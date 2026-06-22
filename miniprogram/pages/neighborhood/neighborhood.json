@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "小区找房",
+  "usingComponents": {
+    "house-card": "/components/house-card/house-card",
+    "search-bar": "/components/search-bar/search-bar"
+  }
+}

@@ -1,0 +1,145 @@
+<!-- pages/landlord/landlord.wxml -->
+<view class="page-bg">
+
+  <!-- 顶部身份卡 -->
+  <view class="landlord-hero">
+    <view class="hero-left">
+      <view class="hero-badge">🏠</view>
+      <view class="hero-info">
+        <text class="hero-title">房东管理中心</text>
+        <text class="hero-sub">直联租客 · 0中介费</text>
+      </view>
+    </view>
+    <view class="exit-btn" bindtap="onExitLandlord">退出</view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="stats-row">
+    <view class="stat-box">
+      <text class="stat-num">{{stats.total}}</text>
+      <text class="stat-lbl">总房源</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-box">
+      <text class="stat-num green">{{stats.available}}</text>
+      <text class="stat-lbl">可租中</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-box">
+      <text class="stat-num gray">{{stats.rented}}</text>
+      <text class="stat-lbl">已出租</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-box">
+      <text class="stat-num orange">{{stats.totalViews}}</text>
+      <text class="stat-lbl">总浏览</text>
+    </view>
+  </view>
+
+  <!-- 发布新房源按钮 -->
+  <view class="publish-btn" bindtap="onPublish">
+    <text class="publish-icon">＋</text>
+    <text class="publish-text">发布新房源</text>
+  </view>
+
+  <!-- 筛选 Tab -->
+  <view class="filter-tabs">
+    <view class="f-tab {{filterStatus === 'all' ? 'f-tab-active' : ''}}"
+      bindtap="onFilterChange" data-status="all">全部 ({{stats.total}})</view>
+    <view class="f-tab {{filterStatus === 'available' ? 'f-tab-active' : ''}}"
+      bindtap="onFilterChange" data-status="available">可租 ({{stats.available}})</view>
+    <view class="f-tab {{filterStatus === 'rented' ? 'f-tab-active' : ''}}"
+      bindtap="onFilterChange" data-status="rented">已租 ({{stats.rented}})</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <text class="loading-txt">加载中...</text>
+  </view>
+
+  <!-- 房源列表 -->
+  <view wx:else>
+    <view class="empty-wrap" wx:if="{{myHouseList.length === 0}}">
+      <text class="empty-icon">🏘️</text>
+      <text class="empty-title">还没有发布任何房源</text>
+      <text class="empty-sub">点击上方按钮开始发布</text>
+    </view>
+
+    <view
+      class="house-card"
+      wx:for="{{myHouseList}}"
+      wx:key="id"
+      wx:if="{{filterStatus === 'all' || (filterStatus === 'available' && item.available) || (filterStatus === 'rented' && !item.available)}}"
+    >
+      <!-- 图片区 -->
+      <view class="card-img-wrap" bindtap="onHouseTap" data-id="{{item.id}}">
+        <image
+          wx:if="{{item.images && item.images.length}}"
+          src="{{item.images[0]}}" class="card-img" mode="aspectFill" lazy-load
+        />
+        <view wx:else class="card-img-ph"><text>🏠</text></view>
+        <view class="status-tag {{item.available ? 'tag-ok' : 'tag-rented'}}">
+          {{item.available ? '可租' : '已租'}}
+        </view>
+        <view class="views-tag">👁 {{item.viewCount || 0}}</view>
+      </view>
+
+      <!-- 信息区 -->
+      <view class="card-body" bindtap="onHouseTap" data-id="{{item.id}}">
+        <text class="card-title">{{item.title}}</text>
+        <text class="card-meta">{{item.neighborhood}} · {{item.roomType}} · {{item.area}}㎡</text>
+        <text class="card-price">{{item.price}}<text class="price-u">元/月</text></text>
+      </view>
+
+      <!-- 操作行 -->
+      <view class="card-actions">
+        <view
+          class="act-btn act-edit"
+          bindtap="onEditHouse"
+          data-id="{{item.id}}"
+        >✏️ 编辑</view>
+        <view
+          class="act-btn {{item.available ? 'act-rent' : 'act-open'}}"
+          bindtap="onToggleStatus"
+          data-id="{{item.id}}"
+          data-available="{{item.available}}"
+        >{{item.available ? '标记已租' : '重新出租'}}</view>
+        <view
+          class="act-btn act-del"
+          catchtap="onDeleteHouse"
+          data-id="{{item.id}}"
+          data-title="{{item.title}}"
+        >删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+</view>
+
+<!-- 编辑弹窗 -->
+<view class="edit-mask" wx:if="{{showEditModal}}" bindtap="onEditCancel">
+  <view class="edit-box" catchtap="noop">
+    <text class="edit-title">编辑房源信息</text>
+
+    <view class="edit-field">
+      <text class="edit-label">标题</text>
+      <input class="edit-input" value="{{editForm.title}}" bindinput="onEditInput" data-field="title" placeholder="房源标题" />
+    </view>
+
+    <view class="edit-field">
+      <text class="edit-label">月租金（元）</text>
+      <input class="edit-input" value="{{editForm.price}}" bindinput="onEditInput" data-field="price" placeholder="月租金" type="digit" />
+    </view>
+
+    <view class="edit-field">
+      <text class="edit-label">房源描述</text>
+      <textarea class="edit-textarea" value="{{editForm.description}}" bindinput="onEditInput" data-field="description" placeholder="补充描述（可选）" />
+    </view>
+
+    <view class="edit-btns">
+      <view class="edit-cancel" bindtap="onEditCancel">取消</view>
+      <view class="edit-confirm" bindtap="onEditConfirm">保存</view>
+    </view>
+  </view>
+</view>

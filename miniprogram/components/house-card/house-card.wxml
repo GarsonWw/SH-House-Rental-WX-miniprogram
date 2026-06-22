@@ -1,0 +1,82 @@
+<!-- components/house-card/house-card.wxml -->
+<view class="house-card" bindtap="onTap">
+  <!-- 封面图片区 -->
+  <view class="card-image">
+    <image 
+      wx:if="{{house.images && house.images.length > 0}}"
+      src="{{house.images[0]}}" 
+      class="cover-img" 
+      mode="aspectFill"
+    />
+    <view wx:else class="cover-placeholder">
+      <text class="placeholder-icon">🏠</text>
+      <text class="placeholder-text">{{house.neighborhood}}</text>
+    </view>
+    <!-- 可用状态标签 -->
+    <view class="status-badge {{house.available ? 'available' : 'unavailable'}}">
+      {{house.available ? '可租' : '已租'}}
+    </view>
+    <!-- 房型标签 -->
+    <view class="room-type-badge">{{house.roomType}}</view>
+  </view>
+
+  <!-- 信息区 -->
+  <view class="card-content">
+    <!-- 标题 -->
+    <text class="house-title">{{house.title}}</text>
+
+    <!-- 小区和地区 -->
+    <view class="location-row">
+      <text class="location-icon">📍</text>
+      <text class="neighborhood">{{house.neighborhood}}</text>
+      <text class="district">{{house.district}}</text>
+    </view>
+
+    <!-- 房屋信息 -->
+    <view class="house-info-row">
+      <text class="info-item">{{house.area}}㎡</text>
+      <text class="info-divider">·</text>
+      <text class="info-item">{{house.floor}}</text>
+      <text class="info-divider">·</text>
+      <text class="info-item">{{house.orientation}}</text>
+      <text class="info-divider">·</text>
+      <text class="info-item">{{house.decoration}}</text>
+    </view>
+
+    <!-- 标签 -->
+    <view class="tags-row" wx:if="{{house.tags && house.tags.length > 0}}">
+      <text class="tag" wx:for="{{house.tags}}" wx:key="index">{{item}}</text>
+    </view>
+
+    <!-- 底部：价格和联系 -->
+    <view class="card-footer">
+      <view class="price-section">
+        <text class="price-number">{{house.price}}</text>
+        <text class="price-unit">元/月</text>
+      </view>
+
+      <view class="contact-section" wx:if="{{showContact}}">
+        <view 
+          class="contact-btn phone-btn" 
+          catchtap="onPhoneCall"
+          data-phone="{{house.landlordPhone}}"
+        >
+          <text>📞</text>
+        </view>
+        <view 
+          class="contact-btn wechat-btn"
+          catchtap="onCopyWechat"
+          data-wechat="{{house.landlordWechat}}"
+          data-name="{{house.landlordName}}"
+        >
+          <text>💬</text>
+        </view>
+      </view>
+
+      <view class="meta-info" wx:else>
+        <text class="view-count">👁 {{house.viewCount || 0}}</text>
+        <text class="create-time">{{house.createTime}}</text>
+      </view>
+    </view>
+  </view>
+</view>

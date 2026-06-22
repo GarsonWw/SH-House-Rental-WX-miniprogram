@@ -1,0 +1,43 @@
+/* components/search-bar/search-bar.wxss */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #F8F8F8;
+  border-radius: 50rpx;
+  padding: 16rpx 24rpx;
+  height: 80rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+  height: 100%;
+}
+
+.search-placeholder {
+  color: #BBBBBB;
+  font-size: 28rpx;
+}
+
+.clear-btn {
+  font-size: 28rpx;
+  color: #BBBBBB;
+  padding: 0 12rpx;
+  flex-shrink: 0;
+}
+
+.search-btn {
+  font-size: 26rpx;
+  color: #FF6B35;
+  font-weight: 600;
+  flex-shrink: 0;
+  padding-left: 12rpx;
+  border-left: 1rpx solid #EEEEEE;
+}

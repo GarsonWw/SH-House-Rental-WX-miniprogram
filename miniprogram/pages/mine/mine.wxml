@@ -1,0 +1,140 @@
+<!-- pages/mine/mine.wxml -->
+<view class="page-bg">
+
+  <!-- ══ 未登录状态 ══ -->
+  <view wx:if="{{!isLoggedIn}}" class="login-page">
+    <view class="login-hero">
+      <text class="login-big-icon">🏠</text>
+      <text class="login-title">租房直联</text>
+      <text class="login-sub">登录后使用收藏夹、入学清单等个性化功能</text>
+    </view>
+    <view class="login-btn" bindtap="onLogin">微信一键登录</view>
+    <view class="login-hint">登录后您的收藏和清单数据将同步云端，换设备不丢失</view>
+
+    <!-- 未登录也可进入清单 -->
+    <view class="no-login-tools">
+      <view class="tool-item" bindtap="onGoChecklist">
+        <text class="tool-icon">🎓</text>
+        <text class="tool-name">港校入学清单</text>
+        <text class="tool-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 房东入口（未登录也可进） -->
+    <view class="landlord-entry" bindtap="onLandlordEntry">
+      <text class="le-icon">🔑</text>
+      <text class="le-text">房东入口</text>
+    </view>
+  </view>
+
+  <!-- ══ 已登录状态 ══ -->
+  <view wx:else>
+
+    <!-- 用户头部 -->
+    <view class="user-header">
+      <view class="avatar-wrap" bindtap="onSetProfile">
+        <image
+          wx:if="{{userProfile && userProfile.avatarUrl}}"
+          src="{{userProfile.avatarUrl}}"
+          class="user-avatar-img"
+          mode="aspectFill"
+        />
+        <view wx:else class="user-avatar-ph"><text>👤</text></view>
+        <view class="user-info">
+          <text class="user-name">{{userProfile ? userProfile.nickName : '点击设置昵称'}}</text>
+          <text class="user-sub">直联找房 · 0中介费</text>
+        </view>
+      </view>
+      <view class="edit-profile" bindtap="onSetProfile">
+        <text>编辑</text>
+      </view>
+    </view>
+
+    <!-- 统计卡 -->
+    <view class="stats-card">
+      <view class="stat-item">
+        <text class="stat-num fav-num">{{favoriteCount}}</text>
+        <text class="stat-lbl">收藏</text>
+      </view>
+      <view class="stat-div"></view>
+      <view class="stat-item">
+        <text class="stat-num blue-num">{{checklistProgress}}%</text>
+        <text class="stat-lbl">{{checklistLabel}}</text>
+      </view>
+    </view>
+
+    <!-- 功能入口卡 -->
+    <view class="entry-card">
+      <view class="entry-title-bar"><text class="entry-title-txt">我的功能</text></view>
+
+      <view class="entry-item" bindtap="onGoFavorites">
+        <view class="entry-left">
+          <view class="entry-icon-bg fav-bg"><text class="entry-icon">❤️</text></view>
+          <view class="entry-info">
+            <text class="entry-name">我的收藏夹</text>
+            <text class="entry-sub">已收藏 {{favoriteCount}} 套房源</text>
+          </view>
+        </view>
+        <view class="entry-right">
+          <view class="entry-badge fav-badge" wx:if="{{favoriteCount > 0}}">{{favoriteCount}}</view>
+          <text class="entry-arr">›</text>
+        </view>
+      </view>
+
+      <view class="entry-divider"></view>
+
+      <view class="entry-item" bindtap="onGoChecklist">
+        <view class="entry-left">
+          <view class="entry-icon-bg study-bg"><text class="entry-icon">🎓</text></view>
+          <view class="entry-info">
+            <text class="entry-name">港校入学清单</text>
+            <text class="entry-sub">{{checklistSummary}}</text>
+          </view>
+        </view>
+        <view class="entry-right"><text class="entry-arr">›</text></view>
+      </view>
+    </view>
+
+    <!-- 菜单 -->
+    <view class="menu-card">
+      <view class="menu-item" bindtap="onAbout">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-txt">关于平台</text>
+        <text class="menu-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 房东入口（已登录也显示，位于底部） -->
+    <view class="landlord-entry {{isLandlord ? 'le-active' : ''}}" bindtap="onLandlordEntry">
+      <text class="le-icon">🔑</text>
+      <text class="le-text">{{isLandlord ? '房东管理中心' : '房东入口'}}</text>
+      <text class="le-arr">›</text>
+    </view>
+
+  </view>
+
+  <view style="height: 60rpx;"></view>
+</view>
+
+<!-- 房东访问码弹窗 -->
+<view class="modal-mask" wx:if="{{showCodeModal}}" bindtap="onCodeCancel">
+  <view class="modal-box" catchtap="noop">
+    <text class="modal-title">🔑 房东验证</text>
+    <text class="modal-sub">请输入房东专属访问码</text>
+    <input
+      class="code-input"
+      type="text"
+      placeholder="输入访问码"
+      password
+      value="{{codeInput}}"
+      bindinput="onCodeInput"
+      confirm-type="done"
+      bindconfirm="onCodeConfirm"
+      focus
+    />
+    <view class="modal-btns">
+      <view class="modal-cancel" bindtap="onCodeCancel">取消</view>
+      <view class="modal-confirm" bindtap="onCodeConfirm">验证</view>
+    </view>
+  </view>
+</view>

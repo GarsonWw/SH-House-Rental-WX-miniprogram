@@ -1,0 +1,207 @@
+/* components/house-card/house-card.wxss */
+.house-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 图片区 */
+.card-image {
+  position: relative;
+  width: 100%;
+  height: 280rpx;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-icon {
+  font-size: 80rpx;
+}
+
+.placeholder-text {
+  font-size: 26rpx;
+  color: #FF6B35;
+  margin-top: 12rpx;
+  font-weight: 500;
+}
+
+.status-badge {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 50rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.available {
+  background: #2ECC71;
+}
+
+.unavailable {
+  background: #999999;
+}
+
+.room-type-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 50rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* 内容区 */
+.card-content {
+  padding: 20rpx 24rpx 20rpx;
+}
+
+.house-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222222;
+  display: block;
+  line-height: 1.4;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.location-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.location-icon {
+  font-size: 24rpx;
+  margin-right: 6rpx;
+}
+
+.neighborhood {
+  font-size: 26rpx;
+  color: #FF6B35;
+  font-weight: 500;
+}
+
+.district {
+  font-size: 24rpx;
+  color: #999999;
+  margin-left: 12rpx;
+}
+
+.house-info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.info-item {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.info-divider {
+  color: #DDDDDD;
+  margin: 0 10rpx;
+  font-size: 24rpx;
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 16rpx;
+}
+
+.tag {
+  padding: 4rpx 16rpx;
+  border-radius: 50rpx;
+  font-size: 22rpx;
+  background: #FFF3EE;
+  color: #FF6B35;
+  margin-right: 10rpx;
+  margin-bottom: 8rpx;
+}
+
+/* 底部 */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5F5F5;
+}
+
+.price-section {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-number {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+.price-unit {
+  font-size: 22rpx;
+  color: #FF6B35;
+  margin-left: 4rpx;
+}
+
+.contact-section {
+  display: flex;
+}
+
+.contact-btn {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.phone-btn {
+  background: #EEF5FF;
+}
+
+.wechat-btn {
+  background: #EEFFF5;
+}
+
+.meta-info {
+  display: flex;
+  align-items: center;
+}
+
+.meta-info .view-count {
+  margin-right: 16rpx;
+}
+
+.view-count, .create-time {
+  font-size: 22rpx;
+  color: #BBBBBB;
+}

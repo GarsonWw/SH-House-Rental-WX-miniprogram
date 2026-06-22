@@ -1,0 +1,67 @@
+/* pages/favorites/favorites.wxss */
+.page-bg { background: #F5F6FA; min-height: 100vh; }
+
+/* 空状态 */
+.empty-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 160rpx;
+}
+.empty-icon { font-size: 120rpx; margin-bottom: 24rpx; }
+.empty-title { font-size: 36rpx; font-weight: 700; color: #333; margin-bottom: 12rpx; }
+.empty-sub { font-size: 26rpx; color: #999; margin-bottom: 48rpx; }
+.empty-btn {
+  background: #FF6B35; color: #FFF; font-size: 28rpx; font-weight: 600;
+  padding: 20rpx 60rpx; border-radius: 50rpx;
+}
+
+/* 数量栏 */
+.count-bar { padding: 24rpx 32rpx 8rpx; }
+.count-txt { font-size: 24rpx; color: #999; }
+
+/* 收藏卡片 */
+.fav-card {
+  background: #FFF; margin: 16rpx 24rpx 0;
+  border-radius: 20rpx; overflow: hidden;
+  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.06);
+  display: flex; align-items: stretch;
+}
+
+.fav-img-wrap {
+  width: 200rpx; flex-shrink: 0; position: relative;
+}
+.fav-img { width: 200rpx; height: 180rpx; display: block; }
+.fav-img-ph {
+  width: 200rpx; height: 180rpx;
+  background: linear-gradient(135deg, #FFE5D9, #FFC4A8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56rpx;
+}
+.avail-tag {
+  position: absolute; top: 12rpx; left: 12rpx;
+  background: #2ECC71; color: #FFF;
+  font-size: 18rpx; padding: 4rpx 12rpx; border-radius: 50rpx;
+}
+.tag-rented { background: #999; }
+
+.fav-body {
+  flex: 1; min-width: 0; padding: 24rpx 16rpx;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.fav-title {
+  font-size: 28rpx; font-weight: 700; color: #222;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  display: block;
+}
+.fav-meta { font-size: 22rpx; color: #999; margin-top: 8rpx; display: block; }
+.fav-area { font-size: 22rpx; color: #BBB; margin-top: 4rpx; display: block; }
+.fav-price {
+  font-size: 34rpx; font-weight: 800; color: #FF6B35;
+  margin-top: 10rpx; display: block;
+}
+.fav-unit { font-size: 20rpx; font-weight: 400; color: #FF6B35; }
+
+.fav-remove {
+  width: 80rpx; display: flex; align-items: center; justify-content: center;
+  border-left: 1rpx solid #F5F5F5;
+}
+.remove-icon { font-size: 36rpx; }

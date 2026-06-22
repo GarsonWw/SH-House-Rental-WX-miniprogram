@@ -1,0 +1,136 @@
+/* app.wxss - 全局样式 */
+page {
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+/* 主题色 */
+/* 主色: #FF6B35 橙红色 */
+/* 辅色: #FFF3EE 浅橙背景 */
+/* 文字色: #333 #666 #999 */
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+}
+
+/* 通用卡片样式 */
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  color: #FFFFFF;
+  border-radius: 50rpx;
+  border: none;
+  font-size: 30rpx;
+  font-weight: 600;
+  height: 88rpx;
+  line-height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 53, 0.35);
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #FF6B35;
+  border-radius: 50rpx;
+  border: 2rpx solid #FF6B35;
+  font-size: 28rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.btn-outline::after {
+  border: none;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 50rpx;
+  font-size: 22rpx;
+  background: #FFF3EE;
+  color: #FF6B35;
+  margin-right: 10rpx;
+  margin-bottom: 8rpx;
+}
+
+.tag-blue {
+  background: #EEF5FF;
+  color: #4A90E2;
+}
+
+.tag-green {
+  background: #EEFFF5;
+  color: #2ECC71;
+}
+
+/* 价格样式 */
+.price {
+  color: #FF6B35;
+  font-weight: 700;
+}
+
+.price-number {
+  font-size: 48rpx;
+}
+
+.price-unit {
+  font-size: 24rpx;
+  font-weight: 400;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: #F0F0F0;
+  margin: 20rpx 0;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+  color: #999999;
+}
+
+.empty-state text {
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+
+/* 加载中 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  color: #999999;
+  font-size: 26rpx;
+}
+
+/* 安全区域底部 */
+.safe-bottom {
+  height: env(safe-area-inset-bottom);
+  height: constant(safe-area-inset-bottom);
+}

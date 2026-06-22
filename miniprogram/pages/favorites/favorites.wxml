@@ -1,0 +1,55 @@
+<!-- pages/favorites/favorites.wxml -->
+<view class="page-bg">
+
+  <!-- 空收藏夹 -->
+  <view class="empty-wrap" wx:if="{{favoriteHouses.length === 0}}">
+    <text class="empty-icon">🤍</text>
+    <text class="empty-title">收藏夹是空的</text>
+    <text class="empty-sub">在房源详情页点击 ♡ 收藏喜欢的房源</text>
+    <view class="empty-btn" bindtap="onGoFind">去找房</view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view wx:else>
+    <view class="count-bar">
+      <text class="count-txt">共收藏 {{favoriteHouses.length}} 套房源</text>
+    </view>
+
+    <view
+      class="fav-card"
+      wx:for="{{favoriteHouses}}"
+      wx:key="id"
+    >
+      <!-- 左侧图片 -->
+      <view class="fav-img-wrap" bindtap="onHouseTap" data-id="{{item.id}}">
+        <image
+          wx:if="{{item.images && item.images.length}}"
+          src="{{item.images[0]}}"
+          class="fav-img"
+          mode="aspectFill"
+          lazy-load
+        />
+        <view wx:else class="fav-img-ph"><text>🏠</text></view>
+        <view class="avail-tag {{item.available ? '' : 'tag-rented'}}">
+          {{item.available ? '可租' : '已租'}}
+        </view>
+      </view>
+
+      <!-- 右侧信息 -->
+      <view class="fav-body" bindtap="onHouseTap" data-id="{{item.id}}">
+        <text class="fav-title">{{item.title}}</text>
+        <text class="fav-meta">{{item.neighborhood}} · {{item.roomType}}</text>
+        <text class="fav-area">{{item.area}}㎡</text>
+        <text class="fav-price">{{item.price}}<text class="fav-unit">元/月</text></text>
+      </view>
+
+      <!-- 删除按钮 -->
+      <view class="fav-remove" catchtap="onRemoveFavorite" data-id="{{item.id}}">
+        <text class="remove-icon">🗑</text>
+      </view>
+    </view>
+
+    <view style="height: 60rpx;"></view>
+  </view>
+
+</view>

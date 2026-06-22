@@ -1,0 +1,249 @@
+/* pages/neighborhood/neighborhood.wxss */
+.page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F5F5F5;
+}
+
+/* 搜索区 */
+.search-section {
+  background: #FFFFFF;
+  padding: 20rpx 24rpx;
+}
+
+/* 区域筛选 */
+.district-filter {
+  background: #FFFFFF;
+  padding: 0 24rpx 16rpx;
+  white-space: nowrap;
+}
+
+.district-list {
+  display: flex;
+  white-space: nowrap;
+}
+
+.district-chip {
+  display: inline-block;
+  padding: 10rpx 28rpx;
+  border-radius: 50rpx;
+  font-size: 26rpx;
+  color: #666666;
+  background: #F5F5F5;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.district-chip.active {
+  background: #FF6B35;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* 统计栏 */
+.stats-bar {
+  padding: 16rpx 24rpx;
+  background: #F5F5F5;
+}
+
+.stats-text {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 小区网格 */
+.neighborhood-grid-scroll {
+  flex: 1;
+  height: 0;
+}
+
+.neighborhood-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 16rpx;
+}
+
+.neighborhood-card {
+}
+
+.neighborhood-card {
+  width: calc(50% - 8rpx);
+  margin-right: 16rpx;
+  margin-bottom: 16rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.card-cover {
+  width: 100%;
+  height: 160rpx;
+  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-emoji {
+  font-size: 72rpx;
+}
+
+.card-info {
+  padding: 16rpx;
+}
+
+.card-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222222;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8rpx;
+}
+
+.card-district {
+  font-size: 22rpx;
+  color: #999999;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-count {
+  font-size: 26rpx;
+  color: #FF6B35;
+  font-weight: 600;
+}
+
+.card-arrow {
+  font-size: 32rpx;
+  color: #FF6B35;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+  margin-top: 20rpx;
+}
+
+.empty-action {
+  margin-top: 32rpx;
+  background: #FF6B35;
+  color: #FFFFFF;
+  padding: 16rpx 48rpx;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+/* 小区头部（房源列表视图） */
+.neighborhood-header {
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  color: #FFFFFF;
+  margin-right: 20rpx;
+}
+
+.back-icon {
+  font-size: 48rpx;
+  line-height: 1;
+}
+
+.back-text {
+  font-size: 26rpx;
+  margin-left: 4rpx;
+}
+
+.header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.header-district {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.8);
+  margin-top: 4rpx;
+}
+
+.header-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.count-num {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.count-unit {
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.8);
+}
+
+/* 提示卡片 */
+.tips-card {
+  background: #FFF3EE;
+  padding: 16rpx 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.tips-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.tips-text {
+  font-size: 24rpx;
+  color: #FF6B35;
+}
+
+/* 房源列表 */
+.house-list-scroll {
+  flex: 1;
+  height: 0;
+}
+
+.house-list {
+  padding: 16rpx 24rpx;
+}

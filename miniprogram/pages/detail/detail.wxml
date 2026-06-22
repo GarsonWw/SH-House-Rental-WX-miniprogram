@@ -1,0 +1,226 @@
+<!-- pages/detail/detail.wxml -->
+<view class="page-container" wx:if="{{house}}">
+
+  <!-- 视频带看（有视频时显示在最上方） -->
+  <view class="video-section" wx:if="{{house.videos && house.videos.length > 0}}">
+    <video
+      src="{{house.videos[0]}}"
+      class="detail-video"
+      controls
+      show-mute-btn
+      object-fit="cover"
+      enable-progress-gesture
+    ></video>
+    <view class="video-badge">🎬 视频带看</view>
+  </view>
+
+  <!-- 图片轮播 -->
+  <view class="image-section">
+    <swiper
+      wx:if="{{house.images && house.images.length > 0}}"
+      class="image-swiper"
+      indicator-dots
+      autoplay
+      circular
+    >
+      <swiper-item wx:for="{{house.images}}" wx:key="index">
+        <image src="{{item}}" class="house-img" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+    <!-- 无图占位 -->
+    <view wx:else class="image-placeholder">
+      <text class="placeholder-emoji">🏠</text>
+      <text class="placeholder-name">{{house.neighborhood}}</text>
+    </view>
+    <!-- 状态标签 -->
+    <view class="image-overlay">
+      <view class="status-tag {{house.available ? 'available' : 'rented'}}">
+        {{house.available ? '✓ 可租' : '✗ 已租'}}
+      </view>
+      <view class="share-btn" bindtap="onShareAppMessage">
+        <text>分享</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 基本信息卡片 -->
+  <view class="info-card">
+    <!-- 价格和标题 -->
+    <view class="price-row">
+      <view class="price-block">
+        <text class="price-num">{{house.price}}</text>
+        <text class="price-unit">元/月</text>
+      </view>
+      <view class="favorite-btn {{isFavorited ? 'favorited' : ''}}" bindtap="onFavorite">
+        <text class="heart-icon">{{isFavorited ? '❤️' : '♡'}}</text>
+      </view>
+    </view>
+
+    <text class="house-title">{{house.title}}</text>
+
+    <!-- 小区位置 -->
+    <view class="location-row" bindtap="onNeighborhoodTap">
+      <text class="location-icon">📍</text>
+      <text class="neighborhood-name">{{house.neighborhood}}</text>
+      <text class="district-name">{{house.district}}</text>
+      <text class="view-more">查看更多房源 ›</text>
+    </view>
+
+    <!-- 标签行 -->
+    <view class="tags-row" wx:if="{{house.tags && house.tags.length > 0}}">
+      <text class="tag" wx:for="{{house.tags}}" wx:key="index">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 房屋参数卡片 -->
+  <view class="detail-card">
+    <text class="card-title">房屋参数</text>
+    <view class="params-grid">
+      <view class="param-item">
+        <text class="param-label">房型</text>
+        <text class="param-value">{{house.roomType}}</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">面积</text>
+        <text class="param-value">{{house.area}}㎡</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">楼层</text>
+        <text class="param-value">{{house.floor}}</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">朝向</text>
+        <text class="param-value">{{house.orientation}}</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">装修</text>
+        <text class="param-value">{{house.decoration}}</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">地址</text>
+        <text class="param-value address-text">{{house.address}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 房源描述 -->
+  <view class="detail-card" wx:if="{{house.description}}">
+    <text class="card-title">房源描述</text>
+    <text class="description-text">{{house.description}}</text>
+  </view>
+
+  <!-- 🔑 房东信息卡片（核心功能） -->
+  <view class="landlord-card">
+    <text class="card-title">房东信息</text>
+
+    <view class="landlord-info">
+      <view class="landlord-avatar">
+        <image
+          wx:if="{{house.landlordAvatar}}"
+          src="{{house.landlordAvatar}}"
+          class="avatar-img"
+          mode="aspectFill"
+        />
+        <view wx:else class="avatar-placeholder">
+          <text>👤</text>
+        </view>
+      </view>
+      <view class="landlord-detail">
+        <text class="landlord-name">{{house.landlordName}}</text>
+        <text class="landlord-badge">🏠 直租房东 · 无中介费</text>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="contact-methods">
+      <!-- 电话联系 -->
+      <view class="contact-method phone-method" bindtap="onPhoneCall">
+        <view class="method-icon-wrap phone-icon-bg">
+          <text class="method-icon">📞</text>
+        </view>
+        <view class="method-info">
+          <text class="method-label">联系电话</text>
+          <text class="method-value">{{house.landlordPhone}}</text>
+        </view>
+        <view class="method-action phone-action">
+          <text>立即拨打</text>
+        </view>
+      </view>
+
+      <!-- 微信联系 -->
+      <view class="contact-method wechat-method" bindtap="onCopyWechat">
+        <view class="method-icon-wrap wechat-icon-bg">
+          <text class="method-icon">💬</text>
+        </view>
+        <view class="method-info">
+          <text class="method-label">微信号</text>
+          <text class="method-value wechat-id">{{house.landlordWechat}}</text>
+        </view>
+        <view class="method-action wechat-action {{wechatCopied ? 'copied' : ''}}">
+          <text>{{wechatCopied ? '已复制' : '复制微信'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 提示文字 -->
+    <view class="contact-tips">
+      <text>💡 复制微信号后，打开微信 → 搜索 → 添加好友</text>
+    </view>
+  </view>
+
+  <!-- 发布时间和浏览量 -->
+  <view class="meta-card">
+    <text class="meta-item">📅 发布于 {{house.createTime}}</text>
+    <text class="meta-item">👁 已有 {{house.viewCount || 0}} 人浏览</text>
+  </view>
+
+  <!-- 底部安全区 -->
+  <view style="height: 180rpx;"></view>
+</view>
+
+<!-- 底部固定联系栏 -->
+<view class="bottom-bar" wx:if="{{house}}">
+  <view class="bottom-bar-inner">
+    <view class="bottom-phone" bindtap="onPhoneCall">
+      <text class="bottom-icon">📞</text>
+      <text class="bottom-text">电话咨询</text>
+    </view>
+    <view class="bottom-divider"></view>
+    <view class="bottom-wechat" bindtap="onCopyWechat">
+      <text class="bottom-icon">💬</text>
+      <text class="bottom-text">微信联系</text>
+    </view>
+  </view>
+</view>
+
+<!-- 微信号弹窗 -->
+<view class="modal-mask" wx:if="{{showContactModal}}" bindtap="onCloseModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">联系房东</text>
+      <text class="modal-close" bindtap="onCloseModal">✕</text>
+    </view>
+
+    <view class="modal-landlord">
+      <view class="modal-avatar">👤</view>
+      <text class="modal-name">{{house.landlordName}}</text>
+    </view>
+
+    <view class="modal-wechat-section">
+      <text class="modal-label">微信号</text>
+      <view class="modal-wechat-id">
+        <text class="wechat-id-text">{{house.landlordWechat}}</text>
+      </view>
+    </view>
+
+    <view class="modal-steps">
+      <text class="steps-title">添加步骤：</text>
+      <view class="step-item"><text class="step-num">1</text><text class="step-text">点击下方"复制微信号"</text></view>
+      <view class="step-item"><text class="step-num">2</text><text class="step-text">打开微信 → 搜索框</text></view>
+      <view class="step-item"><text class="step-num">3</text><text class="step-text">粘贴微信号并添加好友</text></view>
+    </view>
+
+    <button class="modal-copy-btn" bindtap="onConfirmWechat">复制微信号</button>
+    <button class="modal-phone-btn" bindtap="onPhoneCall">直接拨打电话</button>
+  </view>
+</view>

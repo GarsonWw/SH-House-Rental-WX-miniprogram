@@ -1,0 +1,266 @@
+<!-- pages/index/index.wxml -->
+<view class="page-wrap">
+
+  <!-- ① 顶部选择小区 Banner -->
+  <view class="select-banner" bindtap="onSelectNeighborhood">
+    <view class="banner-left">
+      <view class="banner-icon-bg"><text class="banner-icon">🎓</text></view>
+      <view class="banner-texts">
+        <text class="banner-title">选择小区，定制找房</text>
+        <text class="banner-sub">找到心仪小区，直联房东零中介</text>
+      </view>
+    </view>
+    <view class="banner-action">去选择 →</view>
+  </view>
+
+  <!-- ② 平台信息卡 -->
+  <view class="platform-card">
+    <view class="platform-left">
+      <view class="platform-avatar"><text>🏠</text></view>
+      <view class="platform-info">
+        <view class="platform-name-row">
+          <text class="platform-name">租房直联</text>
+          <text class="platform-divider">|</text>
+          <text class="platform-tagline">找好房</text>
+        </view>
+        <text class="platform-meta">深圳罗湖直租平台 · 房源实测中</text>
+        <text class="platform-desc">致力于实现租房信息透明化，直连房东，0中介费</text>
+      </view>
+    </view>
+    <view class="platform-stat">
+      <text class="stat-num">{{platformStats.available}}</text>
+      <text class="stat-lbl">实测房源</text>
+    </view>
+  </view>
+
+  <!-- ③ Tab 切换 -->
+  <view class="main-tabs">
+    <view
+      class="main-tab {{activeTab === 'overview' ? 'main-tab-active' : ''}}"
+      bindtap="onTabSwitch"
+      data-tab="overview"
+    >全部房源</view>
+    <view
+      class="main-tab {{activeTab === 'match' ? 'main-tab-active' : ''}}"
+      bindtap="onTabSwitch"
+      data-tab="match"
+    >🔍 智能匹配</view>
+  </view>
+
+  <!-- ══ 全部房源 Tab ════════════════════════════ -->
+  <view wx:if="{{activeTab === 'overview'}}">
+
+    <!-- ④ 三维度筛选 -->
+    <view class="dim-row">
+      <view
+        class="dim-item {{activeDim === item ? 'dim-active' : ''}}"
+        wx:for="{{filterDims}}"
+        wx:key="index"
+        bindtap="onDimSelect"
+        data-dim="{{item}}"
+      >{{item}}</view>
+    </view>
+
+    <!-- ⑤ 区域筛选芯片 -->
+    <scroll-view scroll-x class="chips-scroll">
+      <view class="chips-row">
+        <view
+          class="chip {{selectedDistrict === item ? 'chip-active' : ''}}"
+          wx:for="{{districtList}}"
+          wx:key="index"
+          bindtap="onDistrictSelect"
+          data-district="{{item}}"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- ⑥ 无内容提示 -->
+    <view class="empty-tip" wx:if="{{neighborhoodSections.length === 0}}">
+      <text class="empty-icon">🏘️</text>
+      <text class="empty-text">该区域暂无房源</text>
+    </view>
+
+    <!-- ⑦ 小区分区块列表 -->
+    <view class="section-block" wx:for="{{neighborhoodSections}}" wx:key="name">
+      <view class="sb-head">
+        <view class="sb-title-col">
+          <view class="sb-title-row">
+            <text class="sb-icon">{{item.icon}}</text>
+            <text class="sb-name">{{item.name}}</text>
+            <view class="sb-badge" wx:if="{{item.badge}}">{{item.badge}}</view>
+          </view>
+          <text class="sb-category">{{item.categoryLabel}} · {{item.district}}</text>
+        </view>
+        <view class="sb-link" bindtap="onNeighborhoodTap" data-name="{{item.name}}">
+          <text>查看联系方式</text>
+        </view>
+      </view>
+
+      <text class="sb-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+
+      <view class="sb-review-wrap" wx:if="{{item.review}}">
+        <view class="sb-review-quote"></view>
+        <text class="sb-review {{item.expanded ? '' : 'sb-review-clamp'}}">{{item.review}}</text>
+        <view class="sb-expand" bindtap="onExpandSection" data-idx="{{index}}">
+          <text>{{item.expanded ? '收起 ↑' : '展开完整点评 ↓'}}</text>
+        </view>
+      </view>
+
+      <scroll-view scroll-x class="house-scroll">
+        <view class="house-row">
+          <view
+            class="mini-card"
+            wx:for="{{item.houses}}"
+            wx:key="id"
+            wx:for-item="h"
+            bindtap="onHouseTap"
+            data-id="{{h.id}}"
+          >
+            <view class="mini-img-wrap">
+              <image
+                wx:if="{{h.images && h.images.length > 0}}"
+                src="{{h.images[0]}}"
+                class="mini-img"
+                mode="aspectFill"
+                lazy-load
+              />
+              <view wx:else class="mini-img-ph"><text>🏠</text></view>
+              <view class="mini-badge {{h.available ? '' : 'mini-rented'}}">
+                {{h.available ? '可租' : '已租'}}
+              </view>
+            </view>
+            <text class="mini-title">{{h.title}}</text>
+            <text class="mini-meta">{{h.roomType}} · {{h.area}}㎡</text>
+            <text class="mini-price">{{h.price}}元/月</text>
+          </view>
+          <view class="mini-more" bindtap="onNeighborhoodTap" data-name="{{item.name}}">
+            <text class="more-icon">›</text>
+            <text class="more-text">查看{{item.name}}全部房源</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+
+  </view>
+
+  <!-- ══ 智能匹配 Tab ════════════════════════════ -->
+  <view wx:if="{{activeTab === 'match'}}" class="match-wrap">
+
+    <!-- 筛选面板 -->
+    <view class="filter-panel">
+      <text class="filter-panel-title">🎯 设置条件，自动为你匹配合适房源</text>
+
+      <!-- 地区选择 -->
+      <view class="filter-row">
+        <text class="filter-label">📍 地区</text>
+        <scroll-view scroll-x class="filter-scroll">
+          <view class="filter-chips">
+            <view
+              class="f-chip {{matchSelectedDistrict === item ? 'f-chip-active' : ''}}"
+              wx:for="{{matchDistrictList}}"
+              wx:key="index"
+              bindtap="onMatchDistrictSelect"
+              data-district="{{item}}"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 价格区间 -->
+      <view class="filter-row">
+        <text class="filter-label">💰 价格</text>
+        <scroll-view scroll-x class="filter-scroll">
+          <view class="filter-chips">
+            <view
+              class="f-chip {{selectedPriceIdx === index ? 'f-chip-active' : ''}}"
+              wx:for="{{priceRanges}}"
+              wx:key="index"
+              bindtap="onPriceSelect"
+              data-idx="{{index}}"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 房型 -->
+      <view class="filter-row">
+        <text class="filter-label">🏡 房型</text>
+        <scroll-view scroll-x class="filter-scroll">
+          <view class="filter-chips">
+            <view
+              class="f-chip {{selectedRoomType === item ? 'f-chip-active' : ''}}"
+              wx:for="{{roomTypes}}"
+              wx:key="index"
+              bindtap="onRoomTypeSelect"
+              data-type="{{item}}"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <!-- 匹配结果区 -->
+    <view class="match-results">
+
+      <!-- 结果标题 -->
+      <view class="result-header" wx:if="{{hasSearched}}">
+        <text class="result-title">为你找到</text>
+        <text class="result-count">{{matchCount}}</text>
+        <text class="result-title">套房源</text>
+      </view>
+
+      <!-- 无结果 -->
+      <view class="no-result" wx:if="{{hasSearched && matchCount === 0}}">
+        <text class="no-result-icon">🔍</text>
+        <text class="no-result-text">暂无符合条件的房源</text>
+        <text class="no-result-sub">试试放宽地区或价格条件？</text>
+      </view>
+
+      <!-- 结果列表 -->
+      <view
+        class="result-card"
+        wx:for="{{matchResults}}"
+        wx:key="id"
+        bindtap="onHouseTap"
+        data-id="{{item.id}}"
+      >
+        <!-- 图片 -->
+        <view class="result-img-wrap">
+          <image
+            wx:if="{{item.images && item.images.length}}"
+            src="{{item.images[0]}}"
+            class="result-img"
+            mode="aspectFill"
+            lazy-load
+          />
+          <view wx:else class="result-img-ph"><text>🏠</text></view>
+          <view class="result-avail {{item.available ? '' : 'avail-rented'}}">
+            {{item.available ? '可租' : '已租'}}
+          </view>
+        </view>
+
+        <!-- 信息 -->
+        <view class="result-info">
+          <text class="result-name">{{item.title}}</text>
+          <view class="result-tags">
+            <view class="r-tag r-tag-district">{{item.district}}</view>
+            <view class="r-tag r-tag-room">{{item.roomType}}</view>
+            <view class="r-tag r-tag-area">{{item.area}}㎡</view>
+          </view>
+          <text class="result-hood">📍 {{item.neighborhood}}</text>
+          <view class="result-bottom">
+            <text class="result-price">{{item.price}}<text class="price-unit">元/月</text></text>
+            <view class="result-arrow">查看详情 →</view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+  </view>
+
+  <view style="height: 50rpx;"></view>
+</view>

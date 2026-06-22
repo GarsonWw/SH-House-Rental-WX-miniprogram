@@ -1,0 +1,153 @@
+/* pages/mine/mine.wxss */
+.page-bg { background: #F5F6FA; min-height: 100vh; }
+
+/* ── 未登录 ── */
+.login-page { display: flex; flex-direction: column; align-items: center; padding: 80rpx 48rpx 0; }
+.login-hero  { display: flex; flex-direction: column; align-items: center; margin-bottom: 48rpx; }
+.login-big-icon { font-size: 100rpx; margin-bottom: 16rpx; }
+.login-title    { font-size: 40rpx; font-weight: 800; color: #1A1A1A; margin-bottom: 12rpx; }
+.login-sub      { font-size: 26rpx; color: #777; text-align: center; line-height: 1.6; }
+
+.login-btn {
+  width: 100%; background: linear-gradient(135deg, #07C160, #09A752);
+  color: #FFF; font-size: 32rpx; font-weight: 700;
+  padding: 28rpx 0; border-radius: 60rpx; text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(7,193,96,0.35);
+}
+.login-hint {
+  font-size: 22rpx; color: #BBB; text-align: center; margin-top: 16rpx; line-height: 1.6;
+}
+
+.no-login-tools {
+  width: 100%; background: #FFF; border-radius: 20rpx; margin-top: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05); overflow: hidden;
+}
+.tool-item {
+  display: flex; align-items: center; padding: 28rpx 28rpx;
+}
+.tool-icon { font-size: 36rpx; margin-right: 16rpx; }
+.tool-name { flex: 1; font-size: 28rpx; color: #333; }
+.tool-arr  { font-size: 32rpx; color: #CCC; }
+
+/* ── 已登录：用户头部 ── */
+.user-header {
+  background: linear-gradient(160deg, #FF6B35, #FF8C42);
+  padding: 48rpx 32rpx 60rpx;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.avatar-wrap { display: flex; align-items: center; flex: 1; }
+.user-avatar-img {
+  width: 110rpx; height: 110rpx; border-radius: 50%;
+  border: 4rpx solid rgba(255,255,255,0.7); margin-right: 24rpx; flex-shrink: 0;
+}
+.user-avatar-ph {
+  width: 110rpx; height: 110rpx; border-radius: 50%;
+  background: rgba(255,255,255,0.3); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 60rpx; margin-right: 24rpx; flex-shrink: 0;
+  border: 4rpx solid rgba(255,255,255,0.6);
+}
+.user-name { font-size: 36rpx; font-weight: 700; color: #FFF; display: block; }
+.user-sub  { font-size: 22rpx; color: rgba(255,255,255,0.8); margin-top: 5rpx; display: block; }
+.edit-profile {
+  font-size: 24rpx; color: rgba(255,255,255,0.85);
+  border: 1rpx solid rgba(255,255,255,0.4);
+  padding: 8rpx 20rpx; border-radius: 50rpx; flex-shrink: 0;
+}
+
+/* 统计卡 */
+.stats-card {
+  background: #FFF; margin: -32rpx 24rpx 0;
+  border-radius: 20rpx; padding: 28rpx 16rpx;
+  display: flex; justify-content: space-around;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.08); position: relative; z-index: 1;
+}
+.stat-item  { display: flex; flex-direction: column; align-items: center; }
+.stat-num   { font-size: 40rpx; font-weight: 800; color: #222; }
+.fav-num    { color: #FF3B3B; }
+.green-num  { color: #2ECC71; }
+.blue-num   { color: #2B6FD9; }
+.stat-lbl   { font-size: 20rpx; color: #999; margin-top: 6rpx; }
+.stat-div   { width: 1rpx; background: #F0F0F0; height: 50rpx; align-self: center; }
+
+/* 功能入口卡片 */
+.entry-card {
+  background: #FFF; margin: 20rpx 24rpx 0;
+  border-radius: 20rpx; overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+.entry-title-bar { padding: 22rpx 28rpx 8rpx; }
+.entry-title-txt { font-size: 22rpx; color: #999; font-weight: 600; letter-spacing: 1rpx; }
+.entry-item      { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 28rpx; }
+.entry-left      { display: flex; align-items: center; flex: 1; }
+.entry-icon-bg   {
+  width: 80rpx; height: 80rpx; border-radius: 18rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38rpx; margin-right: 20rpx; flex-shrink: 0;
+}
+.fav-bg   { background: #FFF0F5; }
+.study-bg { background: #F0F4FF; }
+.entry-info { display: flex; flex-direction: column; }
+.entry-name { font-size: 30rpx; font-weight: 700; color: #1A1A1A; }
+.entry-sub  { font-size: 22rpx; color: #999; margin-top: 5rpx; }
+.entry-right { display: flex; align-items: center; }
+.entry-badge {
+  font-size: 20rpx; font-weight: 700; padding: 3rpx 14rpx;
+  border-radius: 50rpx; margin-right: 10rpx;
+}
+.fav-badge { background: #FFF0F0; color: #FF3B3B; }
+.entry-arr { font-size: 36rpx; color: #CCC; }
+.entry-divider { height: 1rpx; background: #F5F5F5; margin: 0 28rpx; }
+
+/* 菜单 */
+.menu-card {
+  background: #FFF; margin: 20rpx 24rpx 0;
+  border-radius: 20rpx; overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+.menu-item { display: flex; align-items: center; padding: 32rpx 28rpx; }
+.menu-icon { font-size: 32rpx; margin-right: 16rpx; }
+.menu-txt  { flex: 1; font-size: 28rpx; color: #333; }
+.menu-arr  { font-size: 36rpx; color: #CCC; }
+
+/* 房东入口（通用，登录/未登录都显示） */
+.landlord-entry {
+  display: flex; align-items: center; justify-content: center;
+  margin: 28rpx 24rpx 0; padding: 24rpx;
+  border-radius: 16rpx; border: 2rpx dashed #DDD;
+  background: #FAFAFA;
+}
+.le-active { background: #F0F4FF; border-color: #2B6FD9; }
+.le-icon   { font-size: 32rpx; margin-right: 12rpx; }
+.le-text   { font-size: 28rpx; color: #888; flex: 1; }
+.le-active .le-text { color: #2B6FD9; font-weight: 600; }
+.le-arr    { font-size: 32rpx; color: #CCC; }
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+.modal-box {
+  background: #FFF; border-radius: 24rpx; padding: 48rpx 40rpx 36rpx;
+  width: 620rpx; display: flex; flex-direction: column; align-items: center;
+}
+.modal-title { font-size: 36rpx; font-weight: 800; color: #1A1A1A; margin-bottom: 10rpx; }
+.modal-sub   { font-size: 24rpx; color: #999; margin-bottom: 36rpx; }
+.code-input  {
+  width: 100%; background: #F5F6FA; border-radius: 14rpx;
+  padding: 24rpx 20rpx; font-size: 32rpx; text-align: center;
+  letter-spacing: 6rpx; margin-bottom: 32rpx; border: 2rpx solid #EBEBEB;
+}
+.modal-btns { display: flex; width: 100%; }
+.modal-cancel {
+  flex: 1; text-align: center; padding: 20rpx 0;
+  font-size: 28rpx; color: #999; border: 1rpx solid #E0E0E0;
+  border-radius: 50rpx; margin-right: 16rpx;
+}
+.modal-confirm {
+  flex: 1; text-align: center; padding: 20rpx 0;
+  font-size: 28rpx; font-weight: 700; color: #FFF;
+  background: linear-gradient(135deg, #1A3A5C, #2B6FD9); border-radius: 50rpx;
+}

@@ -1,0 +1,150 @@
+<!-- pages/map/map.wxml -->
+<view class="map-page">
+
+  <!-- 地图主体 -->
+  <map
+    id="myMap"
+    class="map-view"
+    latitude="{{mapLat}}"
+    longitude="{{mapLng}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    show-location
+    enable-zoom
+    enable-scroll
+    enable-rotate="{{false}}"
+    bindmarkertap="onMarkerTap"
+    bindtap="onMapTap"
+    bindregionchange="onRegionChange"
+  />
+
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-inner">
+      <text class="search-icon-txt">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索小区或地址，点击 Marker 查看房源"
+        placeholder-class="search-ph"
+        value="{{searchValue}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+        confirm-type="search"
+      />
+    </view>
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <!-- 缩放提示 -->
+  <view class="scale-tip">缩放: {{currentScale}}</view>
+
+  <!-- 右侧图层按钮 -->
+  <view class="layer-panel">
+    <view
+      class="layer-btn {{activeLayer === item.key ? 'layer-active' : ''}}"
+      wx:for="{{layers}}"
+      wx:key="key"
+      bindtap="onLayerTap"
+      data-key="{{item.key}}"
+    >
+      <text class="layer-icon">{{item.icon}}</text>
+      <text class="layer-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 区域筛选浮层 -->
+  <view class="district-panel" wx:if="{{showDistrictPanel}}">
+    <view
+      class="dp-item {{selectedDistrict === item ? 'dp-active' : ''}}"
+      wx:for="{{districtList}}"
+      wx:key="index"
+      bindtap="onDistrictSelect"
+      data-district="{{item}}"
+    >{{item}}</view>
+  </view>
+
+  <!-- 定位按钮 -->
+  <view class="locate-btn" bindtap="onLocate">
+    <text class="locate-icon">◎</text>
+  </view>
+
+  <!-- 底部提示卡片（无选中时） -->
+  <view class="hint-cards" wx:if="{{!showSheet}}">
+    <view class="hint-card">
+      <text class="hint-txt">💡 点击地图上的蓝色 Marker 查看该小区房源</text>
+    </view>
+    <view class="hint-card">
+      <text class="hint-txt">📍 共 {{markers.length}} 个小区有在租房源</text>
+    </view>
+  </view>
+
+  <!-- 底部房源列表浮层 -->
+  <view class="bottom-sheet {{showSheet ? 'sheet-show' : ''}}">
+    <!-- 拖动指示条 -->
+    <view class="sheet-handle"></view>
+
+    <!-- 标题行 -->
+    <view class="sheet-header">
+      <view class="sheet-title-wrap">
+        <text class="sheet-icon">🏠</text>
+        <text class="sheet-title">{{sheetNeighborhood}}</text>
+        <text class="sheet-count">{{sheetHouses.length}}套在租</text>
+      </view>
+      <view class="sheet-close" bindtap="onCloseSheet">✕</view>
+    </view>
+
+    <!-- 房源列表 -->
+    <scroll-view scroll-y class="sheet-list">
+      <view
+        class="sheet-house"
+        wx:for="{{sheetHouses}}"
+        wx:key="id"
+        bindtap="onHouseTap"
+        data-id="{{item.id}}"
+      >
+        <!-- 图片 -->
+        <view class="sh-img-wrap">
+          <image
+            wx:if="{{item.images && item.images.length > 0}}"
+            src="{{item.images[0]}}"
+            class="sh-img"
+            mode="aspectFill"
+            lazy-load
+          />
+          <view wx:else class="sh-img-ph"><text>🏠</text></view>
+          <view class="sh-status {{item.available ? '' : 'sh-rented'}}">
+            {{item.available ? '可租' : '已租'}}
+          </view>
+        </view>
+
+        <!-- 信息 -->
+        <view class="sh-info">
+          <text class="sh-title">{{item.title}}</text>
+          <text class="sh-meta">{{item.roomType}} · {{item.area}}㎡ · {{item.floor}}</text>
+          <view class="sh-tags">
+            <text class="sh-tag" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag">{{tag}}</text>
+          </view>
+          <view class="sh-footer">
+            <text class="sh-price">{{item.price}}<text class="sh-price-unit">元/月</text></text>
+            <view class="sh-contacts">
+              <view
+                class="sh-contact-btn sh-phone"
+                catchtap="onPhoneCall"
+                data-phone="{{item.landlordPhone}}"
+                data-name="{{item.landlordName}}"
+              >📞 电话</view>
+              <view
+                class="sh-contact-btn sh-wechat"
+                catchtap="onCopyWechat"
+                data-wechat="{{item.landlordWechat}}"
+              >💬 微信</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="sheet-bottom-space"></view>
+    </scroll-view>
+  </view>
+
+</view>

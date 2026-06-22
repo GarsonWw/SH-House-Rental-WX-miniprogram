@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/neighborhood/neighborhood",
+    "pages/map/map",
+    "pages/detail/detail",
+    "pages/publish/publish",
+    "pages/mine/mine",
+    "pages/favorites/favorites",
+    "pages/checklist/checklist",
+    "pages/landlord/landlord"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FF6B35",
+    "navigationBarTitleText": "租房找房",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B35",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "找房",
+        "iconPath": "images/tab_home.png",
+        "selectedIconPath": "images/tab_home_active.png"
+      },
+      {
+        "pagePath": "pages/neighborhood/neighborhood",
+        "text": "小区",
+        "iconPath": "images/tab_community.png",
+        "selectedIconPath": "images/tab_community_active.png"
+      },
+      {
+        "pagePath": "pages/map/map",
+        "text": "地图",
+        "iconPath": "images/tab_map.png",
+        "selectedIconPath": "images/tab_map_active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tab_mine.png",
+        "selectedIconPath": "images/tab_mine_active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "house-card": "/components/house-card/house-card",
+    "search-bar": "/components/search-bar/search-bar"
+  }
+}

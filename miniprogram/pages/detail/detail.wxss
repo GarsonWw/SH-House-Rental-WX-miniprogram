@@ -1,0 +1,633 @@
+/* pages/detail/detail.wxss */
+.page-container {
+  background: #F5F5F5;
+  min-height: 100vh;
+}
+
+/* 视频带看 */
+.video-section {
+  position: relative; background: #000; width: 100%;
+}
+.detail-video {
+  width: 100%; height: 420rpx; display: block;
+}
+.video-badge {
+  position: absolute; top: 16rpx; left: 16rpx;
+  background: rgba(0,0,0,0.55); color: #FFF;
+  font-size: 22rpx; padding: 6rpx 18rpx; border-radius: 50rpx;
+}
+
+/* 图片区 */
+.image-section {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  background: #F0F0F0;
+}
+
+.image-swiper {
+  width: 100%;
+  height: 480rpx;
+}
+
+.house-img {
+  width: 100%;
+  height: 480rpx;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 480rpx;
+  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-emoji {
+  font-size: 120rpx;
+}
+
+.placeholder-name {
+  font-size: 32rpx;
+  color: #FF6B35;
+  font-weight: 600;
+  margin-top: 20rpx;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.status-tag {
+  padding: 8rpx 24rpx;
+  border-radius: 50rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.available {
+  background: rgba(46, 204, 113, 0.9);
+}
+
+.rented {
+  background: rgba(153, 153, 153, 0.9);
+}
+
+.share-btn {
+  background: rgba(255,255,255,0.85);
+  padding: 8rpx 24rpx;
+  border-radius: 50rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+/* 通用卡片 */
+.info-card,
+.detail-card,
+.landlord-card,
+.meta-card {
+  background: #FFFFFF;
+  margin: 16rpx 24rpx 0;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+
+/* 基本信息 */
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.price-block {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-num {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #FF6B35;
+}
+
+.price-unit {
+  font-size: 26rpx;
+  color: #FF6B35;
+  margin-left: 6rpx;
+}
+
+.favorite-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  border: 2rpx solid #EEEEEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-icon {
+  font-size: 36rpx;
+  color: #CCCCCC;
+}
+
+.favorite-btn.favorited {
+  border-color: #FF6B35;
+  background: #FFF3EE;
+}
+
+.house-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #222222;
+  display: block;
+  line-height: 1.5;
+  margin-bottom: 16rpx;
+}
+
+.location-row {
+  display: flex;
+  align-items: center;
+  background: #FFF8F5;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.location-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.neighborhood-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+.district-name {
+  font-size: 24rpx;
+  color: #999999;
+  margin-left: 10rpx;
+}
+
+.view-more {
+  font-size: 22rpx;
+  color: #FF6B35;
+  margin-left: auto;
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 6rpx 20rpx;
+  border-radius: 50rpx;
+  font-size: 22rpx;
+  background: #FFF3EE;
+  color: #FF6B35;
+  margin-right: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+/* 参数卡片 */
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #222222;
+  display: block;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.params-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.param-item {
+  width: 50%;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.param-label {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 6rpx;
+}
+
+.param-value {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.address-text {
+  font-size: 24rpx;
+}
+
+/* 描述 */
+.description-text {
+  font-size: 28rpx;
+  color: #555555;
+  line-height: 1.8;
+  display: block;
+}
+
+/* 房东信息（核心） */
+.landlord-card {
+  border: 2rpx solid #FFE0D0;
+}
+
+.landlord-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.landlord-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 20rpx;
+  background: #F5F5F5;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.avatar-placeholder {
+  width: 96rpx;
+  height: 96rpx;
+  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.landlord-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.landlord-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 8rpx;
+}
+
+.landlord-badge {
+  font-size: 24rpx;
+  color: #2ECC71;
+  background: #EEFFF5;
+  padding: 4rpx 16rpx;
+  border-radius: 50rpx;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* 联系方式 */
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #F8F8F8;
+}
+
+.method-icon-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.phone-icon-bg {
+  background: #EEF5FF;
+}
+
+.wechat-icon-bg {
+  background: #EEFFF5;
+}
+
+.method-icon {
+  font-size: 40rpx;
+}
+
+.method-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.method-label {
+  font-size: 22rpx;
+  color: #999999;
+  margin-bottom: 6rpx;
+}
+
+.method-value {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.wechat-id {
+  color: #07C160;
+}
+
+.method-action {
+  padding: 12rpx 24rpx;
+  border-radius: 50rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.phone-action {
+  background: #EEF5FF;
+  color: #4A90E2;
+}
+
+.wechat-action {
+  background: #EEFFF5;
+  color: #07C160;
+}
+
+.wechat-action.copied {
+  background: #F5F5F5;
+  color: #999999;
+}
+
+.contact-tips {
+  background: #FFF8F5;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: #FF6B35;
+}
+
+/* 元信息 */
+.meta-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 28rpx;
+  background: #FAFAFA;
+  border: none;
+  box-shadow: none;
+}
+
+.meta-item {
+  font-size: 22rpx;
+  color: #BBBBBB;
+}
+
+/* 底部固定联系栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2rpx 16rpx rgba(0,0,0,0.08);
+  z-index: 100;
+}
+
+.bottom-bar-inner {
+  display: flex;
+  height: 120rpx;
+}
+
+.bottom-phone, .bottom-wechat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-phone {
+  background: linear-gradient(135deg, #4A90E2, #5BA3F5);
+}
+
+.bottom-wechat {
+  background: linear-gradient(135deg, #07C160, #0EDB6E);
+}
+
+.bottom-icon {
+  font-size: 40rpx;
+}
+
+.bottom-text {
+  font-size: 26rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+  margin-top: 6rpx;
+}
+
+.bottom-divider {
+  width: 2rpx;
+  background: rgba(255,255,255,0.3);
+}
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-content {
+  background: #FFFFFF;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  width: 100%;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #222222;
+}
+
+.modal-close {
+  font-size: 36rpx;
+  color: #999999;
+  padding: 8rpx;
+}
+
+.modal-landlord {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.modal-avatar {
+  font-size: 80rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: #FFF3EE;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 120rpx;
+  margin-bottom: 16rpx;
+}
+
+.modal-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #222222;
+}
+
+.modal-wechat-section {
+  margin-bottom: 32rpx;
+}
+
+.modal-label {
+  font-size: 24rpx;
+  color: #999999;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.modal-wechat-id {
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  text-align: center;
+}
+
+.wechat-id-text {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #07C160;
+  letter-spacing: 4rpx;
+}
+
+.modal-steps {
+  background: #FFF8F5;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.steps-title {
+  font-size: 24rpx;
+  color: #FF6B35;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.step-num {
+  width: 40rpx;
+  height: 40rpx;
+  background: #FF6B35;
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 22rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 40rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 26rpx;
+  color: #555555;
+}
+
+.modal-copy-btn {
+  background: linear-gradient(135deg, #07C160, #0EDB6E);
+  color: #FFFFFF;
+  border-radius: 50rpx;
+  border: none;
+  font-size: 32rpx;
+  font-weight: 700;
+  height: 96rpx;
+  line-height: 96rpx;
+  width: 100%;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(7,193,96,0.3);
+}
+
+.modal-copy-btn::after {
+  border: none;
+}
+
+.modal-phone-btn {
+  background: transparent;
+  color: #4A90E2;
+  border-radius: 50rpx;
+  border: 2rpx solid #4A90E2;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  width: 100%;
+}
+
+.modal-phone-btn::after {
+  border: none;
+}

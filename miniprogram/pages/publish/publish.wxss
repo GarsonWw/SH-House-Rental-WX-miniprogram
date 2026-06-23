@@ -239,6 +239,53 @@
   flex-shrink: 0;
 }
 
+.location-picker {
+  min-height: 88rpx;
+  background: #F8F8F8;
+  border-radius: 12rpx;
+  padding: 18rpx 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.location-picker-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.location-picker-placeholder,
+.location-picker-value {
+  font-size: 28rpx;
+  line-height: 1.4;
+}
+
+.location-picker-placeholder {
+  color: #BBBBBB;
+}
+
+.location-picker-value {
+  color: #333333;
+  font-weight: 600;
+}
+
+.location-picker-sub {
+  font-size: 22rpx;
+  color: #999999;
+  line-height: 1.4;
+  margin-top: 6rpx;
+}
+
+.location-picker-action {
+  flex-shrink: 0;
+  margin-left: 20rpx;
+  color: #FF6B35;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
 /* 选择器 */
 .picker-view {
   height: 88rpx;
@@ -306,6 +353,10 @@
   line-height: 1.6;
 }
 
+.small-textarea {
+  min-height: 120rpx;
+}
+
 .textarea-count {
   font-size: 22rpx;
   color: #BBBBBB;
@@ -332,6 +383,18 @@
 .notice-text {
   font-size: 24rpx;
   color: #FF6B35;
+}
+
+.prefill-landlord-btn {
+  background: #F0F7FF;
+  color: #2B6FD9;
+  border: 2rpx solid #CFE2FF;
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  margin-bottom: 24rpx;
+  text-align: center;
 }
 
 /* 出租状态 */
@@ -557,6 +620,14 @@
   font-size: 24rpx;
   color: #999999;
   display: block;
+  margin-bottom: 6rpx;
+}
+
+.preview-location-detail {
+  font-size: 22rpx;
+  color: #AAAAAA;
+  display: block;
+  line-height: 1.5;
   margin-bottom: 16rpx;
 }
 
@@ -564,6 +635,29 @@
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 16rpx;
+}
+
+.preview-neighborhood-extra {
+  background: #F8FAFF;
+  border-radius: 12rpx;
+  padding: 18rpx;
+  margin-bottom: 16rpx;
+}
+
+.preview-extra-title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #2B6FD9;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.preview-extra-text {
+  font-size: 23rpx;
+  color: #666;
+  line-height: 1.6;
+  display: block;
+  margin-top: 4rpx;
 }
 
 .tag {

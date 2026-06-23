@@ -7,9 +7,31 @@ Page({
     stats: { total: 0, available: 0, rented: 0, totalViews: 0 },
     loading: true,
     filterStatus: 'all',   // 'all' | 'available' | 'rented'
+    roomTypeOptions: ['1室1厅1卫', '2室1厅1卫', '2室2厅1卫', '3室1厅1卫', '3室2厅1卫', '3室2厅2卫', '合租/主卧', '合租/次卧', '整套公寓'],
+    orientationOptions: ['南', '北', '东', '西', '南北', '东南', '东北', '西南', '西北'],
+    decorationOptions: ['毛坯', '简装', '中装', '精装修', '豪装'],
+    tagOptions: ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全'],
     // 编辑弹窗
     showEditModal: false,
-    editForm: { id: '', title: '', price: '', description: '' }
+    editForm: {
+      id: '',
+      title: '',
+      neighborhood: '',
+      district: '',
+      address: '',
+      price: '',
+      roomType: '',
+      area: '',
+      floor: '',
+      orientation: '',
+      decoration: '',
+      description: '',
+      landlordName: '',
+      landlordPhone: '',
+      landlordWechat: '',
+      available: true,
+      tags: []
+    }
   },
 
   onLoad() {
@@ -62,6 +84,8 @@ Page({
     this.setData({ filterStatus: e.currentTarget.dataset.status })
   },
 
+  noop() {},
+
   onPublish() {
     wx.navigateTo({ url: '/pages/publish/publish' })
   },
@@ -104,17 +128,7 @@ Page({
 
   onEditHouse(e) {
     const { id } = e.currentTarget.dataset
-    const house = app.getHouseById(id) || this.data.myHouseList.find(h => h.id === id)
-    if (!house) return
-    this.setData({
-      showEditModal: true,
-      editForm: {
-        id: house.id,
-        title: house.title || '',
-        price: String(house.price || ''),
-        description: house.description || ''
-      }
-    })
+    wx.navigateTo({ url: `/pages/publish/publish?id=${id}` })
   },
 
   onEditInput(e) {
@@ -122,13 +136,77 @@ Page({
     this.setData({ [`editForm.${field}`]: e.detail.value })
   },
 
+  onEditPickerChange(e) {
+    const { field, options } = e.currentTarget.dataset
+    const idx = e.detail.value
+    const value = this.data[options][idx]
+    this.setData({ [`editForm.${field}`]: value })
+  },
+
+  onEditStatusChange(e) {
+    const available = e.currentTarget.dataset.available === 'true'
+    this.setData({ 'editForm.available': available })
+  },
+
+  onPrefillEditLandlordInfo() {
+    this.setData({
+      'editForm.landlordName': '孙先生',
+      'editForm.landlordPhone': '13520174107',
+      'editForm.landlordWechat': 'weixin123'
+    })
+    wx.showToast({ title: '已填充房东信息', icon: 'success' })
+  },
+
+  onEditTagToggle(e) {
+    const { tag } = e.currentTarget.dataset
+    const tags = [...(this.data.editForm.tags || [])]
+    const idx = tags.indexOf(tag)
+    if (idx > -1) {
+      tags.splice(idx, 1)
+    } else {
+      if (tags.length >= 5) {
+        wx.showToast({ title: '最多选5个标签', icon: 'none' })
+        return
+      }
+      tags.push(tag)
+    }
+    this.setData({ 'editForm.tags': tags })
+  },
+
   onEditConfirm() {
-    const { id, title, price, description } = this.data.editForm
+    const {
+      id, title, neighborhood, district, address, price, roomType, area, floor,
+      orientation, decoration, description, landlordName, landlordPhone,
+      landlordWechat, available, tags
+    } = this.data.editForm
     if (!title.trim()) { wx.showToast({ title: '标题不能为空', icon: 'none' }); return }
+    if (!neighborhood.trim()) { wx.showToast({ title: '小区名称不能为空', icon: 'none' }); return }
     if (!price || isNaN(price) || Number(price) <= 0) { wx.showToast({ title: '请填写正确的价格', icon: 'none' }); return }
+    if (!roomType) { wx.showToast({ title: '请选择房型', icon: 'none' }); return }
+    if (!area || isNaN(area) || Number(area) <= 0) { wx.showToast({ title: '请填写正确的面积', icon: 'none' }); return }
+    if (!landlordName.trim()) { wx.showToast({ title: '请填写房东姓名', icon: 'none' }); return }
+    if (!landlordPhone.trim()) { wx.showToast({ title: '请填写联系电话', icon: 'none' }); return }
+    if (!landlordWechat.trim()) { wx.showToast({ title: '请填写微信号', icon: 'none' }); return }
 
     wx.showLoading({ title: '保存中...' })
-    app.updateHouse(id, { title: title.trim(), price: Number(price), description: description.trim() }, err => {
+    app.updateHouse(id, {
+      title: title.trim(),
+      neighborhood: neighborhood.trim(),
+      district: district.trim(),
+      address: address.trim(),
+      price: Number(price),
+      roomType,
+      area: Number(area),
+      floor: floor.trim(),
+      orientation,
+      decoration,
+      description: description.trim(),
+      landlordName: landlordName.trim(),
+      landlordPhone: landlordPhone.trim(),
+      landlordWechat: landlordWechat.trim(),
+      available,
+      tags: tags || []
+    }, err => {
       wx.hideLoading()
       if (err) { wx.showToast({ title: '保存失败，请重试', icon: 'none' }); return }
       this.setData({ showEditModal: false })

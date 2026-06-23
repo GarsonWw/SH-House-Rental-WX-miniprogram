@@ -21,12 +21,18 @@ Page({
 
     // 房东入口弹窗
     showCodeModal: false,
-    codeInput: ''
+    codeInput: '',
+
+    // 资料编辑弹窗
+    showProfileModal: false,
+    profileForm: { nickName: '', avatarUrl: '' }
   },
 
   onShow() {
     this.refreshState()
   },
+
+  noop() {},
 
   refreshState() {
     const openid    = app.globalData.openid
@@ -92,16 +98,19 @@ Page({
       })
     }, 8000)
 
-    app.onLoginReady(openid => {
+    app.retryLogin((openid, err) => {
       clearTimeout(timer)
       wx.hideLoading()
       if (openid) {
         this.refreshState()
         wx.showToast({ title: '登录成功 ✓', icon: 'success' })
       } else {
+        const detail = app.getCloudErrorMessage
+          ? app.getCloudErrorMessage(err, '未获取到 openid')
+          : (err && (err.errMsg || err.message)) || '未获取到 openid'
         wx.showModal({
           title: '登录失败',
-          content: '请先在微信开发者工具中部署 login 云函数\n（右键 cloudfunctions/login → 上传并部署）',
+          content: `login 云函数调用失败。\n\n请确认：\n1. 云环境 ID 是 cloud1-d5gtn67zydd66b8de\n2. 云函数名称是 login\n3. 部署后已清缓存并重新预览\n\n错误详情：${detail}`,
           showCancel: false, confirmText: '知道了'
         })
       }
@@ -109,17 +118,41 @@ Page({
   },
 
   onSetProfile() {
-    wx.getUserProfile({
-      desc: '用于展示您的个人信息',
-      success: res => {
-        app.setUserProfile(res.userInfo)
-        this.setData({ userProfile: res.userInfo })
-        wx.showToast({ title: '设置成功', icon: 'success' })
-      },
-      fail: () => {
-        wx.showToast({ title: '已取消', icon: 'none' })
+    const profile = app.globalData.userProfile || {}
+    this.setData({
+      showProfileModal: true,
+      profileForm: {
+        nickName: profile.nickName || '',
+        avatarUrl: profile.avatarUrl || ''
       }
     })
+  },
+
+  onProfileNameInput(e) {
+    this.setData({ 'profileForm.nickName': e.detail.value })
+  },
+
+  onChooseAvatar(e) {
+    this.setData({ 'profileForm.avatarUrl': e.detail.avatarUrl })
+  },
+
+  onProfileCancel() {
+    this.setData({ showProfileModal: false })
+  },
+
+  onProfileConfirm() {
+    const nickName = this.data.profileForm.nickName.trim()
+    if (!nickName) {
+      wx.showToast({ title: '请输入昵称', icon: 'none' })
+      return
+    }
+    const profile = {
+      nickName,
+      avatarUrl: this.data.profileForm.avatarUrl
+    }
+    app.setUserProfile(profile)
+    this.setData({ userProfile: profile, showProfileModal: false })
+    wx.showToast({ title: '设置成功', icon: 'success' })
   },
 
   // ── 功能导航 ─────────────────────────────────────
@@ -172,7 +205,7 @@ Page({
   onAbout() {
     wx.showModal({
       title: '关于',
-      content: '租房直联 · 找好房\n版本 2.0.0（云开发版）\n\n直连房东，0中介费\n数据实时同步云端',
+      content: '深港租房双城通\n版本 2.0.0（云开发版）\n\n直连房东，0中介费\n数据实时同步云端',
       showCancel: false, confirmText: '知道了'
     })
   }

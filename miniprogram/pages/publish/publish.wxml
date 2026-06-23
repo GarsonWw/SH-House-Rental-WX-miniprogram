@@ -45,7 +45,7 @@
     <!-- 视频上传 -->
     <view class="form-card">
       <view class="video-title-row">
-        <text class="form-section-title">🎬 带看视频（可选，15秒以内）</text>
+        <text class="form-section-title">🎬 带看视频（可选，60秒以内）</text>
         <text class="video-tip">1个视频</text>
       </view>
 
@@ -69,7 +69,7 @@
       <view class="add-video-btn" bindtap="onChooseVideo" wx:else>
         <text class="add-video-icon">▶</text>
         <text class="add-video-text">拍摄 / 选择视频</text>
-        <text class="add-video-hint">限15秒，建议横拍</text>
+        <text class="add-video-hint">限60秒，建议横拍</text>
       </view>
     </view>
 
@@ -108,6 +108,47 @@
           bindinput="onInput"
           data-field="address"
         />
+      </view>
+
+      <view class="form-item required">
+        <text class="form-label">地图位置</text>
+        <view class="location-picker" bindtap="onChooseLocation">
+          <view class="location-picker-main">
+            <text class="{{form.latitude && form.longitude ? 'location-picker-value' : 'location-picker-placeholder'}}">
+              {{form.locationName || (form.latitude && form.longitude ? '已选择小区位置' : '点击选择小区地图位置')}}
+            </text>
+            <text class="location-picker-sub" wx:if="{{form.address}}">{{form.address}}</text>
+          </view>
+          <text class="location-picker-action">选择</text>
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">小区备注（首页小区下方展示）</text>
+        <textarea
+          class="form-textarea small-textarea"
+          placeholder="如：罗湖成熟社区，近地铁，生活配套齐全"
+          maxlength="200"
+          value="{{form.neighborhoodNote}}"
+          bindinput="onInput"
+          data-field="neighborhoodNote"
+          auto-height
+        />
+        <text class="textarea-count">{{form.neighborhoodNote.length}}/200</text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">小区点评（首页展开点评展示）</text>
+        <textarea
+          class="form-textarea"
+          placeholder="写一段给租客看的点评，如通勤、生活便利度、适合人群等"
+          maxlength="500"
+          value="{{form.neighborhoodReview}}"
+          bindinput="onInput"
+          data-field="neighborhoodReview"
+          auto-height
+        />
+        <text class="textarea-count">{{form.neighborhoodReview.length}}/500</text>
       </view>
 
       <view class="form-item required">
@@ -244,6 +285,10 @@
         <text class="notice-text">联系方式仅对感兴趣的租客可见，用于直接沟通</text>
       </view>
 
+      <view class="prefill-landlord-btn" bindtap="onPrefillLandlordInfo">
+        一键填充：孙先生 · 13520174107 · weixin123
+      </view>
+
       <view class="form-item required">
         <text class="form-label">您的姓名</text>
         <input
@@ -303,15 +348,15 @@
 
     <view class="step-buttons">
       <button class="prev-btn" bindtap="onPrevStep">上一步</button>
-      <button class="next-btn flex1" bindtap="onNextStep">下一步：预览</button>
+      <button class="next-btn flex1" bindtap="onNextStep">{{isEditMode ? '下一步：保存预览' : '下一步：预览'}}</button>
     </view>
   </view>
 
   <!-- Step 3: 预览确认 -->
   <view wx:if="{{currentStep === 3}}" class="form-section">
     <view class="preview-header">
-      <text class="preview-title">📋 发布预览</text>
-      <text class="preview-sub">确认信息无误后发布</text>
+      <text class="preview-title">📋 {{isEditMode ? '编辑预览' : '发布预览'}}</text>
+      <text class="preview-sub">{{isEditMode ? '确认信息无误后保存修改' : '确认信息无误后发布'}}</text>
     </view>
 
     <!-- 预览卡片 -->
@@ -360,10 +405,19 @@
 
         <!-- 位置 -->
         <text class="preview-location">📍 {{form.neighborhood}} {{form.district}}</text>
+        <text class="preview-location-detail" wx:if="{{form.locationName || form.address}}">
+          {{form.locationName || ''}} {{form.address || ''}}
+        </text>
 
         <!-- 标签 -->
         <view class="preview-tags" wx:if="{{form.tags.length > 0}}">
           <text class="tag" wx:for="{{form.tags}}" wx:key="index">{{item}}</text>
+        </view>
+
+        <view class="preview-neighborhood-extra" wx:if="{{form.neighborhoodNote || form.neighborhoodReview}}">
+          <text class="preview-extra-title">小区展示信息</text>
+          <text class="preview-extra-text" wx:if="{{form.neighborhoodNote}}">备注：{{form.neighborhoodNote}}</text>
+          <text class="preview-extra-text" wx:if="{{form.neighborhoodReview}}">点评：{{form.neighborhoodReview}}</text>
         </view>
 
         <view class="preview-divider"></view>
@@ -392,7 +446,7 @@
         bindtap="onSubmit"
         loading="{{submitting}}"
         disabled="{{submitting}}"
-      >🚀 立即发布</button>
+      >{{isEditMode ? '保存修改' : '🚀 立即发布'}}</button>
     </view>
   </view>
 

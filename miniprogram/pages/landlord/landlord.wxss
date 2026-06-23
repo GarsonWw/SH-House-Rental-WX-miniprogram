@@ -122,17 +122,69 @@
   padding: 40rpx 32rpx 60rpx; width: 100%;
 }
 .edit-title { font-size: 34rpx; font-weight: 800; color: #1A1A1A; display: block; margin-bottom: 32rpx; }
+.edit-scroll { max-height: 70vh; }
+.edit-section-title {
+  font-size: 24rpx; font-weight: 800; color: #1A3A5C;
+  margin: 8rpx 0 20rpx; padding-left: 14rpx;
+  border-left: 6rpx solid #2B6FD9;
+}
 .edit-field { margin-bottom: 24rpx; }
 .edit-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 10rpx; }
+.edit-grid {
+  display: flex; gap: 18rpx;
+}
+.edit-grid-item {
+  flex: 1;
+}
 .edit-input {
   width: 100%; background: #F5F6FA; border-radius: 12rpx;
   padding: 20rpx; font-size: 28rpx; color: #222;
   border: 2rpx solid #EBEBEB; box-sizing: border-box;
 }
+.edit-picker {
+  height: 82rpx; background: #F5F6FA; border-radius: 12rpx;
+  padding: 0 20rpx; border: 2rpx solid #EBEBEB;
+  display: flex; align-items: center; justify-content: space-between;
+  box-sizing: border-box;
+}
+.edit-picker-value { font-size: 28rpx; color: #222; }
+.edit-picker-placeholder { font-size: 28rpx; color: #BBB; }
+.edit-picker-arrow { font-size: 36rpx; color: #BBB; }
 .edit-textarea {
   width: 100%; background: #F5F6FA; border-radius: 12rpx;
   padding: 20rpx; font-size: 26rpx; color: #222; height: 160rpx;
   border: 2rpx solid #EBEBEB; box-sizing: border-box;
+}
+.edit-prefill-btn {
+  background: #F0F7FF; color: #2B6FD9;
+  border: 2rpx solid #CFE2FF; border-radius: 12rpx;
+  padding: 18rpx 20rpx; font-size: 24rpx;
+  font-weight: 600; margin-bottom: 24rpx; text-align: center;
+}
+.edit-status-row {
+  display: flex; margin-bottom: 24rpx;
+}
+.edit-status {
+  padding: 14rpx 42rpx; border-radius: 999rpx;
+  background: #F5F6FA; color: #888; font-size: 26rpx;
+  border: 2rpx solid #E8E8E8; margin-right: 18rpx;
+}
+.edit-status-active {
+  color: #2ECC71; background: #EEFFF5; border-color: #2ECC71; font-weight: 700;
+}
+.edit-status-rented {
+  color: #999; background: #F5F5F5; border-color: #BBB; font-weight: 700;
+}
+.edit-tags {
+  display: flex; flex-wrap: wrap; gap: 14rpx;
+}
+.edit-tag {
+  font-size: 24rpx; color: #666;
+  padding: 12rpx 20rpx; border-radius: 999rpx;
+  background: #F5F6FA; border: 2rpx solid #E8E8E8;
+}
+.edit-tag-active {
+  color: #FFF; background: #2B6FD9; border-color: #2B6FD9;
 }
 .edit-btns { display: flex; margin-top: 32rpx; }
 .edit-cancel {

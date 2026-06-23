@@ -51,6 +51,9 @@ Page({
     activeDim: '区域',
     districtList: [],
     selectedDistrict: '全部',
+    overviewFilterOptions: [],
+    overviewSelectedRoomType: '不限',
+    overviewSelectedPriceIdx: 0,
     neighborhoodSections: [],
 
     // 智能匹配
@@ -79,10 +82,11 @@ Page({
     }
     const districts = ['全部', ...new Set(houseList.map(h => h.district).filter(Boolean))]
     const matchDistricts = ['不限', ...new Set(houseList.map(h => h.district).filter(Boolean))]
-    const sections = this.buildSections(houseList, this.data.selectedDistrict)
+    const sections = this.buildSections(houseList)
     this.setData({
       platformStats: stats,
       districtList: districts,
+      overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim, districts),
       matchDistrictList: matchDistricts,
       neighborhoodSections: sections
     })
@@ -92,18 +96,48 @@ Page({
     }
   },
 
-  buildSections(houseList, districtFilter) {
+  getOverviewFilterOptions(dim, districts = this.data.districtList) {
+    const { selectedDistrict, overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
+    if (dim === '区域') {
+      return districts.map((label, idx) => ({ label, idx, active: selectedDistrict === label }))
+    }
+    if (dim === '房型') {
+      return ROOM_TYPES.map((label, idx) => ({ label, idx, active: overviewSelectedRoomType === label }))
+    }
+    return PRICE_RANGES.map((r, idx) => ({ label: r.label, idx, active: overviewSelectedPriceIdx === idx }))
+  },
+
+  matchRoomType(h, selectedRoomType) {
+    if (selectedRoomType === '不限') return true
+    if (selectedRoomType === '整租' || selectedRoomType === '合租') {
+      if (h.rentType && h.rentType === selectedRoomType) return true
+      const combined = (h.roomType || '') + (h.title || '')
+      return combined.includes(selectedRoomType)
+    }
+    return (h.roomType || '').includes(selectedRoomType.replace('+', ''))
+  },
+
+  buildSections(houseList) {
+    const { selectedDistrict, overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
+    const range = PRICE_RANGES[overviewSelectedPriceIdx] || PRICE_RANGES[0]
     const map = {}
     ;(houseList || []).forEach(h => {
-      if (districtFilter && districtFilter !== '全部' && h.district !== districtFilter) return
+      if (selectedDistrict !== '全部' && h.district !== selectedDistrict) return
+      if (h.price < range.min || h.price > range.max) return
+      if (!this.matchRoomType(h, overviewSelectedRoomType)) return
+      const note = h.neighborhoodNote || h.neighborhoodDesc || ''
+      const review = h.neighborhoodReview || ''
       if (!map[h.neighborhood]) {
         const p = NEIGHBORHOOD_PROFILES[h.neighborhood] || DEFAULT_PROFILE
         map[h.neighborhood] = {
           name: h.neighborhood, district: h.district || '',
           icon: p.icon, categoryLabel: p.categoryLabel,
-          badge: p.badge, desc: p.desc, review: p.review,
+          badge: p.badge, desc: note || p.desc, review: review || p.review,
           expanded: false, houses: []
         }
+      } else {
+        if (note) map[h.neighborhood].desc = note
+        if (review) map[h.neighborhood].review = review
       }
       map[h.neighborhood].houses.push(h)
     })
@@ -111,14 +145,31 @@ Page({
   },
 
   // ── 浏览tab ──────────────────────────────────────
-  onDistrictSelect(e) {
-    const district = e.currentTarget.dataset.district
-    const sections = this.buildSections(app.globalData.houseList, district)
-    this.setData({ selectedDistrict: district, neighborhoodSections: sections })
+  onDimSelect(e) {
+    const activeDim = e.currentTarget.dataset.dim
+    this.setData({
+      activeDim,
+      overviewFilterOptions: this.getOverviewFilterOptions(activeDim)
+    })
   },
 
-  onDimSelect(e) {
-    this.setData({ activeDim: e.currentTarget.dataset.dim })
+  onOverviewFilterSelect(e) {
+    const { value } = e.currentTarget.dataset
+    const idx = Number(e.currentTarget.dataset.idx || 0)
+    const data = {}
+    if (this.data.activeDim === '区域') {
+      data.selectedDistrict = value
+    } else if (this.data.activeDim === '房型') {
+      data.overviewSelectedRoomType = value
+    } else {
+      data.overviewSelectedPriceIdx = idx
+    }
+    this.setData(data, () => {
+      this.setData({
+        overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim),
+        neighborhoodSections: this.buildSections(app.globalData.houseList || [])
+      })
+    })
   },
 
   onTabSwitch(e) {
@@ -162,16 +213,7 @@ Page({
       if (h.price < range.min || h.price > range.max) return false
       if (selectedRoomType !== '不限') {
         // 房型匹配：整租/合租精确，其他按 roomType 包含
-        if (selectedRoomType === '整租' || selectedRoomType === '合租') {
-          if (!h.rentType || h.rentType !== selectedRoomType) {
-            // 也尝试从 title/roomType 中匹配
-            const combined = (h.roomType || '') + (h.title || '')
-            if (!combined.includes(selectedRoomType)) return false
-          }
-        } else {
-          // 一室、两室等按 roomType 字段匹配
-          if (!(h.roomType || '').includes(selectedRoomType.replace('+', ''))) return false
-        }
+        if (!this.matchRoomType(h, selectedRoomType)) return false
       }
       return true
     })

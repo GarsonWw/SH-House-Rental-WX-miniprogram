@@ -7,8 +7,13 @@ Page({
     form: {
       title: '',
       neighborhood: '',
+      neighborhoodNote: '',
+      neighborhoodReview: '',
       district: '',
       address: '',
+      locationName: '',
+      latitude: '',
+      longitude: '',
       price: '',
       roomType: '',
       area: '',
@@ -22,7 +27,7 @@ Page({
       available: true,
       tags: [],
       images: [],
-      videos: []     // 最多1个，15秒以内
+      videos: []     // 最多1个，60秒以内
     },
     roomTypeOptions: ['1室1厅1卫', '2室1厅1卫', '2室2厅1卫', '3室1厅1卫', '3室2厅1卫', '3室2厅2卫', '合租/主卧', '合租/次卧', '整套公寓'],
     orientationOptions: ['南', '北', '东', '西', '南北', '东南', '东北', '西南', '西北'],
@@ -30,13 +35,20 @@ Page({
     tagOptions: ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全'],
     selectedTags: [],
     submitting: false,
+    isEditMode: false,
+    editHouseId: '',
     currentStep: 1, // 1:基本信息 2:房东信息 3:预览确认
     showRoomTypePicker: false,
     showOrientationPicker: false,
     showDecorationPicker: false
   },
 
-  onLoad() {
+  onLoad(options = {}) {
+    if (options.id) {
+      this.loadEditHouse(options.id)
+      return
+    }
+
     // 获取用户信息填充默认姓名
     const userInfo = app.globalData.userInfo
     if (userInfo) {
@@ -44,10 +56,73 @@ Page({
     }
   },
 
+  loadEditHouse(id) {
+    wx.setNavigationBarTitle({ title: '编辑房源' })
+    const setEditForm = (house) => {
+      const tags = Array.isArray(house.tags) ? [...house.tags] : []
+      this.setData({
+        isEditMode: true,
+        editHouseId: id,
+        selectedTags: tags,
+        form: {
+          title: house.title || '',
+          neighborhood: house.neighborhood || '',
+          neighborhoodNote: house.neighborhoodNote || house.neighborhoodDesc || '',
+          neighborhoodReview: house.neighborhoodReview || '',
+          district: house.district || '',
+          address: house.address || '',
+          locationName: house.locationName || '',
+          latitude: house.latitude || '',
+          longitude: house.longitude || '',
+          price: String(house.price || ''),
+          roomType: house.roomType || '',
+          area: String(house.area || ''),
+          floor: house.floor || '',
+          orientation: house.orientation || '',
+          decoration: house.decoration || '',
+          description: house.description || '',
+          landlordName: house.landlordName || '',
+          landlordPhone: house.landlordPhone || '',
+          landlordWechat: house.landlordWechat || '',
+          available: house.available !== false,
+          tags,
+          images: Array.isArray(house.images) ? [...house.images] : [],
+          videos: Array.isArray(house.videos) ? [...house.videos] : [],
+          videoCover: house.videoCover || ''
+        }
+      })
+    }
+
+    const cached = app.getHouseById(id)
+    if (cached) {
+      setEditForm(cached)
+      return
+    }
+
+    const db = wx.cloud.database()
+    wx.showLoading({ title: '加载房源...' })
+    db.collection('houses').doc(id).get()
+      .then(res => {
+        wx.hideLoading()
+        setEditForm({ ...res.data, id: res.data._id })
+      })
+      .catch(err => {
+        wx.hideLoading()
+        this.showCloudError('加载失败', err, '无法获取房源详情，请稍后重试。')
+        setTimeout(() => wx.navigateBack(), 1200)
+      })
+  },
+
   // 表单输入处理
   onInput(e) {
     const { field } = e.currentTarget.dataset
-    const value = e.detail.value
+    const value = Object.prototype.hasOwnProperty.call(e.currentTarget.dataset, 'value')
+      ? e.currentTarget.dataset.value === 'true'
+        ? true
+        : e.currentTarget.dataset.value === 'false'
+          ? false
+          : e.currentTarget.dataset.value
+      : e.detail.value
     this.setData({ [`form.${field}`]: value })
   },
 
@@ -94,6 +169,42 @@ Page({
         const newImages = res.tempFiles.map(f => f.tempFilePath)
         const images = [...this.data.form.images, ...newImages]
         this.setData({ 'form.images': images })
+      },
+      fail: err => {
+        console.error('[Publish] 选择图片失败', err)
+        wx.showToast({ title: '选择图片失败', icon: 'none' })
+      }
+    })
+  },
+
+  onChooseLocation() {
+    const form = this.data.form
+    const latitude = Number(form.latitude) || 22.5550
+    const longitude = Number(form.longitude) || 114.1200
+
+    wx.chooseLocation({
+      latitude,
+      longitude,
+      success: res => {
+        const nextData = {
+          'form.locationName': res.name || '',
+          'form.latitude': res.latitude,
+          'form.longitude': res.longitude
+        }
+
+        if (!form.neighborhood.trim() && res.name) {
+          nextData['form.neighborhood'] = res.name
+        }
+        if (!form.address.trim() && res.address) {
+          nextData['form.address'] = res.address
+        }
+
+        this.setData(nextData)
+        wx.showToast({ title: '位置已选择', icon: 'success' })
+      },
+      fail: err => {
+        if (err && err.errMsg && err.errMsg.includes('cancel')) return
+        wx.showToast({ title: '选择位置失败', icon: 'none' })
       }
     })
   },
@@ -114,12 +225,12 @@ Page({
       count: 1,
       mediaType: ['video'],
       sourceType: ['album', 'camera'],
-      maxDuration: 15,
+      maxDuration: 60,
       camera: 'back',
       success: res => {
         const file = res.tempFiles[0]
-        if (file.duration > 15) {
-          wx.showToast({ title: '视频不能超过15秒', icon: 'none', duration: 2000 })
+        if (file.duration > 60) {
+          wx.showToast({ title: '视频不能超过60秒', icon: 'none', duration: 2000 })
           return
         }
         this.setData({
@@ -132,6 +243,15 @@ Page({
 
   onDeleteVideo() {
     this.setData({ 'form.videos': [], 'form.videoCover': '' })
+  },
+
+  onPrefillLandlordInfo() {
+    this.setData({
+      'form.landlordName': '孙先生',
+      'form.landlordPhone': '13520174107',
+      'form.landlordWechat': 'weixin123'
+    })
+    wx.showToast({ title: '已填充房东信息', icon: 'success' })
   },
 
   // 步骤切换
@@ -151,6 +271,10 @@ Page({
     const { form } = this.data
     if (!form.neighborhood.trim()) {
       wx.showToast({ title: '请填写小区名称', icon: 'none' })
+      return false
+    }
+    if (!form.latitude || !form.longitude) {
+      wx.showToast({ title: '请在地图中选择小区位置', icon: 'none' })
       return false
     }
     if (!form.price || isNaN(form.price) || Number(form.price) <= 0) {
@@ -213,7 +337,7 @@ Page({
       if (imgErr) {
         wx.hideLoading()
         this.setData({ submitting: false })
-        wx.showToast({ title: '图片上传失败，请重试', icon: 'none', duration: 2500 })
+        this.showCloudError('图片上传失败', imgErr, '请确认云开发环境、云存储权限已开启。')
         return
       }
 
@@ -223,18 +347,47 @@ Page({
         if (vidErr) {
           wx.hideLoading()
           this.setData({ submitting: false })
-          wx.showToast({ title: '视频上传失败，请重试', icon: 'none', duration: 2500 })
+          this.showCloudError('视频上传失败', vidErr, '请确认云开发环境、云存储权限已开启。')
           return
         }
 
-        wx.showLoading({ title: '发布中...' })
+        wx.showLoading({ title: this.data.isEditMode ? '保存中...' : '发布中...' })
 
         const houseData = {
           ...form,
           images: [...cloudImages, ...imgIDs],
           videos: [...cloudVideos, ...vidIDs],
           price: Number(form.price),
-          area: Number(form.area)
+          area: Number(form.area),
+          latitude: Number(form.latitude),
+          longitude: Number(form.longitude)
+        }
+
+        if (this.data.isEditMode) {
+          app.updateHouse(this.data.editHouseId, houseData, err => {
+            wx.hideLoading()
+            this.setData({ submitting: false })
+
+            if (err) {
+              this.showCloudError('保存失败', err, '请确认 houses 数据库集合允许当前用户写入。')
+              return
+            }
+
+            wx.showModal({
+              title: '保存成功',
+              content: '房源信息已更新。',
+              confirmText: '查看房源',
+              cancelText: '返回管理',
+              success: res => {
+                if (res.confirm) {
+                  wx.redirectTo({ url: `/pages/detail/detail?id=${this.data.editHouseId}` })
+                } else {
+                  wx.navigateBack()
+                }
+              }
+            })
+          })
+          return
         }
 
         app.addHouse(houseData, (newHouse, err) => {
@@ -242,7 +395,7 @@ Page({
           this.setData({ submitting: false })
 
           if (err) {
-            wx.showToast({ title: '发布失败，请检查网络', icon: 'none', duration: 2500 })
+            this.showCloudError('发布失败', err, '请确认 houses 数据库集合已创建，并允许当前用户写入。')
             return
           }
 
@@ -259,7 +412,19 @@ Page({
             }
           })
         })
-      })
+      }, 'house-videos')
+    })
+  },
+
+  showCloudError(title, err, hint) {
+    const detail = app.getCloudErrorMessage
+      ? app.getCloudErrorMessage(err, title)
+      : (err && (err.errMsg || err.message)) || title
+    wx.showModal({
+      title,
+      content: `${hint}\n\n错误详情：${detail}`,
+      showCancel: false,
+      confirmText: '知道了'
     })
   },
 
@@ -268,8 +433,13 @@ Page({
       form: {
         title: '',
         neighborhood: '',
+        neighborhoodNote: '',
+        neighborhoodReview: '',
         district: '',
         address: '',
+        locationName: '',
+        latitude: '',
+        longitude: '',
         price: '',
         roomType: '',
         area: '',

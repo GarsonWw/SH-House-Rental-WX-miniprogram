@@ -13,7 +13,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FF6B35",
-    "navigationBarTitleText": "租房找房",
+    "navigationBarTitleText": "深港租房双城通",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#F5F5F5"
   },
@@ -51,6 +51,15 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于选择房源所在小区位置并在地图中展示"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation",
+    "getLocation"
+  ],
   "usingComponents": {
     "house-card": "/components/house-card/house-card",
     "search-bar": "/components/search-bar/search-bar"

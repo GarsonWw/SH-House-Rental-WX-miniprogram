@@ -122,20 +122,125 @@
   <view class="edit-box" catchtap="noop">
     <text class="edit-title">编辑房源信息</text>
 
-    <view class="edit-field">
-      <text class="edit-label">标题</text>
-      <input class="edit-input" value="{{editForm.title}}" bindinput="onEditInput" data-field="title" placeholder="房源标题" />
-    </view>
+    <scroll-view scroll-y class="edit-scroll">
+      <view class="edit-section-title">基础信息</view>
+      <view class="edit-field">
+        <text class="edit-label">标题</text>
+        <input class="edit-input" value="{{editForm.title}}" bindinput="onEditInput" data-field="title" placeholder="房源标题" />
+      </view>
 
-    <view class="edit-field">
-      <text class="edit-label">月租金（元）</text>
-      <input class="edit-input" value="{{editForm.price}}" bindinput="onEditInput" data-field="price" placeholder="月租金" type="digit" />
-    </view>
+      <view class="edit-field">
+        <text class="edit-label">小区名称</text>
+        <input class="edit-input" value="{{editForm.neighborhood}}" bindinput="onEditInput" data-field="neighborhood" placeholder="小区名称" />
+      </view>
 
-    <view class="edit-field">
-      <text class="edit-label">房源描述</text>
-      <textarea class="edit-textarea" value="{{editForm.description}}" bindinput="onEditInput" data-field="description" placeholder="补充描述（可选）" />
-    </view>
+      <view class="edit-field">
+        <text class="edit-label">所在区域</text>
+        <input class="edit-input" value="{{editForm.district}}" bindinput="onEditInput" data-field="district" placeholder="如：罗湖区" />
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">详细地址</text>
+        <input class="edit-input" value="{{editForm.address}}" bindinput="onEditInput" data-field="address" placeholder="楼栋门牌号" />
+      </view>
+
+      <view class="edit-grid">
+        <view class="edit-field edit-grid-item">
+          <text class="edit-label">月租金（元）</text>
+          <input class="edit-input" value="{{editForm.price}}" bindinput="onEditInput" data-field="price" placeholder="月租金" type="digit" />
+        </view>
+        <view class="edit-field edit-grid-item">
+          <text class="edit-label">面积（㎡）</text>
+          <input class="edit-input" value="{{editForm.area}}" bindinput="onEditInput" data-field="area" placeholder="面积" type="digit" />
+        </view>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">房型</text>
+        <picker range="{{roomTypeOptions}}" bindchange="onEditPickerChange" data-field="roomType" data-options="roomTypeOptions">
+          <view class="edit-picker">
+            <text class="{{editForm.roomType ? 'edit-picker-value' : 'edit-picker-placeholder'}}">{{editForm.roomType || '请选择房型'}}</text>
+            <text class="edit-picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="edit-grid">
+        <view class="edit-field edit-grid-item">
+          <text class="edit-label">楼层</text>
+          <input class="edit-input" value="{{editForm.floor}}" bindinput="onEditInput" data-field="floor" placeholder="如：8/18层" />
+        </view>
+        <view class="edit-field edit-grid-item">
+          <text class="edit-label">朝向</text>
+          <picker range="{{orientationOptions}}" bindchange="onEditPickerChange" data-field="orientation" data-options="orientationOptions">
+            <view class="edit-picker">
+              <text class="{{editForm.orientation ? 'edit-picker-value' : 'edit-picker-placeholder'}}">{{editForm.orientation || '请选择'}}</text>
+              <text class="edit-picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">装修</text>
+        <picker range="{{decorationOptions}}" bindchange="onEditPickerChange" data-field="decoration" data-options="decorationOptions">
+          <view class="edit-picker">
+            <text class="{{editForm.decoration ? 'edit-picker-value' : 'edit-picker-placeholder'}}">{{editForm.decoration || '请选择装修情况'}}</text>
+            <text class="edit-picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">房源描述</text>
+        <textarea class="edit-textarea" value="{{editForm.description}}" bindinput="onEditInput" data-field="description" placeholder="补充描述（可选）" />
+      </view>
+
+      <view class="edit-section-title">房东联系方式</view>
+      <view class="edit-prefill-btn" bindtap="onPrefillEditLandlordInfo">一键填充：孙先生 · 13520174107 · weixin123</view>
+
+      <view class="edit-field">
+        <text class="edit-label">房东姓名</text>
+        <input class="edit-input" value="{{editForm.landlordName}}" bindinput="onEditInput" data-field="landlordName" placeholder="房东姓名" />
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">联系电话</text>
+        <input class="edit-input" value="{{editForm.landlordPhone}}" bindinput="onEditInput" data-field="landlordPhone" placeholder="联系电话" type="number" maxlength="11" />
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">微信号</text>
+        <input class="edit-input" value="{{editForm.landlordWechat}}" bindinput="onEditInput" data-field="landlordWechat" placeholder="微信号" />
+      </view>
+
+      <view class="edit-section-title">状态与标签</view>
+      <view class="edit-status-row">
+        <view
+          class="edit-status {{editForm.available ? 'edit-status-active' : ''}}"
+          bindtap="onEditStatusChange"
+          data-available="true"
+        >可租</view>
+        <view
+          class="edit-status {{!editForm.available ? 'edit-status-rented' : ''}}"
+          bindtap="onEditStatusChange"
+          data-available="false"
+        >已租</view>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">房源标签（最多5个）</text>
+        <view class="edit-tags">
+          <view
+            class="edit-tag {{editForm.tags.indexOf(item) > -1 ? 'edit-tag-active' : ''}}"
+            wx:for="{{tagOptions}}"
+            wx:key="index"
+            bindtap="onEditTagToggle"
+            data-tag="{{item}}"
+          >{{item}}</view>
+        </view>
+      </view>
+    </scroll-view>
 
     <view class="edit-btns">
       <view class="edit-cancel" bindtap="onEditCancel">取消</view>

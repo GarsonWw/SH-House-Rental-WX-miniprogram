@@ -19,9 +19,9 @@
       <view class="platform-avatar"><text>🏠</text></view>
       <view class="platform-info">
         <view class="platform-name-row">
-          <text class="platform-name">租房直联</text>
+          <text class="platform-name">深港租房双城通</text>
           <text class="platform-divider">|</text>
-          <text class="platform-tagline">找好房</text>
+          <text class="platform-tagline">深港找房</text>
         </view>
         <text class="platform-meta">深圳罗湖直租平台 · 房源实测中</text>
         <text class="platform-desc">致力于实现租房信息透明化，直连房东，0中介费</text>
@@ -61,17 +61,18 @@
       >{{item}}</view>
     </view>
 
-    <!-- ⑤ 区域筛选芯片 -->
+    <!-- ⑤ 筛选芯片 -->
     <scroll-view scroll-x class="chips-scroll">
       <view class="chips-row">
         <view
-          class="chip {{selectedDistrict === item ? 'chip-active' : ''}}"
-          wx:for="{{districtList}}"
+          class="chip {{item.active ? 'chip-active' : ''}}"
+          wx:for="{{overviewFilterOptions}}"
           wx:key="index"
-          bindtap="onDistrictSelect"
-          data-district="{{item}}"
+          bindtap="onOverviewFilterSelect"
+          data-value="{{item.label}}"
+          data-idx="{{item.idx}}"
         >
-          <text>{{item}}</text>
+          <text>{{item.label}}</text>
         </view>
       </view>
     </scroll-view>
@@ -93,7 +94,7 @@
           </view>
           <text class="sb-category">{{item.categoryLabel}} · {{item.district}}</text>
         </view>
-        <view class="sb-link" bindtap="onNeighborhoodTap" data-name="{{item.name}}">
+        <view class="sb-link" catchtap="onNeighborhoodTap" data-name="{{item.name}}">
           <text>查看联系方式</text>
         </view>
       </view>
@@ -135,7 +136,7 @@
             <text class="mini-meta">{{h.roomType}} · {{h.area}}㎡</text>
             <text class="mini-price">{{h.price}}元/月</text>
           </view>
-          <view class="mini-more" bindtap="onNeighborhoodTap" data-name="{{item.name}}">
+          <view class="mini-more" catchtap="onNeighborhoodTap" data-name="{{item.name}}">
             <text class="more-icon">›</text>
             <text class="more-text">查看{{item.name}}全部房源</text>
           </view>

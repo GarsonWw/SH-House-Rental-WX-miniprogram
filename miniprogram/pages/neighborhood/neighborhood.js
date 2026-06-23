@@ -10,12 +10,14 @@ Page({
     houseList: [],
     showHouseList: false,
     districtList: [],
-    selectedDistrict: '全部'
+    selectedDistrict: '全部',
+    pendingNeighborhoodName: ''
   },
 
   onLoad(options) {
     if (options.name) {
       const name = decodeURIComponent(options.name)
+      this.setData({ pendingNeighborhoodName: name })
       app.onHouseListReady(() => {
         this.loadData()
         this.selectNeighborhood(name)
@@ -26,11 +28,17 @@ Page({
   },
 
   onShow() {
-    app.onHouseListReady(() => this.loadData())
+    app.onHouseListReady(() => {
+      this.loadData()
+      const name = this.data.pendingNeighborhoodName || (this.data.selectedNeighborhood && this.data.selectedNeighborhood.name)
+      if (name) {
+        this.selectNeighborhood(name)
+      }
+    })
   },
 
   loadData() {
-    const neighborhoodList = app.globalData.neighborhoodList
+    const neighborhoodList = app.globalData.neighborhoodList || []
     const districts = ['全部', ...new Set(neighborhoodList.map(n => n.district))]
     this.setData({
       neighborhoodList,
@@ -61,12 +69,14 @@ Page({
   },
 
   onSearchInput(e) {
-    this.setData({ searchValue: e.detail.value })
+    const value = typeof e.detail === 'string' ? e.detail : e.detail.value
+    this.setData({ searchValue: value || '' })
     this.filterNeighborhoods()
   },
 
   onSearch(e) {
-    this.setData({ searchValue: e.detail.value })
+    const value = typeof e.detail === 'string' ? e.detail : e.detail.value
+    this.setData({ searchValue: value || '' })
     this.filterNeighborhoods()
   },
 
@@ -95,7 +105,8 @@ Page({
     this.setData({
       showHouseList: false,
       selectedNeighborhood: null,
-      houseList: []
+      houseList: [],
+      pendingNeighborhoodName: ''
     })
   },
 
@@ -112,6 +123,6 @@ Page({
   },
 
   onPublish() {
-    wx.switchTab({ url: '/pages/publish/publish' })
+    wx.navigateTo({ url: '/pages/publish/publish' })
   }
 })

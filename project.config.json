@@ -1,5 +1,5 @@
 {
-  "desc": "微信租房房源信息小程序",
+  "desc": "深港租房双城通微信小程序",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -46,7 +46,7 @@
   "compileType": "miniprogram",
   "libVersion": "3.16.1",
   "appid": "wx743b5a1a6ca09775",
-  "projectname": "租房找房小程序",
+  "projectname": "深港租房双城通",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
@@ -58,5 +58,6 @@
   "packOptions": {
     "ignore": [],
     "include": []
-  }
+  },
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

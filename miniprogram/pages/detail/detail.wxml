@@ -37,9 +37,9 @@
       <view class="status-tag {{house.available ? 'available' : 'rented'}}">
         {{house.available ? '✓ 可租' : '✗ 已租'}}
       </view>
-      <view class="share-btn" bindtap="onShareAppMessage">
+      <button class="share-btn" open-type="share">
         <text>分享</text>
-      </view>
+      </button>
     </view>
   </view>
 
@@ -170,7 +170,7 @@
 
   <!-- 发布时间和浏览量 -->
   <view class="meta-card">
-    <text class="meta-item">📅 发布于 {{house.createTime}}</text>
+    <text class="meta-item">📅 发布于 {{house.displayCreateTime}}</text>
     <text class="meta-item">👁 已有 {{house.viewCount || 0}} 人浏览</text>
   </view>
 
@@ -195,7 +195,7 @@
 
 <!-- 微信号弹窗 -->
 <view class="modal-mask" wx:if="{{showContactModal}}" bindtap="onCloseModal">
-  <view class="modal-content" catchtap="">
+  <view class="modal-content" catchtap="noop">
     <view class="modal-header">
       <text class="modal-title">联系房东</text>
       <text class="modal-close" bindtap="onCloseModal">✕</text>

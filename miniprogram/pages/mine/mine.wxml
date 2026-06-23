@@ -5,7 +5,7 @@
   <view wx:if="{{!isLoggedIn}}" class="login-page">
     <view class="login-hero">
       <text class="login-big-icon">🏠</text>
-      <text class="login-title">租房直联</text>
+      <text class="login-title">深港租房双城通</text>
       <text class="login-sub">登录后使用收藏夹、入学清单等个性化功能</text>
     </view>
     <view class="login-btn" bindtap="onLogin">微信一键登录</view>
@@ -42,7 +42,7 @@
         <view wx:else class="user-avatar-ph"><text>👤</text></view>
         <view class="user-info">
           <text class="user-name">{{userProfile ? userProfile.nickName : '点击设置昵称'}}</text>
-          <text class="user-sub">直联找房 · 0中介费</text>
+          <text class="user-sub">深港找房 · 0中介费</text>
         </view>
       </view>
       <view class="edit-profile" bindtap="onSetProfile">
@@ -114,6 +114,38 @@
   </view>
 
   <view style="height: 60rpx;"></view>
+</view>
+
+<!-- 资料编辑弹窗 -->
+<view class="modal-mask" wx:if="{{showProfileModal}}" bindtap="onProfileCancel">
+  <view class="profile-modal-box" catchtap="noop">
+    <text class="modal-title">编辑个人资料</text>
+    <text class="modal-sub">设置头像和昵称，方便之后识别账号</text>
+
+    <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image
+        wx:if="{{profileForm.avatarUrl}}"
+        src="{{profileForm.avatarUrl}}"
+        class="avatar-picker-img"
+        mode="aspectFill"
+      />
+      <view wx:else class="avatar-picker-ph">👤</view>
+      <text class="avatar-picker-text">选择头像</text>
+    </button>
+
+    <input
+      class="profile-input"
+      type="nickname"
+      placeholder="请输入昵称"
+      value="{{profileForm.nickName}}"
+      bindinput="onProfileNameInput"
+    />
+
+    <view class="modal-btns">
+      <view class="modal-cancel" bindtap="onProfileCancel">取消</view>
+      <view class="modal-confirm" bindtap="onProfileConfirm">保存</view>
+    </view>
+  </view>
 </view>
 
 <!-- 房东访问码弹窗 -->

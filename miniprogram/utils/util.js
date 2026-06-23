@@ -4,6 +4,9 @@
  * 格式化时间
  */
 const formatTime = date => {
+  if (!date) return ''
+  date = normalizeDate(date)
+  if (!date || isNaN(date.getTime())) return ''
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -11,6 +14,18 @@ const formatTime = date => {
   const minute = date.getMinutes()
   const second = date.getSeconds()
   return `${[year, month, day].map(formatNumber).join('/')} ${[hour, minute, second].map(formatNumber).join(':')}`
+}
+
+const normalizeDate = value => {
+  if (!value) return null
+  if (value instanceof Date) return value
+  if (typeof value === 'number' || typeof value === 'string') return new Date(value)
+  if (value.$date) return new Date(value.$date)
+  if (value._date) return new Date(value._date)
+  if (value.seconds) return new Date(value.seconds * 1000)
+  if (value._seconds) return new Date(value._seconds * 1000)
+  if (typeof value.toDate === 'function') return value.toDate()
+  return null
 }
 
 const formatNumber = n => {
@@ -116,6 +131,7 @@ const generateId = () => {
 
 module.exports = {
   formatTime,
+  normalizeDate,
   formatNumber,
   makePhoneCall,
   copyToClipboard,

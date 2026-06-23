@@ -1,6 +1,7 @@
 // app.js
-// ⚠️ 填入你的云开发环境 ID
-const CLOUD_ENV = 'cloud1-d5gtn6t7zydd66b8de'
+// 云开发环境 ID
+const CLOUD_ENV = 'cloud1-d5gtn67zydd66b8de'
+const getCloudConfig = () => CLOUD_ENV ? { env: CLOUD_ENV } : {}
 
 // 房东访问码（可自行修改，用于房东专属页面的入口验证）
 const LANDLORD_CODE = 'swt123'
@@ -17,6 +18,7 @@ App({
     openid: null,
     userProfile: null,       // { nickName, avatarUrl }
     loginReady: false,
+    loginError: null,
     loginCallbacks: [],
 
     // 收藏（云同步）
@@ -31,7 +33,7 @@ App({
       console.error('请使用 2.2.3 或以上的基础库')
       return
     }
-    wx.cloud.init({ env: CLOUD_ENV, traceUser: true })
+    wx.cloud.init({ ...getCloudConfig(), traceUser: true })
 
     // 恢复本地缓存的用户信息（避免每次冷启都等云函数）
     const cachedProfile = wx.getStorageSync('userProfile')
@@ -51,11 +53,15 @@ App({
 
   // ── 登录 ────────────────────────────────────────────────
   silentLogin() {
-    wx.cloud.callFunction({ name: 'login' })
+    wx.cloud.callFunction({
+      name: 'login',
+      config: getCloudConfig()
+    })
       .then(res => {
         const { openid } = res.result
         this.globalData.openid     = openid
         this.globalData.loginReady = true
+        this.globalData.loginError = null
         wx.setStorageSync('openid', openid)
         this._flushLoginCallbacks()
         this._loadFavoriteIds()
@@ -64,6 +70,7 @@ App({
         console.error('[Login] 登录失败', err)
         // 无论成功与否，都标记为就绪，避免回调永远挂起
         this.globalData.loginReady = true
+        this.globalData.loginError = err
         this._flushLoginCallbacks()
         if (this.globalData.openid) {
           this._loadFavoriteIds()
@@ -71,16 +78,23 @@ App({
       })
   },
 
+  retryLogin(cb) {
+    this.globalData.loginReady = false
+    this.globalData.loginError = null
+    if (cb) this.globalData.loginCallbacks.push(cb)
+    this.silentLogin()
+  },
+
   onLoginReady(cb) {
     if (this.globalData.loginReady) {
-      cb(this.globalData.openid)
+      cb(this.globalData.openid, this.globalData.loginError)
     } else {
       this.globalData.loginCallbacks.push(cb)
     }
   },
 
   _flushLoginCallbacks() {
-    this.globalData.loginCallbacks.forEach(cb => cb(this.globalData.openid))
+    this.globalData.loginCallbacks.forEach(cb => cb(this.globalData.openid, this.globalData.loginError))
     this.globalData.loginCallbacks = []
   },
 
@@ -171,7 +185,7 @@ App({
       price: Number(data.price),
       area: Number(data.area),
       viewCount: 0,
-      available: true,
+      available: data.available !== false,
       createTime: db.serverDate()
     }
     db.collection('houses').add({ data: houseData })
@@ -247,22 +261,37 @@ App({
         // 同步更新本地缓存
         const house = this.getHouseById(id)
         if (house) Object.assign(house, data)
+        this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
         if (callback) callback(null)
       })
       .catch(err => { if (callback) callback(err) })
   },
 
-  // ── 图片上传 ────────────────────────────────────────────
-  uploadImages(tempPaths, callback) {
+  getCloudErrorMessage(err, fallback = '云服务请求失败') {
+    if (!err) return fallback
+    return err.errMsg || err.message || JSON.stringify(err)
+  },
+
+  // ── 媒体上传 ────────────────────────────────────────────
+  uploadImages(tempPaths, callback, folder = 'houses') {
     if (!tempPaths || tempPaths.length === 0) { callback([], null); return }
-    Promise.all(tempPaths.map(filePath => {
-      const ext = filePath.split('.').pop() || 'jpg'
-      const cloudPath = `houses/${Date.now()}_${Math.random().toString(36).substr(2, 6)}.${ext}`
-      return wx.cloud.uploadFile({ cloudPath, filePath }).then(r => r.fileID)
+    Promise.all(tempPaths.map((filePath, index) => {
+      const cleanPath = String(filePath || '').split('?')[0]
+      const extMatch = cleanPath.match(/\.([a-zA-Z0-9]+)$/)
+      const ext = extMatch ? extMatch[1] : 'jpg'
+      const cloudPath = `${folder}/${Date.now()}_${index}_${Math.random().toString(36).substr(2, 6)}.${ext}`
+      return wx.cloud.uploadFile({
+        cloudPath,
+        filePath,
+        config: getCloudConfig()
+      }).then(r => r.fileID)
     }))
       .then(ids => callback(ids, null))
-      .catch(err => { console.error('[Cloud] 图片上传失败', err); callback([], err) })
+      .catch(err => {
+        console.error('[Cloud] 媒体上传失败', err)
+        callback([], err)
+      })
   },
 
   // ── 收藏（云同步）──────────────────────────────────────

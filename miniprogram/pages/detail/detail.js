@@ -10,6 +10,13 @@ Page({
     wechatCopied: false
   },
 
+  normalizeHouse(house) {
+    return {
+      ...house,
+      displayCreateTime: util.formatTime(house.createTime) || '刚刚'
+    }
+  },
+
   onLoad(options) {
     if (!options.id) return
     const id = options.id
@@ -17,7 +24,7 @@ Page({
     const tryLoad = () => {
       const house = app.getHouseById(id)
       if (house) {
-        this.setData({ house, isFavorited: app.isFavorited(id) })
+        this.setData({ house: this.normalizeHouse(house), isFavorited: app.isFavorited(id) })
         wx.setNavigationBarTitle({ title: house.neighborhood + ' · 房源详情' })
       } else {
         // 缓存中没有，直接从云 DB 获取单条
@@ -25,7 +32,7 @@ Page({
         db.collection('houses').doc(id).get()
           .then(res => {
             const h = { ...res.data, id: res.data._id }
-            this.setData({ house: h, isFavorited: app.isFavorited(id) })
+            this.setData({ house: this.normalizeHouse(h), isFavorited: app.isFavorited(id) })
             wx.setNavigationBarTitle({ title: h.neighborhood + ' · 房源详情' })
           })
           .catch(() => {
@@ -92,6 +99,8 @@ Page({
   onCloseModal() {
     this.setData({ showContactModal: false })
   },
+
+  noop() {},
 
   // 分享
   onShareAppMessage() {

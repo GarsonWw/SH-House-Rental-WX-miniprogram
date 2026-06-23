@@ -4,9 +4,17 @@ const app = getApp()
 // 各小区近似坐标（深圳罗湖）
 const COORDS = {
   '京基东方都会': { latitude: 22.5433, longitude: 114.1030 },
+  '松园小区':     { latitude: 22.5559, longitude: 114.1078 },
   '深业东岭':     { latitude: 22.5526, longitude: 114.1425 },
   '华润银湖蓝山': { latitude: 22.5735, longitude: 114.0964 },
   '合正锦湖逸园': { latitude: 22.5610, longitude: 114.1266 }
+}
+
+const getHouseCoord = house => {
+  const latitude = Number(house.latitude)
+  const longitude = Number(house.longitude)
+  if (latitude && longitude) return { latitude, longitude }
+  return COORDS[house.neighborhood]
 }
 
 // 右侧快捷图层
@@ -60,7 +68,7 @@ Page({
 
     houseList.forEach(h => {
       if (districtFilter && districtFilter !== '全部' && h.district !== districtFilter) return
-      const coord = COORDS[h.neighborhood]
+      const coord = getHouseCoord(h)
       if (!coord) return
       if (!nbMap[h.neighborhood]) {
         nbMap[h.neighborhood] = {
@@ -175,11 +183,43 @@ Page({
 
   // ── 定位到当前位置 ────────────────────────────────
   onLocate() {
-    wx.showModal({
-      title: '定位功能',
-      content: '地图定位功能需要在小程序后台申请 wx.getLocation 接口权限后方可使用。\n\n当前已显示深圳罗湖片区，可手动拖动地图查找房源。',
-      showCancel: false,
-      confirmText: '知道了'
+    wx.showLoading({ title: '定位中...' })
+    wx.getLocation({
+      type: 'gcj02',
+      isHighAccuracy: true,
+      success: res => {
+        wx.hideLoading()
+        this.setData({
+          mapLat: res.latitude,
+          mapLng: res.longitude,
+          scale: 15,
+          showSheet: false,
+          showDistrictPanel: false
+        })
+        wx.showToast({ title: '已定位到当前位置', icon: 'success' })
+      },
+      fail: err => {
+        wx.hideLoading()
+        const errMsg = err && err.errMsg ? err.errMsg : ''
+        if (errMsg.includes('auth deny') || errMsg.includes('auth denied') || errMsg.includes('authorize')) {
+          wx.showModal({
+            title: '需要位置权限',
+            content: '请允许获取当前位置，用于在地图中查看你附近的房源。',
+            confirmText: '去设置',
+            cancelText: '取消',
+            success: modalRes => {
+              if (modalRes.confirm) wx.openSetting()
+            }
+          })
+          return
+        }
+        wx.showModal({
+          title: '定位失败',
+          content: '暂时无法获取当前位置，请检查手机定位服务和微信位置权限后重试。',
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      }
     })
   },
 
@@ -223,9 +263,14 @@ Page({
   onSearch() {
     const kw = this.data.searchValue.trim()
     if (!kw) return
-    const found = Object.entries(COORDS).find(([name]) => name.includes(kw))
-    if (found) {
-      const [name, coord] = found
+    const house = app.globalData.houseList.find(h => {
+      return (h.neighborhood && h.neighborhood.includes(kw)) ||
+        (h.locationName && h.locationName.includes(kw)) ||
+        (h.address && h.address.includes(kw))
+    })
+    const coord = house ? getHouseCoord(house) : null
+    if (house && coord) {
+      const name = house.neighborhood
       this.setData({ mapLat: coord.latitude, mapLng: coord.longitude, scale: 14 })
       const houses = app.globalData.houseList.filter(h => h.neighborhood === name)
       this.setData({ showSheet: true, sheetNeighborhood: name, sheetHouses: houses })

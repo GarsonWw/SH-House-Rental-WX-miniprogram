@@ -3,7 +3,7 @@
 
 /* 顶部身份卡 */
 .landlord-hero {
-  background: linear-gradient(135deg, #1A3A5C, #2B6FD9);
+  background: linear-gradient(135deg, #1A3A5C, #0F4C75);
   padding: 48rpx 32rpx 40rpx;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -31,18 +31,18 @@
 }
 .stat-box { display: flex; flex-direction: column; align-items: center; }
 .stat-num { font-size: 44rpx; font-weight: 900; color: #222; }
-.stat-num.green  { color: #2ECC71; }
+.stat-num.green  { color: #2E7D5B; }
 .stat-num.gray   { color: #999; }
-.stat-num.orange { color: #FF6B35; }
+.stat-num.orange { color: #B8894D; }
 .stat-lbl { font-size: 20rpx; color: #999; margin-top: 6rpx; }
 .stat-divider { width: 1rpx; background: #F0F0F0; align-self: center; height: 44rpx; }
 
 /* 发布按钮 */
 .publish-btn {
-  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  background: linear-gradient(135deg, #0F2F4A, #1C4966);
   margin: 20rpx 24rpx 0; border-radius: 20rpx;
   padding: 28rpx; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6rpx 20rpx rgba(255,107,53,0.35);
+  box-shadow: 0 6rpx 20rpx rgba(15,47,74,0.24);
 }
 .publish-icon { font-size: 40rpx; color: #FFF; margin-right: 12rpx; font-weight: 200; }
 .publish-text { font-size: 32rpx; font-weight: 700; color: #FFF; }
@@ -58,7 +58,7 @@
   font-size: 26rpx; color: #999;
   border-bottom: 4rpx solid transparent;
 }
-.f-tab-active { color: #1A3A5C; font-weight: 700; border-bottom-color: #2B6FD9; }
+.f-tab-active { color: #1A3A5C; font-weight: 700; border-bottom-color: #0F4C75; }
 
 /* 加载/空 */
 .loading-wrap { padding: 60rpx; text-align: center; }
@@ -85,7 +85,7 @@
   position: absolute; top: 16rpx; left: 16rpx;
   font-size: 20rpx; font-weight: 700; padding: 5rpx 16rpx; border-radius: 50rpx;
 }
-.tag-ok     { background: #2ECC71; color: #FFF; }
+.tag-ok     { background: #2E7D5B; color: #FFF; }
 .tag-rented { background: rgba(0,0,0,0.5); color: #FFF; }
 .views-tag {
   position: absolute; top: 16rpx; right: 16rpx;
@@ -95,21 +95,22 @@
 
 .card-body { padding: 20rpx 24rpx 12rpx; }
 .card-title {
-  font-size: 28rpx; font-weight: 700; color: #1A1A1A;
+  font-size: 28rpx; font-weight: 700; color: #171512;
   display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .card-meta  { font-size: 22rpx; color: #999; display: block; margin-top: 6rpx; }
-.card-price { font-size: 34rpx; font-weight: 800; color: #FF6B35; display: block; margin-top: 8rpx; }
+.card-price { font-size: 34rpx; font-weight: 800; color: #0F2F4A; display: block; margin-top: 8rpx; }
 .price-u    { font-size: 20rpx; font-weight: 400; }
 
 .card-actions {
-  display: flex; padding: 0 20rpx 20rpx; border-top: 1rpx solid #F5F5F5; padding-top: 16rpx;
+  display: flex; flex-wrap: wrap; padding: 0 20rpx 12rpx; border-top: 1rpx solid #F4F1EA; padding-top: 16rpx;
 }
-.act-btn { font-size: 24rpx; padding: 12rpx 22rpx; border-radius: 10rpx; margin-right: 10rpx; }
+.act-btn { font-size: 24rpx; padding: 12rpx 22rpx; border-radius: 10rpx; margin-right: 10rpx; margin-bottom: 10rpx; }
 .act-edit  { background: #FFFBF0; color: #E6920A; }
-.act-rent  { background: #F0F4FF; color: #2B6FD9; }
-.act-open  { background: #F0FFF4; color: #2ECC71; }
-.act-del   { background: #FFF2F2; color: #FF3B30; }
+.act-community { background: #EEF6FF; color: #0F4C75; }
+.act-rent  { background: #EAF1F6; color: #0F4C75; }
+.act-open  { background: #F0FFF4; color: #2E7D5B; }
+.act-del   { background: #F7ECE7; color: #A64B3C; }
 
 /* 编辑弹窗 */
 .edit-mask {
@@ -121,12 +122,12 @@
   background: #FFF; border-radius: 28rpx 28rpx 0 0;
   padding: 40rpx 32rpx 60rpx; width: 100%;
 }
-.edit-title { font-size: 34rpx; font-weight: 800; color: #1A1A1A; display: block; margin-bottom: 32rpx; }
+.edit-title { font-size: 34rpx; font-weight: 800; color: #171512; display: block; margin-bottom: 32rpx; }
 .edit-scroll { max-height: 70vh; }
 .edit-section-title {
   font-size: 24rpx; font-weight: 800; color: #1A3A5C;
   margin: 8rpx 0 20rpx; padding-left: 14rpx;
-  border-left: 6rpx solid #2B6FD9;
+  border-left: 6rpx solid #0F4C75;
 }
 .edit-field { margin-bottom: 24rpx; }
 .edit-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 10rpx; }
@@ -137,13 +138,13 @@
   flex: 1;
 }
 .edit-input {
-  width: 100%; background: #F5F6FA; border-radius: 12rpx;
+  width: 100%; background: #F4F1EA; border-radius: 12rpx;
   padding: 20rpx; font-size: 28rpx; color: #222;
-  border: 2rpx solid #EBEBEB; box-sizing: border-box;
+  border: 2rpx solid #E6E0D8; box-sizing: border-box;
 }
 .edit-picker {
-  height: 82rpx; background: #F5F6FA; border-radius: 12rpx;
-  padding: 0 20rpx; border: 2rpx solid #EBEBEB;
+  height: 82rpx; background: #F4F1EA; border-radius: 12rpx;
+  padding: 0 20rpx; border: 2rpx solid #E6E0D8;
   display: flex; align-items: center; justify-content: space-between;
   box-sizing: border-box;
 }
@@ -151,13 +152,13 @@
 .edit-picker-placeholder { font-size: 28rpx; color: #BBB; }
 .edit-picker-arrow { font-size: 36rpx; color: #BBB; }
 .edit-textarea {
-  width: 100%; background: #F5F6FA; border-radius: 12rpx;
+  width: 100%; background: #F4F1EA; border-radius: 12rpx;
   padding: 20rpx; font-size: 26rpx; color: #222; height: 160rpx;
-  border: 2rpx solid #EBEBEB; box-sizing: border-box;
+  border: 2rpx solid #E6E0D8; box-sizing: border-box;
 }
 .edit-prefill-btn {
-  background: #F0F7FF; color: #2B6FD9;
-  border: 2rpx solid #CFE2FF; border-radius: 12rpx;
+  background: #EAF1F6; color: #0F4C75;
+  border: 2rpx solid #C9D8E3; border-radius: 12rpx;
   padding: 18rpx 20rpx; font-size: 24rpx;
   font-weight: 600; margin-bottom: 24rpx; text-align: center;
 }
@@ -166,14 +167,14 @@
 }
 .edit-status {
   padding: 14rpx 42rpx; border-radius: 999rpx;
-  background: #F5F6FA; color: #888; font-size: 26rpx;
-  border: 2rpx solid #E8E8E8; margin-right: 18rpx;
+  background: #F4F1EA; color: #888; font-size: 26rpx;
+  border: 2rpx solid #E6E0D8; margin-right: 18rpx;
 }
 .edit-status-active {
-  color: #2ECC71; background: #EEFFF5; border-color: #2ECC71; font-weight: 700;
+  color: #2E7D5B; background: #EAF6EF; border-color: #2E7D5B; font-weight: 700;
 }
 .edit-status-rented {
-  color: #999; background: #F5F5F5; border-color: #BBB; font-weight: 700;
+  color: #999; background: #F4F1EA; border-color: #BBB; font-weight: 700;
 }
 .edit-tags {
   display: flex; flex-wrap: wrap; gap: 14rpx;
@@ -181,10 +182,10 @@
 .edit-tag {
   font-size: 24rpx; color: #666;
   padding: 12rpx 20rpx; border-radius: 999rpx;
-  background: #F5F6FA; border: 2rpx solid #E8E8E8;
+  background: #F4F1EA; border: 2rpx solid #E6E0D8;
 }
 .edit-tag-active {
-  color: #FFF; background: #2B6FD9; border-color: #2B6FD9;
+  color: #FFF; background: #0F4C75; border-color: #0F4C75;
 }
 .edit-btns { display: flex; margin-top: 32rpx; }
 .edit-cancel {
@@ -193,5 +194,5 @@
 }
 .edit-confirm {
   flex: 2; text-align: center; padding: 22rpx 0; font-size: 28rpx; font-weight: 700; color: #FFF;
-  background: linear-gradient(135deg, #1A3A5C, #2B6FD9); border-radius: 50rpx;
+  background: linear-gradient(135deg, #1A3A5C, #0F4C75); border-radius: 50rpx;
 }

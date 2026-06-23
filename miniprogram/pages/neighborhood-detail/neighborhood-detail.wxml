@@ -1,0 +1,95 @@
+<view class="detail-page">
+  <view class="hero">
+    <image wx:if="{{profile.cover}}" class="hero-img" src="{{profile.cover}}" mode="aspectFill" />
+    <view wx:else class="hero-fallback">
+      <text class="hero-icon">🏘</text>
+    </view>
+    <view class="hero-mask"></view>
+    <view class="hero-content">
+      <text class="hero-title">{{profile.name}}</text>
+      <text class="hero-sub">{{profile.district}}｜{{profile.slogan}}</text>
+    </view>
+  </view>
+
+  <view class="join-strip">
+    <text class="join-text">{{stats.available}} 套在租 · {{stats.roomTypes || '户型持续更新'}} · 直连房东</text>
+    <view class="join-btn" bindtap="onViewHouses">立即看房</view>
+  </view>
+
+  <view class="summary-card">
+    <view class="summary-main">
+      <text class="nb-name">{{profile.name}}</text>
+      <text class="nb-slogan">{{profile.slogan}}</text>
+    </view>
+    <view class="summary-stats">
+      <view class="s-item">
+        <text class="s-num">{{stats.available}}</text>
+        <text class="s-label">在租</text>
+      </view>
+      <view class="s-item">
+        <text class="s-num">{{stats.minPrice || '-'}}</text>
+        <text class="s-label">最低月租</text>
+      </view>
+    </view>
+    <view class="crowd-tags" wx:if="{{crowdTags.length}}">
+      <text class="crowd-tag" wx:for="{{crowdTags}}" wx:key="index">#{{item}}</text>
+    </view>
+  </view>
+
+  <view class="section-title">详细信息</view>
+  <view class="commute-card">
+    <view class="card-head">
+      <text class="card-title">通勤</text>
+      <view class="mode-pill">{{profile.commuteMode}}</view>
+    </view>
+    <text class="card-desc">{{profile.commuteInfo}}</text>
+  </view>
+
+  <view class="detail-grid">
+    <view class="detail-card" wx:for="{{detailCards}}" wx:key="title">
+      <text class="detail-title">{{item.title}}</text>
+      <text class="detail-value">{{item.value}}</text>
+      <text class="detail-sub">{{item.sub}}</text>
+    </view>
+  </view>
+
+  <view class="guide-card">
+    <view class="guide-head">
+      <view class="avatar">深</view>
+      <view>
+        <text class="guide-title">{{profile.scoutTitle}}</text>
+        <text class="guide-sub">实地踩盘 · 租房避坑经验</text>
+      </view>
+    </view>
+    <view class="advisor-badge">小区实探总结</view>
+    <text class="guide-summary">{{profile.scoutSummary}}</text>
+  </view>
+
+  <view class="info-section" wx:for="{{guideSections}}" wx:key="title">
+    <view class="info-head">{{item.title}}</view>
+    <text class="info-text">{{item.value}}</text>
+  </view>
+
+  <view id="house-list" class="section-title">该小区在租房源</view>
+  <view wx:if="{{houses.length === 0}}" class="empty-card">
+    <text>暂无房源，房东发布后会自动展示在这里</text>
+  </view>
+  <view class="house-list">
+    <house-card
+      wx:for="{{houses}}"
+      wx:key="id"
+      house="{{item}}"
+      show-contact="{{true}}"
+      bindtap="onHouseTap"
+    />
+  </view>
+
+  <view class="bottom-space"></view>
+
+  <view class="bottom-bar">
+    <view class="suggest-input">提交改进建议...</view>
+    <view class="contact-main" bindtap="onCopyFirstWechat">联系房东</view>
+    <view class="round-btn" bindtap="onCallFirstLandlord">☎</view>
+    <view class="round-btn" bindtap="onOpenMap">⌖</view>
+  </view>
+</view>

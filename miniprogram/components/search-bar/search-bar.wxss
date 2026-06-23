@@ -2,7 +2,7 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: #F8F8F8;
+  background: #F8F6F1;
   border-radius: 50rpx;
   padding: 16rpx 24rpx;
   height: 80rpx;
@@ -17,27 +17,27 @@
 .search-input {
   flex: 1;
   font-size: 28rpx;
-  color: #333333;
+  color: #27241F;
   height: 100%;
 }
 
 .search-placeholder {
-  color: #BBBBBB;
+  color: #A8A196;
   font-size: 28rpx;
 }
 
 .clear-btn {
   font-size: 28rpx;
-  color: #BBBBBB;
+  color: #A8A196;
   padding: 0 12rpx;
   flex-shrink: 0;
 }
 
 .search-btn {
   font-size: 26rpx;
-  color: #FF6B35;
+  color: #0F2F4A;
   font-weight: 600;
   flex-shrink: 0;
   padding-left: 12rpx;
-  border-left: 1rpx solid #EEEEEE;
+  border-left: 1rpx solid #E6E0D8;
 }

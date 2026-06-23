@@ -1,16 +1,19 @@
 /* app.wxss - 全局样式 */
 page {
-  background-color: #F5F5F5;
+  background-color: #F4F1EA;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
   font-size: 28rpx;
-  color: #333333;
+  color: #27241F;
   box-sizing: border-box;
 }
 
-/* 主题色 */
-/* 主色: #FF6B35 橙红色 */
-/* 辅色: #FFF3EE 浅橙背景 */
-/* 文字色: #333 #666 #999 */
+/* Brand palette
+   Deep navy: #0F2F4A
+   Champagne gold: #B8894D
+   Porcelain background: #F4F1EA
+   Ivory card: #FFFFFF
+   Ink text: #171512 / #4F4A43 / #7A746B
+*/
 
 /* 通用容器 */
 .container {
@@ -23,12 +26,13 @@ page {
   border-radius: 16rpx;
   padding: 24rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  border: 1rpx solid rgba(15, 47, 74, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(15, 47, 74, 0.08);
 }
 
 /* 按钮样式 */
 .btn-primary {
-  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  background: linear-gradient(135deg, #0F2F4A, #1C4966);
   color: #FFFFFF;
   border-radius: 50rpx;
   border: none;
@@ -39,7 +43,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 16rpx rgba(255, 107, 53, 0.35);
+  box-shadow: 0 10rpx 24rpx rgba(15, 47, 74, 0.24);
 }
 
 .btn-primary::after {
@@ -47,10 +51,10 @@ page {
 }
 
 .btn-outline {
-  background: transparent;
-  color: #FF6B35;
+  background: rgba(255,255,255,0.72);
+  color: #0F2F4A;
   border-radius: 50rpx;
-  border: 2rpx solid #FF6B35;
+  border: 2rpx solid #0F2F4A;
   font-size: 28rpx;
   height: 72rpx;
   line-height: 72rpx;
@@ -66,25 +70,25 @@ page {
   padding: 4rpx 16rpx;
   border-radius: 50rpx;
   font-size: 22rpx;
-  background: #FFF3EE;
-  color: #FF6B35;
+  background: #F4EFE6;
+  color: #8A6A3D;
   margin-right: 10rpx;
   margin-bottom: 8rpx;
 }
 
 .tag-blue {
-  background: #EEF5FF;
-  color: #4A90E2;
+  background: #EAF1F6;
+  color: #2F6F95;
 }
 
 .tag-green {
-  background: #EEFFF5;
-  color: #2ECC71;
+  background: #EAF6EF;
+  color: #2E7D5B;
 }
 
 /* 价格样式 */
 .price {
-  color: #FF6B35;
+  color: #B8894D;
   font-weight: 700;
 }
 
@@ -100,7 +104,7 @@ page {
 /* 分割线 */
 .divider {
   height: 1rpx;
-  background: #F0F0F0;
+  background: #E6E0D8;
   margin: 20rpx 0;
 }
 
@@ -111,7 +115,7 @@ page {
   align-items: center;
   justify-content: center;
   padding: 100rpx 40rpx;
-  color: #999999;
+  color: #7A746B;
 }
 
 .empty-state text {
@@ -125,7 +129,7 @@ page {
   align-items: center;
   justify-content: center;
   padding: 40rpx;
-  color: #999999;
+  color: #7A746B;
   font-size: 26rpx;
 }
 
@@ -133,4 +137,28 @@ page {
 .safe-bottom {
   height: env(safe-area-inset-bottom);
   height: constant(safe-area-inset-bottom);
+}
+
+/* Premium emphasis */
+.price,
+.price-number,
+.price-unit,
+.mini-price,
+.result-price,
+.fav-price,
+.card-price,
+.preview-price,
+.preview-price-unit,
+.stat-num,
+.s-num {
+  color: #B8894D;
+}
+
+.btn-primary,
+.submit-btn,
+.next-btn,
+.contact-main,
+.publish-btn,
+.empty-action {
+  letter-spacing: 1rpx;
 }

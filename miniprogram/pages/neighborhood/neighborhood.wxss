@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #F5F5F5;
+  background: #F4F1EA;
 }
 
 /* 搜索区 */
@@ -29,15 +29,15 @@
   padding: 10rpx 28rpx;
   border-radius: 50rpx;
   font-size: 26rpx;
-  color: #666666;
-  background: #F5F5F5;
+  color: #4F4A43;
+  background: #F4F1EA;
   margin-right: 16rpx;
   flex-shrink: 0;
   transition: all 0.2s;
 }
 
 .district-chip.active {
-  background: #FF6B35;
+  background: #0F2F4A;
   color: #FFFFFF;
   font-weight: 600;
 }
@@ -45,12 +45,12 @@
 /* 统计栏 */
 .stats-bar {
   padding: 16rpx 24rpx;
-  background: #F5F5F5;
+  background: #F4F1EA;
 }
 
 .stats-text {
   font-size: 24rpx;
-  color: #999999;
+  color: #7A746B;
 }
 
 /* 小区网格 */
@@ -81,7 +81,7 @@
 .card-cover {
   width: 100%;
   height: 160rpx;
-  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  background: linear-gradient(135deg, #EFE3D0, #D9C19F);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@
 .card-name {
   font-size: 28rpx;
   font-weight: 600;
-  color: #222222;
+  color: #171512;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,7 +108,7 @@
 
 .card-district {
   font-size: 22rpx;
-  color: #999999;
+  color: #7A746B;
   display: block;
   margin-bottom: 12rpx;
 }
@@ -121,13 +121,13 @@
 
 .card-count {
   font-size: 26rpx;
-  color: #FF6B35;
+  color: #0F2F4A;
   font-weight: 600;
 }
 
 .card-arrow {
   font-size: 32rpx;
-  color: #FF6B35;
+  color: #0F2F4A;
 }
 
 /* 空状态 */
@@ -145,13 +145,13 @@
 
 .empty-text {
   font-size: 28rpx;
-  color: #999999;
+  color: #7A746B;
   margin-top: 20rpx;
 }
 
 .empty-action {
   margin-top: 32rpx;
-  background: #FF6B35;
+  background: #0F2F4A;
   color: #FFFFFF;
   padding: 16rpx 48rpx;
   border-radius: 50rpx;
@@ -161,7 +161,7 @@
 
 /* 小区头部（房源列表视图） */
 .neighborhood-header {
-  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  background: linear-gradient(135deg, #0F2F4A, #1C4966);
   padding: 24rpx;
   display: flex;
   align-items: center;
@@ -222,7 +222,7 @@
 
 /* 提示卡片 */
 .tips-card {
-  background: #FFF3EE;
+  background: #F4EFE6;
   padding: 16rpx 24rpx;
   display: flex;
   align-items: center;
@@ -235,7 +235,7 @@
 
 .tips-text {
   font-size: 24rpx;
-  color: #FF6B35;
+  color: #0F2F4A;
 }
 
 /* 房源列表 */

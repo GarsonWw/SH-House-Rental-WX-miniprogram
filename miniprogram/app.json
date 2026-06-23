@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/neighborhood/neighborhood",
+    "pages/neighborhood-detail/neighborhood-detail",
     "pages/map/map",
     "pages/detail/detail",
     "pages/publish/publish",
@@ -12,15 +13,15 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FF6B35",
+    "navigationBarBackgroundColor": "#0F2F4A",
     "navigationBarTitleText": "深港租房双城通",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F5F5"
+    "backgroundColor": "#F4F1EA"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF6B35",
-    "backgroundColor": "#FFFFFF",
+    "color": "#7A746B",
+    "selectedColor": "#B8894D",
+    "backgroundColor": "#FFFCF7",
     "borderStyle": "black",
     "list": [
       {

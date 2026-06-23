@@ -170,7 +170,12 @@ App({
         map[h.neighborhood] = {
           name: h.neighborhood, count: 0,
           district: h.district || '未知区域',
-          coverImg: h.images && h.images[0] ? h.images[0] : ''
+          coverImg: h.neighborhoodCover || (h.images && h.images[0] ? h.images[0] : ''),
+          note: h.neighborhoodNote || h.neighborhoodDesc || '',
+          review: h.neighborhoodReview || '',
+          commuteInfo: h.commuteInfo || '',
+          propertyType: h.propertyType || '',
+          priceReference: h.priceReference || ''
         }
       }
       map[h.neighborhood].count++

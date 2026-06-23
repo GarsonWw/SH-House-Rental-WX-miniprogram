@@ -87,7 +87,7 @@ Page({
 
   onNeighborhoodTap(e) {
     const { name } = e.currentTarget.dataset
-    this.selectNeighborhood(name)
+    wx.navigateTo({ url: `/pages/neighborhood-detail/neighborhood-detail?name=${encodeURIComponent(name)}` })
   },
 
   selectNeighborhood(name) {

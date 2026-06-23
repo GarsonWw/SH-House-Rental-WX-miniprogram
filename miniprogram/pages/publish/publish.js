@@ -2,6 +2,16 @@
 const app = getApp()
 const util = require('../../utils/util')
 
+const TAG_OPTIONS = ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全']
+
+const buildTagOptions = selectedTags => {
+  const selected = Array.isArray(selectedTags) ? selectedTags : []
+  return TAG_OPTIONS.map(label => ({
+    label,
+    selected: selected.indexOf(label) > -1
+  }))
+}
+
 Page({
   data: {
     form: {
@@ -9,6 +19,21 @@ Page({
       neighborhood: '',
       neighborhoodNote: '',
       neighborhoodReview: '',
+      neighborhoodCover: '',
+      neighborhoodSlogan: '',
+      commuteInfo: '',
+      commuteMode: '步行',
+      safetyInfo: '',
+      propertyType: '',
+      deliveryInfo: '',
+      shortRentInfo: '',
+      roomInsight: '',
+      priceReference: '',
+      surroundings: '',
+      suitableCrowd: '',
+      scoutTitle: '',
+      scoutSummary: '',
+      scoutAdvice: '',
       district: '',
       address: '',
       locationName: '',
@@ -32,7 +57,7 @@ Page({
     roomTypeOptions: ['1室1厅1卫', '2室1厅1卫', '2室2厅1卫', '3室1厅1卫', '3室2厅1卫', '3室2厅2卫', '合租/主卧', '合租/次卧', '整套公寓'],
     orientationOptions: ['南', '北', '东', '西', '南北', '东南', '东北', '西南', '西北'],
     decorationOptions: ['毛坯', '简装', '中装', '精装修', '豪装'],
-    tagOptions: ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全'],
+    tagOptions: buildTagOptions([]),
     selectedTags: [],
     submitting: false,
     isEditMode: false,
@@ -64,11 +89,27 @@ Page({
         isEditMode: true,
         editHouseId: id,
         selectedTags: tags,
+        tagOptions: buildTagOptions(tags),
         form: {
           title: house.title || '',
           neighborhood: house.neighborhood || '',
           neighborhoodNote: house.neighborhoodNote || house.neighborhoodDesc || '',
           neighborhoodReview: house.neighborhoodReview || '',
+          neighborhoodCover: house.neighborhoodCover || '',
+          neighborhoodSlogan: house.neighborhoodSlogan || '',
+          commuteInfo: house.commuteInfo || '',
+          commuteMode: house.commuteMode || '步行',
+          safetyInfo: house.safetyInfo || '',
+          propertyType: house.propertyType || '',
+          deliveryInfo: house.deliveryInfo || '',
+          shortRentInfo: house.shortRentInfo || '',
+          roomInsight: house.roomInsight || '',
+          priceReference: house.priceReference || '',
+          surroundings: house.surroundings || '',
+          suitableCrowd: house.suitableCrowd || '',
+          scoutTitle: house.scoutTitle || '',
+          scoutSummary: house.scoutSummary || '',
+          scoutAdvice: house.scoutAdvice || '',
           district: house.district || '',
           address: house.address || '',
           locationName: house.locationName || '',
@@ -137,6 +178,7 @@ Page({
   // 标签选择
   onTagToggle(e) {
     const { tag } = e.currentTarget.dataset
+    if (!tag) return
     const tags = [...this.data.selectedTags]
     const idx = tags.indexOf(tag)
     if (idx > -1) {
@@ -150,6 +192,7 @@ Page({
     }
     this.setData({
       selectedTags: tags,
+      tagOptions: buildTagOptions(tags),
       'form.tags': tags
     })
   },
@@ -435,6 +478,21 @@ Page({
         neighborhood: '',
         neighborhoodNote: '',
         neighborhoodReview: '',
+        neighborhoodCover: '',
+        neighborhoodSlogan: '',
+        commuteInfo: '',
+        commuteMode: '步行',
+        safetyInfo: '',
+        propertyType: '',
+        deliveryInfo: '',
+        shortRentInfo: '',
+        roomInsight: '',
+        priceReference: '',
+        surroundings: '',
+        suitableCrowd: '',
+        scoutTitle: '',
+        scoutSummary: '',
+        scoutAdvice: '',
         district: '',
         address: '',
         locationName: '',
@@ -457,6 +515,7 @@ Page({
         videoCover: ''
       },
       selectedTags: [],
+      tagOptions: buildTagOptions([]),
       currentStep: 1
     })
   }

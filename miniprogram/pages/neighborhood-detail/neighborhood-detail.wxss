@@ -1,0 +1,396 @@
+.detail-page {
+  min-height: 100vh;
+  background: #F4F1EA;
+  padding-bottom: 120rpx;
+}
+
+.hero {
+  position: relative;
+  height: 300rpx;
+  overflow: hidden;
+  background: #DDE6EF;
+}
+
+.hero-img,
+.hero-fallback {
+  width: 100%;
+  height: 300rpx;
+}
+
+.hero-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0F2F4A, #294C67);
+}
+
+.hero-icon {
+  font-size: 92rpx;
+}
+
+.hero-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(15,47,74,0.08), rgba(15,47,74,0.72));
+}
+
+.hero-content {
+  position: absolute;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: 30rpx;
+  color: #FFFFFF;
+}
+
+.hero-title {
+  display: block;
+  font-size: 46rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.hero-sub {
+  display: block;
+  font-size: 24rpx;
+  line-height: 1.5;
+  margin-top: 10rpx;
+  color: rgba(255,255,255,0.88);
+}
+
+.join-strip {
+  margin: 18rpx 18rpx 0;
+  background: #EAF1F6;
+  border: 1rpx solid #C9D8E3;
+  border-radius: 12rpx;
+  min-height: 64rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 16rpx;
+}
+
+.join-text {
+  flex: 1;
+  font-size: 23rpx;
+  color: #3B647C;
+}
+
+.join-btn {
+  background: #0F2F4A;
+  color: #FFFFFF;
+  border-radius: 28rpx;
+  padding: 10rpx 20rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.summary-card,
+.commute-card,
+.guide-card,
+.info-section,
+.empty-card {
+  margin: 18rpx;
+  background: #FFFFFF;
+  border-radius: 10rpx;
+  border: 1rpx solid rgba(15,47,74,0.07);
+  box-shadow: 0 8rpx 24rpx rgba(15,47,74,0.06);
+  overflow: hidden;
+}
+
+.summary-card {
+  padding: 26rpx;
+}
+
+.summary-main {
+  margin-bottom: 20rpx;
+}
+
+.nb-name {
+  display: block;
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #20242A;
+}
+
+.nb-slogan {
+  display: block;
+  font-size: 25rpx;
+  color: #8A8F99;
+  margin-top: 8rpx;
+}
+
+.summary-stats {
+  display: flex;
+}
+
+.s-item {
+  background: #F6F8FB;
+  border-radius: 10rpx;
+  padding: 16rpx 22rpx;
+  min-width: 150rpx;
+  margin-right: 18rpx;
+}
+
+.s-num {
+  display: block;
+  font-size: 34rpx;
+  color: #B8894D;
+  font-weight: 800;
+}
+
+.s-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8A8F99;
+}
+
+.crowd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 18rpx;
+}
+
+.crowd-tag {
+  background: #EAF1F6;
+  color: #0F4C75;
+  border-radius: 28rpx;
+  padding: 8rpx 16rpx;
+  margin-right: 12rpx;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+}
+
+.section-title {
+  margin: 26rpx 22rpx 12rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #171512;
+}
+
+.commute-card {
+  padding: 0;
+}
+
+.card-head {
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+  background: #F8FAFC;
+  border-bottom: 1rpx solid #E7EBF0;
+}
+
+.card-title,
+.detail-title,
+.info-head {
+  font-size: 28rpx;
+  color: #2C333A;
+  font-weight: 800;
+}
+
+.mode-pill {
+  background: #0F2F4A;
+  color: #FFFFFF;
+  border-radius: 10rpx;
+  padding: 10rpx 18rpx;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.card-desc {
+  display: block;
+  padding: 22rpx 24rpx;
+  color: #666D76;
+  line-height: 1.7;
+  font-size: 29rpx;
+}
+
+.detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 18rpx;
+}
+
+.detail-card {
+  width: calc(50% - 8rpx);
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border-radius: 10rpx;
+  border: 1rpx solid #E4E8EF;
+  padding: 20rpx;
+  min-height: 150rpx;
+  margin-right: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.detail-card:nth-child(2n) {
+  margin-right: 0;
+}
+
+.detail-title,
+.detail-value,
+.detail-sub {
+  display: block;
+}
+
+.detail-value {
+  font-size: 29rpx;
+  color: #30343A;
+  line-height: 1.5;
+  margin-top: 10rpx;
+}
+
+.detail-sub {
+  font-size: 22rpx;
+  color: #9AA1AA;
+  line-height: 1.4;
+  margin-top: 8rpx;
+}
+
+.guide-card {
+  padding: 0 0 24rpx;
+  border-left: 6rpx solid #B8894D;
+}
+
+.guide-head {
+  display: flex;
+  align-items: center;
+  padding: 22rpx 24rpx;
+  border-bottom: 1rpx solid #EEF1F5;
+}
+
+.avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #0F2F4A;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  margin-right: 16rpx;
+}
+
+.guide-title {
+  display: block;
+  font-size: 30rpx;
+  color: #27313C;
+  font-weight: 800;
+}
+
+.guide-sub {
+  display: block;
+  font-size: 22rpx;
+  color: #A0A6AF;
+  margin-top: 4rpx;
+}
+
+.advisor-badge {
+  display: inline-block;
+  margin: 20rpx 24rpx 12rpx;
+  background: #0F2F4A;
+  color: #FFFFFF;
+  border-radius: 6rpx;
+  padding: 10rpx 16rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.guide-summary {
+  display: block;
+  margin: 0 24rpx;
+  font-size: 29rpx;
+  color: #606772;
+  line-height: 1.75;
+}
+
+.info-section {
+  padding-bottom: 22rpx;
+}
+
+.info-head {
+  display: block;
+  padding: 18rpx 24rpx;
+  background: #F8FAFC;
+  border-bottom: 1rpx solid #E7EBF0;
+}
+
+.info-text {
+  display: block;
+  padding: 20rpx 24rpx 0;
+  font-size: 29rpx;
+  color: #606772;
+  line-height: 1.75;
+}
+
+.house-list {
+  padding: 0 18rpx;
+}
+
+.empty-card {
+  padding: 36rpx 24rpx;
+  color: #969CA5;
+  font-size: 27rpx;
+  text-align: center;
+}
+
+.bottom-space {
+  height: 120rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.96);
+  border-top: 1rpx solid #E7EBF0;
+  padding: 16rpx 18rpx 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.suggest-input {
+  flex: 1;
+  height: 72rpx;
+  background: #F1EEE7;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  padding-left: 24rpx;
+  font-size: 25rpx;
+  color: #A5A9AF;
+}
+
+.contact-main {
+  height: 72rpx;
+  min-width: 160rpx;
+  border-radius: 36rpx;
+  background: linear-gradient(135deg, #0F2F4A, #1C4966);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  margin-left: 14rpx;
+}
+
+.round-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  border: 1rpx solid #D6DCE4;
+  color: #0F2F4A;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 800;
+  margin-left: 14rpx;
+}

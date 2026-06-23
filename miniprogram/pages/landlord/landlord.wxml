@@ -99,6 +99,11 @@
           data-id="{{item.id}}"
         >✏️ 编辑</view>
         <view
+          class="act-btn act-community"
+          bindtap="onEditHouse"
+          data-id="{{item.id}}"
+        >配置小区</view>
+        <view
           class="act-btn {{item.available ? 'act-rent' : 'act-open'}}"
           bindtap="onToggleStatus"
           data-id="{{item.id}}"

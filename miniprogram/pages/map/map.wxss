@@ -46,18 +46,18 @@
 .search-input {
   flex: 1;
   font-size: 26rpx;
-  color: #333333;
+  color: #27241F;
   height: 72rpx;
   line-height: 72rpx;
 }
 
 .search-ph {
-  color: #BBBBBB;
+  color: #A8A196;
   font-size: 24rpx;
 }
 
 .search-btn {
-  background: #1A5FB4;
+  background: #0F4C75;
   color: #FFFFFF;
   font-size: 26rpx;
   font-weight: 700;
@@ -107,8 +107,8 @@
 }
 
 .layer-active {
-  background: #EEF5FF;
-  border: 2rpx solid #1A5FB4;
+  background: #EAF1F6;
+  border: 2rpx solid #0F4C75;
 }
 
 .layer-icon {
@@ -117,13 +117,13 @@
 
 .layer-label {
   font-size: 20rpx;
-  color: #555555;
+  color: #45413B;
   margin-top: 6rpx;
   font-weight: 500;
 }
 
 .layer-active .layer-label {
-  color: #1A5FB4;
+  color: #0F4C75;
   font-weight: 700;
 }
 
@@ -143,14 +143,14 @@
 .dp-item {
   padding: 16rpx 28rpx;
   font-size: 26rpx;
-  color: #333333;
+  color: #27241F;
   border-radius: 10rpx;
   white-space: nowrap;
 }
 
 .dp-active {
-  background: #EEF5FF;
-  color: #1A5FB4;
+  background: #EAF1F6;
+  color: #0F4C75;
   font-weight: 700;
 }
 
@@ -172,7 +172,7 @@
 
 .locate-icon {
   font-size: 36rpx;
-  color: #1A5FB4;
+  color: #0F4C75;
 }
 
 /* ── 底部提示卡片 ────────────────────────────── */
@@ -199,7 +199,7 @@
 
 .hint-txt {
   font-size: 24rpx;
-  color: #555555;
+  color: #45413B;
 }
 
 /* ── 底部房源浮层 ────────────────────────────── */
@@ -236,7 +236,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20rpx 32rpx 16rpx;
-  border-bottom: 1rpx solid #F5F5F5;
+  border-bottom: 1rpx solid #F4F1EA;
 }
 
 .sheet-title-wrap {
@@ -252,13 +252,13 @@
 .sheet-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #1A1A1A;
+  color: #171512;
   margin-right: 14rpx;
 }
 
 .sheet-count {
-  background: #EEF5FF;
-  color: #1A5FB4;
+  background: #EAF1F6;
+  color: #0F4C75;
   font-size: 22rpx;
   font-weight: 700;
   padding: 4rpx 16rpx;
@@ -267,7 +267,7 @@
 
 .sheet-close {
   font-size: 36rpx;
-  color: #BBBBBB;
+  color: #A8A196;
   padding: 8rpx;
 }
 
@@ -281,7 +281,7 @@
 .sheet-house {
   display: flex;
   padding: 20rpx 28rpx;
-  border-bottom: 1rpx solid #F8F8F8;
+  border-bottom: 1rpx solid #F8F6F1;
 }
 
 .sh-img-wrap {
@@ -302,7 +302,7 @@
 .sh-img-ph {
   width: 160rpx;
   height: 140rpx;
-  background: linear-gradient(135deg, #FFE5D9, #FFD1BA);
+  background: linear-gradient(135deg, #EFE3D0, #D9C19F);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,7 +313,7 @@
   position: absolute;
   bottom: 6rpx;
   left: 6rpx;
-  background: #2ECC71;
+  background: #2E7D5B;
   color: #FFFFFF;
   font-size: 18rpx;
   font-weight: 700;
@@ -336,7 +336,7 @@
 .sh-title {
   font-size: 26rpx;
   font-weight: 600;
-  color: #1A1A1A;
+  color: #171512;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -345,7 +345,7 @@
 
 .sh-meta {
   font-size: 22rpx;
-  color: #999999;
+  color: #7A746B;
   display: block;
   margin-top: 6rpx;
 }
@@ -358,8 +358,8 @@
 
 .sh-tag {
   font-size: 20rpx;
-  color: #FF6B35;
-  background: #FFF3EE;
+  color: #0F2F4A;
+  background: #F4EFE6;
   padding: 3rpx 12rpx;
   border-radius: 50rpx;
   margin-right: 8rpx;
@@ -376,7 +376,7 @@
 .sh-price {
   font-size: 32rpx;
   font-weight: 800;
-  color: #FF6B35;
+  color: #0F2F4A;
 }
 
 .sh-price-unit {
@@ -397,13 +397,13 @@
 }
 
 .sh-phone {
-  background: #EEF5FF;
-  color: #1A5FB4;
+  background: #EAF1F6;
+  color: #0F4C75;
 }
 
 .sh-wechat {
-  background: #EEFFF5;
-  color: #07C160;
+  background: #EAF6EF;
+  color: #1F8A5B;
 }
 
 .sheet-bottom-space {

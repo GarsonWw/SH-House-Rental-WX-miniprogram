@@ -233,7 +233,7 @@ Page({
 
   onNeighborhoodTap(e) {
     const name = e.currentTarget.dataset.name
-    wx.navigateTo({ url: `/pages/neighborhood/neighborhood?name=${encodeURIComponent(name)}` })
+    wx.navigateTo({ url: `/pages/neighborhood-detail/neighborhood-detail?name=${encodeURIComponent(name)}` })
   },
 
   onSelectNeighborhood() {

@@ -1,5 +1,5 @@
 /* pages/favorites/favorites.wxss */
-.page-bg { background: #F5F6FA; min-height: 100vh; }
+.page-bg { background: #F4F1EA; min-height: 100vh; }
 
 /* 空状态 */
 .empty-wrap {
@@ -10,7 +10,7 @@
 .empty-title { font-size: 36rpx; font-weight: 700; color: #333; margin-bottom: 12rpx; }
 .empty-sub { font-size: 26rpx; color: #999; margin-bottom: 48rpx; }
 .empty-btn {
-  background: #FF6B35; color: #FFF; font-size: 28rpx; font-weight: 600;
+  background: #0F2F4A; color: #FFF; font-size: 28rpx; font-weight: 600;
   padding: 20rpx 60rpx; border-radius: 50rpx;
 }
 
@@ -32,13 +32,13 @@
 .fav-img { width: 200rpx; height: 180rpx; display: block; }
 .fav-img-ph {
   width: 200rpx; height: 180rpx;
-  background: linear-gradient(135deg, #FFE5D9, #FFC4A8);
+  background: linear-gradient(135deg, #EFE3D0, #D9C19F);
   display: flex; align-items: center; justify-content: center;
   font-size: 56rpx;
 }
 .avail-tag {
   position: absolute; top: 12rpx; left: 12rpx;
-  background: #2ECC71; color: #FFF;
+  background: #2E7D5B; color: #FFF;
   font-size: 18rpx; padding: 4rpx 12rpx; border-radius: 50rpx;
 }
 .tag-rented { background: #999; }
@@ -55,13 +55,13 @@
 .fav-meta { font-size: 22rpx; color: #999; margin-top: 8rpx; display: block; }
 .fav-area { font-size: 22rpx; color: #BBB; margin-top: 4rpx; display: block; }
 .fav-price {
-  font-size: 34rpx; font-weight: 800; color: #FF6B35;
+  font-size: 34rpx; font-weight: 800; color: #0F2F4A;
   margin-top: 10rpx; display: block;
 }
-.fav-unit { font-size: 20rpx; font-weight: 400; color: #FF6B35; }
+.fav-unit { font-size: 20rpx; font-weight: 400; color: #0F2F4A; }
 
 .fav-remove {
   width: 80rpx; display: flex; align-items: center; justify-content: center;
-  border-left: 1rpx solid #F5F5F5;
+  border-left: 1rpx solid #F4F1EA;
 }
 .remove-icon { font-size: 36rpx; }

@@ -258,6 +258,23 @@
         </picker>
       </view>
 
+      <view class="form-item">
+        <text class="form-label">建筑属性</text>
+        <picker
+          range="{{buildingAttributeOptions}}"
+          bindchange="onPickerChange"
+          data-field="buildingAttribute"
+          data-options="buildingAttributeOptions"
+        >
+          <view class="picker-view">
+            <text class="{{form.buildingAttribute ? 'picker-value' : 'picker-placeholder'}}">
+              {{form.buildingAttribute || '请选择建筑属性'}}
+            </text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
       <view class="form-item required">
         <text class="form-label">面积</text>
         <view class="input-with-unit">
@@ -348,6 +365,64 @@
       <text class="textarea-count">{{form.description.length}}/500</text>
     </view>
 
+    <view class="form-card">
+      <text class="form-section-title">📖 详情页展开说明（可选）</text>
+      <text class="field-helper">默认展示三行概述，用户点击后再阅读完整内容。建议写真实体验、适合人群、优缺点和看房提醒。</text>
+
+      <view class="form-item">
+        <text class="form-label">展开标题</text>
+        <input
+          class="form-input"
+          placeholder="如：步行通勤真实体验 / 这套房适合谁"
+          value="{{form.detailGuideTitle}}"
+          bindinput="onInput"
+          data-field="detailGuideTitle"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">三行概述</text>
+        <textarea
+          class="form-textarea small-textarea"
+          placeholder="先用简短、清晰的话概括核心卖点和注意点，详情页默认只展示这里的前几行"
+          maxlength="220"
+          value="{{form.detailGuideSummary}}"
+          bindinput="onInput"
+          data-field="detailGuideSummary"
+          auto-height
+        />
+        <text class="textarea-count">{{form.detailGuideSummary.length}}/220</text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">展开正文</text>
+        <textarea
+          class="form-textarea"
+          placeholder="展开后展示的大段内容，可写通勤、采光、噪音、楼层、家具、周边、适合人群、真实缺点等"
+          maxlength="1200"
+          value="{{form.detailGuideContent}}"
+          bindinput="onInput"
+          data-field="detailGuideContent"
+          auto-height
+        />
+        <text class="textarea-count">{{form.detailGuideContent.length}}/1200</text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">提醒 / 避坑补充</text>
+        <textarea
+          class="form-textarea small-textarea"
+          placeholder="如：声音敏感建议晚高峰实地感受；南向低楼层需确认采光"
+          maxlength="300"
+          value="{{form.detailGuideTip}}"
+          bindinput="onInput"
+          data-field="detailGuideTip"
+          auto-height
+        />
+        <text class="textarea-count">{{form.detailGuideTip.length}}/300</text>
+      </view>
+    </view>
+
     <button class="next-btn" bindtap="onNextStep">下一步：填写联系方式</button>
   </view>
 
@@ -357,7 +432,7 @@
       <text class="form-section-title">👤 房东信息</text>
       <view class="info-notice">
         <text class="notice-icon">🔒</text>
-        <text class="notice-text">联系方式仅对感兴趣的租客可见，用于直接沟通</text>
+        <text class="notice-text">平台已有3年沉淀、服务1000+真实租客，专注罗湖直租，坚持免中介费和真实房源，联系方式用于直连高意向租客。</text>
       </view>
 
       <view class="prefill-landlord-btn" bindtap="onPrefillLandlordInfo">
@@ -471,6 +546,8 @@
         <view class="preview-params">
           <text class="param">{{form.roomType || '-'}}</text>
           <text class="param-dot">·</text>
+          <text class="param">{{form.buildingAttribute || '-'}}</text>
+          <text class="param-dot">·</text>
           <text class="param">{{form.area || '-'}}㎡</text>
           <text class="param-dot">·</text>
           <text class="param">{{form.floor || '-'}}</text>
@@ -493,6 +570,14 @@
           <text class="preview-extra-title">小区展示信息</text>
           <text class="preview-extra-text" wx:if="{{form.neighborhoodNote}}">备注：{{form.neighborhoodNote}}</text>
           <text class="preview-extra-text" wx:if="{{form.neighborhoodReview}}">点评：{{form.neighborhoodReview}}</text>
+        </view>
+
+        <view class="preview-neighborhood-extra" wx:if="{{form.detailGuideTitle || form.detailGuideSummary || form.detailGuideContent || form.detailGuideTip}}">
+          <text class="preview-extra-title">详情页展开说明</text>
+          <text class="preview-extra-text" wx:if="{{form.detailGuideTitle}}">标题：{{form.detailGuideTitle}}</text>
+          <text class="preview-extra-text" wx:if="{{form.detailGuideSummary}}">概述：{{form.detailGuideSummary}}</text>
+          <text class="preview-extra-text" wx:if="{{form.detailGuideContent}}">正文：{{form.detailGuideContent}}</text>
+          <text class="preview-extra-text" wx:if="{{form.detailGuideTip}}">提醒：{{form.detailGuideTip}}</text>
         </view>
 
         <view class="preview-neighborhood-extra" wx:if="{{form.commuteInfo || form.propertyType || form.roomInsight || form.scoutSummary}}">

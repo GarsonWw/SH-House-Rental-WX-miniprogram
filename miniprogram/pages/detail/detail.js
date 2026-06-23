@@ -7,7 +7,8 @@ Page({
     house: null,
     isFavorited: false,
     showContactModal: false,
-    wechatCopied: false
+    wechatCopied: false,
+    isGuideExpanded: false
   },
 
   normalizeHouse(house) {
@@ -98,6 +99,10 @@ Page({
 
   onCloseModal() {
     this.setData({ showContactModal: false })
+  },
+
+  onToggleGuide() {
+    this.setData({ isGuideExpanded: !this.data.isGuideExpanded })
   },
 
   noop() {},

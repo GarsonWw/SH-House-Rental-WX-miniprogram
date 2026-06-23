@@ -65,3 +65,52 @@
   border-left: 1rpx solid #F4F1EA;
 }
 .remove-icon { font-size: 36rpx; }
+
+/* 2026 UI refresh */
+.page-bg {
+  background: #EFF8FB;
+}
+
+.empty-title,
+.fav-title,
+.fav-price,
+.fav-unit {
+  color: #111111;
+}
+
+.empty-sub,
+.count-txt,
+.fav-meta,
+.fav-area {
+  color: #667A82;
+}
+
+.empty-btn {
+  background: #28B8BC;
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 30rpx rgba(40, 184, 188, 0.22);
+}
+
+.fav-card {
+  margin: 18rpx 30rpx 0;
+  border-radius: 34rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.fav-img-ph {
+  background: linear-gradient(135deg, #DDF5F8, #F8FEFF);
+}
+
+.avail-tag {
+  background: #28B8BC;
+  border-radius: 999rpx;
+}
+
+.tag-rented {
+  background: rgba(17, 17, 17, 0.7);
+}
+
+.fav-remove {
+  border-left-color: rgba(17, 17, 17, 0.06);
+}

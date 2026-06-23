@@ -247,3 +247,37 @@
 .house-list {
   padding: 16rpx 24rpx;
 }
+
+/* 2026 UI refresh */
+.page-bg,
+.container {
+  background: #EFF8FB;
+}
+
+.neighborhood-header {
+  background: linear-gradient(180deg, #DDF5F8, #EFF8FB);
+  padding: 30rpx 30rpx 42rpx;
+}
+
+.back-btn,
+.header-name,
+.count-num,
+.tips-text {
+  color: #111111;
+}
+
+.header-district,
+.count-unit {
+  color: #667A82;
+}
+
+.tips-card {
+  margin: -22rpx 30rpx 18rpx;
+  background: #FFFFFF;
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.house-list {
+  padding: 18rpx 30rpx;
+}

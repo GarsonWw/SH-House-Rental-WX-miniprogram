@@ -300,6 +300,17 @@
   font-weight: 700;
 }
 
+.trust-line {
+  display: block;
+  margin: 0 24rpx 14rpx;
+  padding: 16rpx 18rpx;
+  background: #F8F6F1;
+  border-radius: 10rpx;
+  color: #8A6A3D;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
 .guide-summary {
   display: block;
   margin: 0 24rpx;
@@ -393,4 +404,71 @@
   font-size: 30rpx;
   font-weight: 800;
   margin-left: 14rpx;
+}
+
+/* 2026 UI refresh */
+.page,
+.page-wrap,
+.detail-page {
+  background: #EFF8FB;
+}
+
+.hero,
+.hero-img {
+  border-radius: 0 0 42rpx 42rpx;
+}
+
+.summary-card,
+.commute-card,
+.detail-card,
+.guide-card,
+.info-section,
+.join-strip,
+.empty-card {
+  border-radius: 34rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.nb-name,
+.card-title,
+.guide-title,
+.info-head,
+.s-num {
+  color: #111111;
+}
+
+.nb-slogan,
+.card-desc,
+.guide-summary,
+.info-text,
+.s-label,
+.trust-line {
+  color: #667A82;
+}
+
+.join-strip,
+.trust-line,
+.info-head,
+.suggest-input {
+  background: #F5FCFD;
+}
+
+.advisor-badge,
+.contact-main {
+  background: #28B8BC;
+  border-radius: 999rpx;
+}
+
+.round-btn,
+.mode-pill,
+.crowd-tag {
+  background: #DDF5F8;
+  color: #111111;
+  border-color: transparent;
+}
+
+.bottom-bar {
+  border-top: 0;
+  box-shadow: 0 -10rpx 34rpx rgba(39, 122, 139, 0.12);
 }

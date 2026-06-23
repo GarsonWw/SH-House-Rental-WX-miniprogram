@@ -1,18 +1,19 @@
 /* app.wxss - 全局样式 */
 page {
-  background-color: #F4F1EA;
+  background-color: #EFF8FB;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
   font-size: 28rpx;
-  color: #27241F;
+  color: #111111;
   box-sizing: border-box;
 }
 
 /* Brand palette
-   Deep navy: #0F2F4A
-   Champagne gold: #B8894D
-   Porcelain background: #F4F1EA
-   Ivory card: #FFFFFF
-   Ink text: #171512 / #4F4A43 / #7A746B
+   Soft sky: #EFF8FB
+   Clear cyan: #28B8BC
+   Light cyan surface: #DDF5F8
+   Ink: #111111
+   Muted text: #667A82
+   Card: #FFFFFF
 */
 
 /* 通用容器 */
@@ -23,27 +24,27 @@ page {
 /* 通用卡片样式 */
 .card {
   background: #FFFFFF;
-  border-radius: 16rpx;
+  border-radius: 32rpx;
   padding: 24rpx;
   margin-bottom: 20rpx;
-  border: 1rpx solid rgba(15, 47, 74, 0.06);
-  box-shadow: 0 8rpx 28rpx rgba(15, 47, 74, 0.08);
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 12rpx 36rpx rgba(51, 113, 125, 0.08);
 }
 
 /* 按钮样式 */
 .btn-primary {
-  background: linear-gradient(135deg, #0F2F4A, #1C4966);
+  background: #28B8BC;
   color: #FFFFFF;
-  border-radius: 50rpx;
+  border-radius: 999rpx;
   border: none;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 800;
   height: 88rpx;
   line-height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 24rpx rgba(15, 47, 74, 0.24);
+  box-shadow: 0 14rpx 28rpx rgba(40, 184, 188, 0.22);
 }
 
 .btn-primary::after {
@@ -52,9 +53,9 @@ page {
 
 .btn-outline {
   background: rgba(255,255,255,0.72);
-  color: #0F2F4A;
-  border-radius: 50rpx;
-  border: 2rpx solid #0F2F4A;
+  color: #111111;
+  border-radius: 999rpx;
+  border: 2rpx solid rgba(17, 17, 17, 0.12);
   font-size: 28rpx;
   height: 72rpx;
   line-height: 72rpx;
@@ -68,27 +69,27 @@ page {
 .tag {
   display: inline-block;
   padding: 4rpx 16rpx;
-  border-radius: 50rpx;
+  border-radius: 999rpx;
   font-size: 22rpx;
-  background: #F4EFE6;
-  color: #8A6A3D;
+  background: #E2F6F8;
+  color: #111111;
   margin-right: 10rpx;
   margin-bottom: 8rpx;
 }
 
 .tag-blue {
-  background: #EAF1F6;
-  color: #2F6F95;
+  background: #DDF5F8;
+  color: #111111;
 }
 
 .tag-green {
-  background: #EAF6EF;
-  color: #2E7D5B;
+  background: #E6FAF2;
+  color: #111111;
 }
 
 /* 价格样式 */
 .price {
-  color: #B8894D;
+  color: #111111;
   font-weight: 700;
 }
 
@@ -104,7 +105,7 @@ page {
 /* 分割线 */
 .divider {
   height: 1rpx;
-  background: #E6E0D8;
+  background: rgba(17, 17, 17, 0.08);
   margin: 20rpx 0;
 }
 
@@ -115,7 +116,7 @@ page {
   align-items: center;
   justify-content: center;
   padding: 100rpx 40rpx;
-  color: #7A746B;
+  color: #667A82;
 }
 
 .empty-state text {
@@ -129,7 +130,7 @@ page {
   align-items: center;
   justify-content: center;
   padding: 40rpx;
-  color: #7A746B;
+  color: #667A82;
   font-size: 26rpx;
 }
 
@@ -151,7 +152,7 @@ page {
 .preview-price-unit,
 .stat-num,
 .s-num {
-  color: #B8894D;
+  color: #111111;
 }
 
 .btn-primary,
@@ -161,4 +162,81 @@ page {
 .publish-btn,
 .empty-action {
   letter-spacing: 1rpx;
+}
+
+button,
+input,
+textarea,
+picker,
+scroll-view,
+view,
+text {
+  box-sizing: border-box;
+}
+
+button::after {
+  border: 0;
+}
+
+/* New visual language safety layer */
+.submit-btn,
+.next-btn,
+.publish-btn,
+.empty-action,
+.contact-main,
+.search-btn,
+.edit-confirm,
+.login-btn,
+.modal-confirm,
+.modal-copy-btn {
+  background: #28B8BC !important;
+  color: #FFFFFF !important;
+  border-radius: 999rpx !important;
+  border-color: #28B8BC !important;
+  box-shadow: 0 14rpx 30rpx rgba(40, 184, 188, 0.22) !important;
+}
+
+.tag,
+.chip,
+.f-chip,
+.sh-tag,
+.r-tag,
+.status-opt,
+.tag-option,
+.mode-pill,
+.crowd-tag,
+.round-btn {
+  border-radius: 999rpx !important;
+}
+
+.price,
+.price-number,
+.price-unit,
+.mini-price,
+.result-price,
+.fav-price,
+.card-price,
+.preview-price,
+.preview-price-unit,
+.stat-num,
+.s-num,
+.count-num {
+  color: #111111 !important;
+}
+
+.card,
+.form-card,
+.detail-card,
+.info-card,
+.landlord-card,
+.entry-card,
+.menu-card,
+.brand-trust-card,
+.platform-card,
+.trust-card,
+.section-block,
+.result-card,
+.fav-card,
+.house-card {
+  border-radius: 34rpx;
 }

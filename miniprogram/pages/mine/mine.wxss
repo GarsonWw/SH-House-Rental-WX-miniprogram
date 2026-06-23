@@ -18,16 +18,52 @@
   font-size: 22rpx; color: #BBB; text-align: center; margin-top: 16rpx; line-height: 1.6;
 }
 
-.no-login-tools {
-  width: 100%; background: #FFF; border-radius: 20rpx; margin-top: 32rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05); overflow: hidden;
+.brand-trust-card {
+  width: 100%;
+  background: #FFF;
+  border-radius: 20rpx;
+  padding: 26rpx;
+  margin-top: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(15,47,74,0.08);
+  border: 1rpx solid rgba(15,47,74,0.06);
+  box-sizing: border-box;
 }
-.tool-item {
-  display: flex; align-items: center; padding: 28rpx 28rpx;
+
+.logged-trust {
+  width: auto;
+  margin: 20rpx 24rpx 0;
 }
-.tool-icon { font-size: 36rpx; margin-right: 16rpx; }
-.tool-name { flex: 1; font-size: 28rpx; color: #333; }
-.tool-arr  { font-size: 32rpx; color: #CCC; }
+
+.brand-trust-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #171512;
+  margin-bottom: 10rpx;
+}
+
+.brand-trust-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #4F4A43;
+  line-height: 1.7;
+}
+
+.brand-trust-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+
+.brand-trust-tags text {
+  font-size: 22rpx;
+  color: #8A6A3D;
+  background: #F4EFE6;
+  border-radius: 999rpx;
+  padding: 8rpx 14rpx;
+  margin-right: 10rpx;
+  margin-bottom: 8rpx;
+}
 
 /* ── 已登录：用户头部 ── */
 .user-header {
@@ -86,7 +122,6 @@
   font-size: 38rpx; margin-right: 20rpx; flex-shrink: 0;
 }
 .fav-bg   { background: #FFF0F5; }
-.study-bg { background: #EAF1F6; }
 .entry-info { display: flex; flex-direction: column; }
 .entry-name { font-size: 30rpx; font-weight: 700; color: #171512; }
 .entry-sub  { font-size: 22rpx; color: #999; margin-top: 5rpx; }
@@ -176,4 +211,120 @@
   flex: 1; text-align: center; padding: 20rpx 0;
   font-size: 28rpx; font-weight: 700; color: #FFF;
   background: linear-gradient(135deg, #1A3A5C, #0F4C75); border-radius: 50rpx;
+}
+
+/* 2026 UI refresh */
+.page-bg {
+  background: #EFF8FB;
+}
+
+.login-page {
+  padding: 72rpx 36rpx 0;
+}
+
+.login-big-icon {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 50%;
+  background: #DDF5F8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 136rpx;
+}
+
+.login-title,
+.user-name,
+.entry-name,
+.brand-trust-title,
+.modal-title {
+  color: #111111;
+}
+
+.login-sub,
+.login-hint,
+.brand-trust-desc,
+.entry-sub,
+.modal-sub,
+.menu-txt,
+.le-text {
+  color: #667A82;
+}
+
+.login-btn,
+.modal-confirm {
+  background: #28B8BC;
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 30rpx rgba(40, 184, 188, 0.24);
+}
+
+.brand-trust-card,
+.stats-card,
+.entry-card,
+.menu-card,
+.landlord-entry,
+.modal-box,
+.profile-modal-box {
+  border-radius: 34rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.brand-trust-tags text,
+.fav-badge,
+.le-active,
+.avatar-picker-ph {
+  background: #DDF5F8;
+  color: #111111;
+}
+
+.user-header {
+  background: linear-gradient(180deg, #DDF5F8, #EFF8FB);
+  padding: 46rpx 32rpx 64rpx;
+}
+
+.user-name {
+  color: #111111;
+}
+
+.user-sub,
+.edit-profile {
+  color: #667A82;
+  border-color: rgba(17, 17, 17, 0.12);
+}
+
+.user-avatar-ph,
+.user-avatar-img {
+  border-color: #FFFFFF;
+}
+
+.stat-num,
+.fav-num,
+.blue-num,
+.green-num {
+  color: #111111;
+}
+
+.entry-icon-bg {
+  border-radius: 50%;
+}
+
+.fav-bg {
+  background: #DDF5F8;
+}
+
+.landlord-entry {
+  background: #FFFFFF;
+  border-style: solid;
+}
+
+.le-active {
+  border-color: rgba(40, 184, 188, 0.5);
+}
+
+.profile-input,
+.code-input {
+  background: #F5FCFD;
+  border-color: rgba(17, 17, 17, 0.08);
+  border-radius: 999rpx;
 }

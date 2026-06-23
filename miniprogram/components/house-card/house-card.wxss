@@ -205,3 +205,68 @@
   font-size: 22rpx;
   color: #A8A196;
 }
+
+/* 2026 UI refresh */
+.house-card {
+  border-radius: 34rpx;
+  background: #FFFFFF;
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+}
+
+.card-image {
+  height: 300rpx;
+}
+
+.cover-placeholder {
+  background: linear-gradient(135deg, #DDF5F8, #F8FEFF);
+}
+
+.placeholder-text,
+.neighborhood,
+.price-number,
+.price-unit {
+  color: #111111;
+}
+
+.status-badge,
+.room-type-badge,
+.contact-btn {
+  border-radius: 999rpx;
+}
+
+.available {
+  background: #28B8BC;
+}
+
+.unavailable,
+.room-type-badge {
+  background: rgba(17, 17, 17, 0.72);
+}
+
+.house-title {
+  color: #111111;
+  font-weight: 800;
+}
+
+.district,
+.info-item,
+.view-count,
+.create-time {
+  color: #667A82;
+}
+
+.tag {
+  background: #E2F6F8;
+  color: #111111;
+  border-radius: 999rpx;
+}
+
+.card-footer {
+  border-top: 1rpx solid rgba(17, 17, 17, 0.06);
+}
+
+.phone-btn,
+.wechat-btn {
+  background: #DDF5F8;
+}

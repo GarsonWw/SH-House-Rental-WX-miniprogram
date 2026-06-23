@@ -8,20 +8,19 @@
     "pages/publish/publish",
     "pages/mine/mine",
     "pages/favorites/favorites",
-    "pages/checklist/checklist",
     "pages/landlord/landlord"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0F2F4A",
+    "navigationBarBackgroundColor": "#EFF8FB",
     "navigationBarTitleText": "深港租房双城通",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#F4F1EA"
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#EFF8FB"
   },
   "tabBar": {
-    "color": "#7A746B",
-    "selectedColor": "#B8894D",
-    "backgroundColor": "#FFFCF7",
+    "color": "#8A9AA1",
+    "selectedColor": "#111111",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
       {

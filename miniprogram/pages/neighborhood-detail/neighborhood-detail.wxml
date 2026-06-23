@@ -12,7 +12,7 @@
   </view>
 
   <view class="join-strip">
-    <text class="join-text">{{stats.available}} 套在租 · {{stats.roomTypes || '户型持续更新'}} · 直连房东</text>
+    <text class="join-text">{{stats.available}} 套在租 · 3年沉淀 · 1000+真实租客服务 · 免中介费</text>
     <view class="join-btn" bindtap="onViewHouses">立即看房</view>
   </view>
 
@@ -62,6 +62,7 @@
       </view>
     </view>
     <view class="advisor-badge">小区实探总结</view>
+    <text class="trust-line">我们只做罗湖，结合深港通勤、预算需求和生活配套，帮助用户从看房到入住更省心。</text>
     <text class="guide-summary">{{profile.scoutSummary}}</text>
   </view>
 

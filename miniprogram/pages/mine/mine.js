@@ -9,12 +9,6 @@ Page({
 
     // 数据统计
     favoriteCount: 0,
-    hkustProgress: 0,
-    hkuProgress: 0,
-    selectedChecklistUni: '',
-    checklistProgress: 0,
-    checklistLabel: '未选择院校',
-    checklistSummary: '先选择院校，再查看专属清单',
 
     // 房东模式
     isLandlord: false,
@@ -44,37 +38,6 @@ Page({
       userProfile: profile,
       isLandlord,
       favoriteCount: app.globalData.favoriteIds.length
-    })
-    this.loadProgress()
-  },
-
-  loadProgress() {
-    const openid = app.globalData.openid || ''
-    const savedHkust = wx.getStorageSync(`checklist_hkust_${openid}`) || wx.getStorageSync('checklist_hkust') || {}
-    const savedHku   = wx.getStorageSync(`checklist_hku_${openid}`)   || wx.getStorageSync('checklist_hku')   || {}
-    const selectedChecklistUni = wx.getStorageSync('selectedChecklistUni') || ''
-    const hkustProgress = Math.round(Object.keys(savedHkust).length / 20 * 100)
-    const hkuProgress = Math.round(Object.keys(savedHku).length / 22 * 100)
-    const checklistProgress = selectedChecklistUni === 'hkust'
-      ? hkustProgress
-      : selectedChecklistUni === 'hku'
-        ? hkuProgress
-        : 0
-    const checklistLabel = selectedChecklistUni === 'hkust'
-      ? '科大准备'
-      : selectedChecklistUni === 'hku'
-        ? '港大准备'
-        : '选择院校'
-    const checklistSummary = selectedChecklistUni
-      ? `${checklistLabel} ${checklistProgress}%`
-      : '先选择院校，再查看专属清单'
-    this.setData({
-      hkustProgress,
-      hkuProgress,
-      selectedChecklistUni,
-      checklistProgress,
-      checklistLabel,
-      checklistSummary
     })
   },
 
@@ -164,10 +127,6 @@ Page({
     wx.navigateTo({ url: '/pages/favorites/favorites' })
   },
 
-  onGoChecklist() {
-    wx.navigateTo({ url: '/pages/checklist/checklist' })
-  },
-
   // ── 房东入口 ─────────────────────────────────────
   onLandlordEntry() {
     if (app.globalData.isLandlord) {
@@ -205,7 +164,7 @@ Page({
   onAbout() {
     wx.showModal({
       title: '关于',
-      content: '深港租房双城通\n版本 2.0.0（云开发版）\n\n直连房东，0中介费\n数据实时同步云端',
+      content: '深港租房双城通\n版本 2.0.0（云开发版）\n\n3年沉淀 + 上千位真实用户服务 + 免中介费 + 深港生活经验。\n\n自2023年起，我们专注于深圳罗湖租房直租服务，坚持免中介费、真实房源、高效匹配的理念，致力于帮助来罗湖发展的港硕学生、香港高校学生以及深港通勤工作人群找到合适的居住空间。\n\n截至目前，我们已累计服务超过1000+位租客，深耕罗湖口岸、国贸、东门、黄贝岭、翠竹、笋岗等片区，帮助众多用户顺利完成从看房到入住的全过程。\n\n我们深知跨境学习、工作和生活的不易，因此不仅提供罗湖房源信息，更结合通勤时间、预算需求、生活配套等实际情况，为每位用户提供更合适的罗湖租房建议，让租房变得更加省心、高效、透明。',
       showCancel: false, confirmText: '知道了'
     })
   }

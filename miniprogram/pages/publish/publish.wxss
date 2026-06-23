@@ -370,6 +370,17 @@
   margin-top: 8rpx;
 }
 
+.field-helper {
+  display: block;
+  font-size: 23rpx;
+  color: #7A746B;
+  line-height: 1.6;
+  background: #FAF7F1;
+  border-radius: 12rpx;
+  padding: 16rpx 18rpx;
+  margin: 0 0 24rpx;
+}
+
 .neighborhood-config-card {
   background: #F8F6F1;
   border: 2rpx solid #E5D8C4;
@@ -754,4 +765,87 @@
   font-size: 22rpx;
   color: #7A746B;
   margin-bottom: 4rpx;
+}
+
+/* 2026 UI refresh */
+.page-bg,
+.publish-page,
+.page-container {
+  background: #EFF8FB;
+}
+
+.form-card,
+.preview-card,
+.neighborhood-config-card,
+.info-notice,
+.preview-neighborhood-extra {
+  border-radius: 34rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+  background: #FFFFFF;
+}
+
+.form-section-title,
+.form-label,
+.preview-house-title,
+.preview-extra-title,
+.config-title,
+.preview-landlord-name {
+  color: #111111;
+}
+
+.config-sub,
+.field-helper,
+.preview-extra-text,
+.contact-phone,
+.contact-wechat,
+.preview-location,
+.preview-location-detail,
+.textarea-count {
+  color: #667A82;
+}
+
+.field-helper,
+.form-input,
+.form-textarea,
+.picker-view,
+.location-picker,
+.preview-no-img,
+.preview-neighborhood-extra {
+  background: #F5FCFD;
+  border-radius: 28rpx;
+  border-color: rgba(17, 17, 17, 0.06);
+}
+
+.next-btn,
+.submit-btn,
+.prefill-landlord-btn,
+.status-opt.opt-active,
+.tag-option.selected {
+  background: #28B8BC;
+  color: #FFFFFF;
+  border-color: #28B8BC;
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 30rpx rgba(40, 184, 188, 0.22);
+}
+
+.tag-option,
+.status-opt,
+.preview-avatar,
+.preview-landlord-badge,
+.tag {
+  border-radius: 999rpx;
+  background: #DDF5F8;
+  color: #111111;
+  border-color: transparent;
+}
+
+.preview-price,
+.preview-price-unit {
+  color: #111111;
+}
+
+.info-notice {
+  box-shadow: none;
+  background: #F5FCFD;
 }

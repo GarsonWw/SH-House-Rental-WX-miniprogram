@@ -80,6 +80,10 @@
         <text class="param-label">房型</text>
         <text class="param-value">{{house.roomType}}</text>
       </view>
+      <view class="param-item" wx:if="{{house.buildingAttribute || house.propertyType}}">
+        <text class="param-label">建筑属性</text>
+        <text class="param-value">{{house.buildingAttribute || house.propertyType}}</text>
+      </view>
       <view class="param-item">
         <text class="param-label">面积</text>
         <text class="param-value">{{house.area}}㎡</text>
@@ -109,6 +113,34 @@
     <text class="description-text">{{house.description}}</text>
   </view>
 
+  <view class="detail-card guide-expand-card" wx:if="{{house.detailGuideTitle || house.detailGuideSummary || house.detailGuideContent || house.detailGuideTip}}">
+    <view class="guide-expand-head">
+      <view>
+        <text class="guide-expand-eyebrow">实地信息补充</text>
+        <text class="guide-expand-title">{{house.detailGuideTitle || '房源深度说明'}}</text>
+      </view>
+      <view class="guide-expand-pill">{{isGuideExpanded ? '已展开' : '3行速览'}}</view>
+    </view>
+
+    <text class="guide-summary-text {{isGuideExpanded ? '' : 'summary-collapsed'}}">
+      {{house.detailGuideSummary || house.detailGuideContent || house.description}}
+    </text>
+
+    <view class="guide-full-content" wx:if="{{isGuideExpanded && house.detailGuideContent}}">
+      <text>{{house.detailGuideContent}}</text>
+    </view>
+
+    <view class="guide-tip" wx:if="{{isGuideExpanded && house.detailGuideTip}}">
+      <text class="guide-tip-icon">!</text>
+      <text class="guide-tip-text">{{house.detailGuideTip}}</text>
+    </view>
+
+    <view class="guide-toggle" bindtap="onToggleGuide">
+      <text>{{isGuideExpanded ? '收起内容' : '展开阅读全文'}}</text>
+      <text class="guide-toggle-arrow">{{isGuideExpanded ? '↑' : '↓'}}</text>
+    </view>
+  </view>
+
   <!-- 🔑 房东信息卡片（核心功能） -->
   <view class="landlord-card">
     <text class="card-title">房东信息</text>
@@ -129,6 +161,11 @@
         <text class="landlord-name">{{house.landlordName}}</text>
         <text class="landlord-badge">🏠 直租房东 · 无中介费</text>
       </view>
+    </view>
+
+    <view class="trust-mini">
+      <text>3年沉淀 · 上千位真实用户服务 · 免中介费 · 深港生活经验</text>
+      <text>我们坚持真实房源与高效匹配，结合通勤、预算和生活配套，帮助你更安心地完成看房到入住。</text>
     </view>
 
     <!-- 联系方式 -->

@@ -410,3 +410,84 @@
   height: env(safe-area-inset-bottom);
   min-height: 30rpx;
 }
+
+/* 2026 UI refresh */
+.search-inner,
+.search-btn,
+.scale-tip,
+.layer-btn,
+.district-panel,
+.locate-btn,
+.hint-card,
+.bottom-sheet,
+.sheet-house,
+.sh-contact-btn {
+  border-radius: 999rpx;
+}
+
+.bottom-sheet {
+  border-radius: 42rpx 42rpx 0 0;
+  box-shadow: 0 -18rpx 46rpx rgba(39, 122, 139, 0.14);
+}
+
+.search-inner,
+.layer-btn,
+.district-panel,
+.locate-btn,
+.hint-card,
+.sheet-house {
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.12);
+}
+
+.search-btn,
+.layer-active,
+.dp-active,
+.sh-phone,
+.sh-wechat {
+  background: #28B8BC;
+  color: #FFFFFF;
+  border-color: #28B8BC;
+}
+
+.search-input,
+.dp-item,
+.sheet-title,
+.sh-title,
+.sh-price,
+.sh-price-unit,
+.locate-icon,
+.layer-active .layer-label {
+  color: #111111;
+}
+
+.search-ph,
+.layer-label,
+.hint-txt,
+.sh-meta {
+  color: #667A82;
+}
+
+.sheet-count,
+.sh-tag {
+  background: #DDF5F8;
+  color: #111111;
+  border-radius: 999rpx;
+}
+
+.sheet-header {
+  border-bottom-color: rgba(17, 17, 17, 0.06);
+}
+
+.sh-img,
+.sh-img-ph {
+  border-radius: 24rpx;
+}
+
+.sh-available {
+  background: #28B8BC;
+}
+
+.scale-tip {
+  background: rgba(17, 17, 17, 0.72);
+}

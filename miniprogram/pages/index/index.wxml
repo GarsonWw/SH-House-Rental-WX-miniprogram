@@ -13,6 +13,20 @@
     <view class="banner-action">去选择 →</view>
   </view>
 
+  <view class="trust-card">
+    <view class="trust-head">
+      <text class="trust-title">3年沉淀 · 1000+真实租客服务</text>
+      <text class="trust-badge">只做罗湖</text>
+    </view>
+    <text class="trust-desc">自2023年起，我们专注深圳罗湖租房直租服务，结合深港生活经验、通勤时间、预算需求和生活配套，为港硕学生、香港高校学生及深港通勤人群提供更省心、高效、透明的罗湖租房建议。</text>
+    <view class="trust-points">
+      <text>罗湖直租</text>
+      <text>免中介费</text>
+      <text>深港通勤经验</text>
+      <text>真实房源</text>
+    </view>
+  </view>
+
   <!-- ② 平台信息卡 -->
   <view class="platform-card">
     <view class="platform-left">
@@ -24,7 +38,7 @@
           <text class="platform-tagline">深港找房</text>
         </view>
         <text class="platform-meta">深圳罗湖直租平台 · 房源实测中</text>
-        <text class="platform-desc">致力于实现租房信息透明化，直连房东，0中介费</text>
+        <text class="platform-desc">3年沉淀 + 上千位真实用户服务 + 免中介费 + 深港生活经验</text>
       </view>
     </view>
     <view class="platform-stat">

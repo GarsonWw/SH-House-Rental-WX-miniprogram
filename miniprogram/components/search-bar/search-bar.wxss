@@ -41,3 +41,26 @@
   padding-left: 12rpx;
   border-left: 1rpx solid #E6E0D8;
 }
+
+/* 2026 UI refresh */
+.search-bar {
+  background: #FFFFFF;
+  border-radius: 999rpx;
+  padding: 16rpx 24rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 12rpx 28rpx rgba(39, 122, 139, 0.08);
+}
+
+.search-input,
+.search-btn {
+  color: #111111;
+}
+
+.search-placeholder,
+.clear-btn {
+  color: #8A9AA1;
+}
+
+.search-btn {
+  border-left-color: rgba(17, 17, 17, 0.08);
+}

@@ -196,3 +196,67 @@
   flex: 2; text-align: center; padding: 22rpx 0; font-size: 28rpx; font-weight: 700; color: #FFF;
   background: linear-gradient(135deg, #1A3A5C, #0F4C75); border-radius: 50rpx;
 }
+
+/* 2026 UI refresh */
+.page-bg,
+.landlord-page,
+.container {
+  background: #EFF8FB;
+}
+
+.stat-card,
+.house-card,
+.empty-card,
+.edit-box,
+.edit-input,
+.edit-picker,
+.edit-textarea {
+  border-radius: 34rpx;
+}
+
+.stat-card,
+.house-card,
+.empty-card,
+.edit-box {
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.card-title,
+.card-name,
+.card-price,
+.edit-title,
+.edit-section-title,
+.edit-picker-value {
+  color: #111111;
+}
+
+.card-meta,
+.edit-label,
+.edit-picker-placeholder {
+  color: #667A82;
+}
+
+.publish-btn,
+.edit-confirm,
+.edit-tag-active,
+.edit-status-active {
+  background: #28B8BC;
+  border-color: #28B8BC;
+  color: #FFFFFF;
+  border-radius: 999rpx;
+}
+
+.act-btn,
+.edit-prefill-btn,
+.edit-status,
+.edit-tag {
+  border-radius: 999rpx;
+}
+
+.edit-input,
+.edit-picker,
+.edit-textarea {
+  background: #F5FCFD;
+  border-color: rgba(17, 17, 17, 0.08);
+}

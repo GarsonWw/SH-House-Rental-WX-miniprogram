@@ -6,6 +6,7 @@
     "pages/map/map",
     "pages/detail/detail",
     "pages/publish/publish",
+    "pages/neighborhood-config/neighborhood-config",
     "pages/mine/mine",
     "pages/favorites/favorites",
     "pages/landlord/landlord"

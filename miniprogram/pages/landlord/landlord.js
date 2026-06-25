@@ -90,6 +90,10 @@ Page({
     wx.navigateTo({ url: '/pages/publish/publish' })
   },
 
+  onNeighborhoodConfig() {
+    wx.navigateTo({ url: '/pages/neighborhood-config/neighborhood-config' })
+  },
+
   onHouseTap(e) {
     wx.navigateTo({ url: `/pages/detail/detail?id=${e.currentTarget.dataset.id}` })
   },
@@ -129,6 +133,11 @@ Page({
   onEditHouse(e) {
     const { id } = e.currentTarget.dataset
     wx.navigateTo({ url: `/pages/publish/publish?id=${id}` })
+  },
+
+  onEditNeighborhood(e) {
+    const { name } = e.currentTarget.dataset
+    wx.navigateTo({ url: `/pages/neighborhood-config/neighborhood-config?name=${encodeURIComponent(name || '')}` })
   },
 
   onEditInput(e) {

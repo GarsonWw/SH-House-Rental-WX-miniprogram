@@ -123,108 +123,7 @@
         </view>
       </view>
 
-      <view class="form-item">
-        <text class="form-label">小区备注（首页小区下方展示）</text>
-        <textarea
-          class="form-textarea small-textarea"
-          placeholder="如：罗湖成熟社区，近地铁，生活配套齐全"
-          maxlength="200"
-          value="{{form.neighborhoodNote}}"
-          bindinput="onInput"
-          data-field="neighborhoodNote"
-          auto-height
-        />
-        <text class="textarea-count">{{form.neighborhoodNote.length}}/200</text>
-      </view>
-
-      <view class="form-item">
-        <text class="form-label">小区点评（首页展开点评展示）</text>
-        <textarea
-          class="form-textarea"
-          placeholder="写一段给租客看的点评，如通勤、生活便利度、适合人群等"
-          maxlength="500"
-          value="{{form.neighborhoodReview}}"
-          bindinput="onInput"
-          data-field="neighborhoodReview"
-          auto-height
-        />
-        <text class="textarea-count">{{form.neighborhoodReview.length}}/500</text>
-      </view>
-
-      <view class="neighborhood-config-card">
-        <text class="config-title">小区详情页配置</text>
-        <text class="config-sub">这些内容会展示在小区详情页，用来提高租客咨询转化率。</text>
-
-        <view class="form-item">
-          <text class="form-label">顶部宣传语</text>
-          <input class="form-input" placeholder="如：南北少闹 · 均摊老盘 · 适合通勤党" value="{{form.neighborhoodSlogan}}" bindinput="onInput" data-field="neighborhoodSlogan" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">通勤信息</text>
-          <input class="form-input" placeholder="如：步行约12分钟直达口岸 / 地铁站" value="{{form.commuteInfo}}" bindinput="onInput" data-field="commuteInfo" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">通勤方式</text>
-          <input class="form-input" placeholder="如：步行 / 地铁 / 巴士" value="{{form.commuteMode}}" bindinput="onInput" data-field="commuteMode" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">安全与门禁</text>
-          <textarea class="form-textarea small-textarea" placeholder="如：大门人脸识别+单元门禁，保安双重值守" maxlength="200" value="{{form.safetyInfo}}" bindinput="onInput" data-field="safetyInfo" auto-height />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">居住类型</text>
-          <input class="form-input" placeholder="如：传统住宅小区 / 公寓 / 城中村" value="{{form.propertyType}}" bindinput="onInput" data-field="propertyType" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">快递外卖</text>
-          <input class="form-input" placeholder="如：外卖/快递可直接送上楼" value="{{form.deliveryInfo}}" bindinput="onInput" data-field="deliveryInfo" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">短租支持</text>
-          <input class="form-input" placeholder="如：支持短租 / 最短3个月起" value="{{form.shortRentInfo}}" bindinput="onInput" data-field="shortRentInfo" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">房间实探总结</text>
-          <textarea class="form-textarea" placeholder="写清房间优点、噪音、采光、装修、适合人群等真实体验" maxlength="700" value="{{form.roomInsight}}" bindinput="onInput" data-field="roomInsight" auto-height />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">户型价格参考</text>
-          <input class="form-input" placeholder="如：1房3k-4k / 2房6k-6k5" value="{{form.priceReference}}" bindinput="onInput" data-field="priceReference" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">周边配套</text>
-          <textarea class="form-textarea small-textarea" placeholder="如：楼下小卖部，餐饮偏少，吃饭需步行或依赖外卖" maxlength="300" value="{{form.surroundings}}" bindinput="onInput" data-field="surroundings" auto-height />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">适合人群标签</text>
-          <input class="form-input" placeholder="如：合租党 / 省钱党 / 抗噪体质" value="{{form.suitableCrowd}}" bindinput="onInput" data-field="suitableCrowd" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">实探标题</text>
-          <input class="form-input" placeholder="如：首席实测官｜港硕通行 ID: 250001" value="{{form.scoutTitle}}" bindinput="onInput" data-field="scoutTitle" />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">学长测评总结</text>
-          <textarea class="form-textarea" placeholder="写一段像实地探盘笔记一样的客观总结" maxlength="800" value="{{form.scoutSummary}}" bindinput="onInput" data-field="scoutSummary" auto-height />
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">学长建议 / 避坑提醒</text>
-          <textarea class="form-textarea" placeholder="如：对声音敏感慎选南向低楼层；优先看北向高楼层" maxlength="600" value="{{form.scoutAdvice}}" bindinput="onInput" data-field="scoutAdvice" auto-height />
-        </view>
-      </view>
+      <view class="field-helper">小区详情、通勤配套、点评等复杂内容已移到「房东管理中心 → 小区详情配置」。发布房源时先填必要信息即可。</view>
 
       <view class="form-item required">
         <text class="form-label">月租金</text>
@@ -365,9 +264,16 @@
       <text class="textarea-count">{{form.description.length}}/500</text>
     </view>
 
-    <view class="form-card">
-      <text class="form-section-title">📖 详情页展开说明（可选）</text>
-      <text class="field-helper">默认展示三行概述，用户点击后再阅读完整内容。建议写真实体验、适合人群、优缺点和看房提醒。</text>
+    <view class="form-card advanced-card">
+      <view class="advanced-head" bindtap="onToggleAdvancedHouseFields">
+        <view>
+          <text class="form-section-title">📖 补充房源详情（可选）</text>
+          <text class="field-helper compact">非必填，适合后续补充。填写后详情页会默认展示三行概述，用户点击后阅读完整内容。</text>
+        </view>
+        <text class="advanced-toggle">{{showAdvancedHouseFields ? '收起' : '展开'}}</text>
+      </view>
+
+      <view wx:if="{{showAdvancedHouseFields}}">
 
       <view class="form-item">
         <text class="form-label">展开标题</text>
@@ -420,6 +326,7 @@
           auto-height
         />
         <text class="textarea-count">{{form.detailGuideTip.length}}/300</text>
+      </view>
       </view>
     </view>
 
@@ -566,26 +473,12 @@
           <text class="tag" wx:for="{{form.tags}}" wx:key="index">{{item}}</text>
         </view>
 
-        <view class="preview-neighborhood-extra" wx:if="{{form.neighborhoodNote || form.neighborhoodReview}}">
-          <text class="preview-extra-title">小区展示信息</text>
-          <text class="preview-extra-text" wx:if="{{form.neighborhoodNote}}">备注：{{form.neighborhoodNote}}</text>
-          <text class="preview-extra-text" wx:if="{{form.neighborhoodReview}}">点评：{{form.neighborhoodReview}}</text>
-        </view>
-
         <view class="preview-neighborhood-extra" wx:if="{{form.detailGuideTitle || form.detailGuideSummary || form.detailGuideContent || form.detailGuideTip}}">
           <text class="preview-extra-title">详情页展开说明</text>
           <text class="preview-extra-text" wx:if="{{form.detailGuideTitle}}">标题：{{form.detailGuideTitle}}</text>
           <text class="preview-extra-text" wx:if="{{form.detailGuideSummary}}">概述：{{form.detailGuideSummary}}</text>
           <text class="preview-extra-text" wx:if="{{form.detailGuideContent}}">正文：{{form.detailGuideContent}}</text>
           <text class="preview-extra-text" wx:if="{{form.detailGuideTip}}">提醒：{{form.detailGuideTip}}</text>
-        </view>
-
-        <view class="preview-neighborhood-extra" wx:if="{{form.commuteInfo || form.propertyType || form.roomInsight || form.scoutSummary}}">
-          <text class="preview-extra-title">小区详情页</text>
-          <text class="preview-extra-text" wx:if="{{form.commuteInfo}}">通勤：{{form.commuteInfo}}</text>
-          <text class="preview-extra-text" wx:if="{{form.propertyType}}">类型：{{form.propertyType}}</text>
-          <text class="preview-extra-text" wx:if="{{form.priceReference}}">价格：{{form.priceReference}}</text>
-          <text class="preview-extra-text" wx:if="{{form.scoutSummary}}">实探：{{form.scoutSummary}}</text>
         </view>
 
         <view class="preview-divider"></view>

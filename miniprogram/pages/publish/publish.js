@@ -68,6 +68,7 @@ Page({
     submitting: false,
     isEditMode: false,
     editHouseId: '',
+    showAdvancedHouseFields: false,
     currentStep: 1, // 1:基本信息 2:房东信息 3:预览确认
     showRoomTypePicker: false,
     showOrientationPicker: false,
@@ -206,6 +207,10 @@ Page({
       tagOptions: buildTagOptions(tags),
       'form.tags': tags
     })
+  },
+
+  onToggleAdvancedHouseFields() {
+    this.setData({ showAdvancedHouseFields: !this.data.showAdvancedHouseFields })
   },
 
   // 上传图片
@@ -532,6 +537,7 @@ Page({
       },
       selectedTags: [],
       tagOptions: buildTagOptions([]),
+      showAdvancedHouseFields: false,
       currentStep: 1
     })
   }

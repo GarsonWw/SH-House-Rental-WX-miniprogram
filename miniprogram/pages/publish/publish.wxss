@@ -381,6 +381,29 @@
   margin: 0 0 24rpx;
 }
 
+.field-helper.compact {
+  margin: 8rpx 0 0;
+  padding: 0;
+  background: transparent;
+}
+
+.advanced-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.advanced-toggle {
+  flex-shrink: 0;
+  margin-left: 20rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  color: #111111;
+  background: #DDF5F8;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
 .neighborhood-config-card {
   background: #F8F6F1;
   border: 2rpx solid #E5D8C4;

@@ -42,6 +42,14 @@
     <text class="publish-text">发布新房源</text>
   </view>
 
+  <view class="config-entry-card" bindtap="onNeighborhoodConfig">
+    <view>
+      <text class="config-entry-title">小区详情配置</text>
+      <text class="config-entry-sub">发布房源后，按小区单独补充通勤、配套、点评和转化内容</text>
+    </view>
+    <text class="config-entry-arrow">›</text>
+  </view>
+
   <!-- 筛选 Tab -->
   <view class="filter-tabs">
     <view class="f-tab {{filterStatus === 'all' ? 'f-tab-active' : ''}}"
@@ -100,8 +108,8 @@
         >✏️ 编辑</view>
         <view
           class="act-btn act-community"
-          bindtap="onEditHouse"
-          data-id="{{item.id}}"
+          bindtap="onEditNeighborhood"
+          data-name="{{item.neighborhood}}"
         >配置小区</view>
         <view
           class="act-btn {{item.available ? 'act-rent' : 'act-open'}}"

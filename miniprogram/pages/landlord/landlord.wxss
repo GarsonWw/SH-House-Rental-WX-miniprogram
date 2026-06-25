@@ -47,6 +47,39 @@
 .publish-icon { font-size: 40rpx; color: #FFF; margin-right: 12rpx; font-weight: 200; }
 .publish-text { font-size: 32rpx; font-weight: 700; color: #FFF; }
 
+.config-entry-card {
+  margin: 18rpx 24rpx 0;
+  padding: 26rpx 28rpx;
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+}
+
+.config-entry-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #111111;
+}
+
+.config-entry-sub {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 23rpx;
+  color: #667A82;
+  line-height: 1.5;
+}
+
+.config-entry-arrow {
+  font-size: 44rpx;
+  color: #28B8BC;
+  margin-left: 20rpx;
+}
+
 /* 筛选 Tab */
 .filter-tabs {
   display: flex; background: #FFF;

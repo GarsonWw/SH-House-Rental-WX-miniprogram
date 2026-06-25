@@ -1,0 +1,159 @@
+<scroll-view scroll-y class="page">
+  <view class="hero-card">
+    <text class="hero-title">小区详情配置</text>
+    <text class="hero-sub">房源发布只管房源本身；小区通勤、配套、点评和转化内容在这里单独维护。</text>
+  </view>
+
+  <view class="empty-card" wx:if="{{!loading && neighborhoods.length === 0}}">
+    <text class="empty-title">还没有可配置的小区</text>
+    <text class="empty-sub">先发布至少一套房源，系统会自动生成对应小区的配置入口。</text>
+  </view>
+
+  <view wx:if="{{neighborhoods.length > 0}}">
+    <view class="section-label">选择小区</view>
+    <scroll-view scroll-x class="nb-scroll">
+      <view class="nb-row">
+        <view
+          class="nb-card {{selectedName === item.name ? 'nb-active' : ''}}"
+          wx:for="{{neighborhoods}}"
+          wx:key="name"
+          bindtap="onSelectNeighborhood"
+          data-name="{{item.name}}"
+        >
+          <text class="nb-name">{{item.name}}</text>
+          <text class="nb-meta">{{item.district}} · {{item.count}}套房源 · {{item.available}}套在租</text>
+          <text class="nb-progress">{{item.progressText}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="editor-card" wx:if="{{selectedName}}">
+      <view class="editor-head">
+        <view>
+          <text class="editor-title">{{selectedName}}</text>
+          <text class="editor-sub">以下内容会同步展示在该小区详情页，并应用到该小区下的所有房源。</text>
+        </view>
+        <view class="preview-btn" bindtap="onPreviewNeighborhood">预览</view>
+      </view>
+
+      <view class="assist-card">
+        <view class="assist-top">
+          <view>
+            <text class="assist-title">配置完成度 {{completion.percent}}%</text>
+            <text class="assist-sub">{{completion.missingText}}</text>
+          </view>
+          <text class="assist-count">{{completion.filled}}/{{completion.total}}</text>
+        </view>
+        <view class="progress-track">
+          <view class="progress-fill" style="width: {{completion.width}};"></view>
+        </view>
+        <view class="quick-actions">
+          <view class="quick-btn primary" bindtap="onApplyStarterTemplate">一键生成基础文案</view>
+          <view class="quick-btn" bindtap="onApplyCommonDefaults">补充常用默认项</view>
+        </view>
+        <text class="assist-note">智能填充只会补空白项，不会覆盖你已经写好的内容。</text>
+      </view>
+
+      <view class="config-section">
+        <view class="section-head" bindtap="onToggleSection" data-section="basic">
+          <text>基础展示</text>
+          <text>{{openSections.basic ? '收起' : '展开'}}</text>
+        </view>
+        <view wx:if="{{openSections.basic}}">
+          <view class="field">
+            <text class="label">首页备注</text>
+            <textarea class="textarea small" maxlength="200" value="{{form.neighborhoodNote}}" data-field="neighborhoodNote" bindinput="onInput" placeholder="如：罗湖成熟社区，近地铁，生活配套齐全" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">首页点评</text>
+            <textarea class="textarea" maxlength="500" value="{{form.neighborhoodReview}}" data-field="neighborhoodReview" bindinput="onInput" placeholder="写给租客看的真实点评，如通勤、生活便利度、适合人群等" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">详情页封面图地址</text>
+            <input class="input" value="{{form.neighborhoodCover}}" data-field="neighborhoodCover" bindinput="onInput" placeholder="可选，不填则自动使用房源首图" />
+          </view>
+          <view class="field">
+            <text class="label">顶部宣传语</text>
+            <input class="input" value="{{form.neighborhoodSlogan}}" data-field="neighborhoodSlogan" bindinput="onInput" placeholder="如：步行通勤 · 罗湖口岸 · 生活便利" />
+          </view>
+        </view>
+      </view>
+
+      <view class="config-section">
+        <view class="section-head" bindtap="onToggleSection" data-section="commute">
+          <text>通勤与居住信息</text>
+          <text>{{openSections.commute ? '收起' : '展开'}}</text>
+        </view>
+        <view wx:if="{{openSections.commute}}">
+          <view class="field">
+            <text class="label">通勤信息</text>
+            <input class="input" value="{{form.commuteInfo}}" data-field="commuteInfo" bindinput="onInput" placeholder="如：步行约12分钟直达罗湖口岸" />
+          </view>
+          <view class="field">
+            <text class="label">通勤方式</text>
+            <input class="input" value="{{form.commuteMode}}" data-field="commuteMode" bindinput="onInput" placeholder="如：步行 / 地铁 / 巴士" />
+          </view>
+          <view class="field">
+            <text class="label">安全与门禁</text>
+            <textarea class="textarea small" maxlength="200" value="{{form.safetyInfo}}" data-field="safetyInfo" bindinput="onInput" placeholder="如：大门人脸识别+单元门禁，保安值守" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">居住类型</text>
+            <input class="input" value="{{form.propertyType}}" data-field="propertyType" bindinput="onInput" placeholder="如：传统住宅小区 / 商业公寓 / 酒店公寓" />
+          </view>
+          <view class="field">
+            <text class="label">快递外卖</text>
+            <input class="input" value="{{form.deliveryInfo}}" data-field="deliveryInfo" bindinput="onInput" placeholder="如：外卖/快递可直接送上楼" />
+          </view>
+          <view class="field">
+            <text class="label">短租支持</text>
+            <input class="input" value="{{form.shortRentInfo}}" data-field="shortRentInfo" bindinput="onInput" placeholder="如：支持短租 / 最短3个月起" />
+          </view>
+        </view>
+      </view>
+
+      <view class="config-section">
+        <view class="section-head" bindtap="onToggleSection" data-section="conversion">
+          <text>转化内容与实探</text>
+          <text>{{openSections.conversion ? '收起' : '展开'}}</text>
+        </view>
+        <view wx:if="{{openSections.conversion}}">
+          <view class="field">
+            <text class="label">房间实探总结</text>
+            <textarea class="textarea" maxlength="700" value="{{form.roomInsight}}" data-field="roomInsight" bindinput="onInput" placeholder="写清优点、噪音、采光、装修、适合人群等真实体验" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">户型价格参考</text>
+            <input class="input" value="{{form.priceReference}}" data-field="priceReference" bindinput="onInput" placeholder="如：1房3k-4k / 2房6k-6k5" />
+          </view>
+          <view class="field">
+            <text class="label">周边配套</text>
+            <textarea class="textarea small" maxlength="300" value="{{form.surroundings}}" data-field="surroundings" bindinput="onInput" placeholder="如：楼下小卖部，餐饮偏少，吃饭需步行或依赖外卖" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">适合人群标签</text>
+            <input class="input" value="{{form.suitableCrowd}}" data-field="suitableCrowd" bindinput="onInput" placeholder="如：合租党 / 省钱党 / 口岸通勤 / 安静优先" />
+          </view>
+          <view class="field">
+            <text class="label">实探标题</text>
+            <input class="input" value="{{form.scoutTitle}}" data-field="scoutTitle" bindinput="onInput" placeholder="如：学长实探｜罗湖通勤 ID: 250001" />
+          </view>
+          <view class="field">
+            <text class="label">学长测评总结</text>
+            <textarea class="textarea" maxlength="800" value="{{form.scoutSummary}}" data-field="scoutSummary" bindinput="onInput" placeholder="写一段像实地探盘笔记一样的客观总结" auto-height></textarea>
+          </view>
+          <view class="field">
+            <text class="label">学长建议 / 避坑提醒</text>
+            <textarea class="textarea" maxlength="600" value="{{form.scoutAdvice}}" data-field="scoutAdvice" bindinput="onInput" placeholder="如：声音敏感慎选低楼层；优先看北向高楼层" auto-height></textarea>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-space"></view>
+</scroll-view>
+
+<view class="bottom-bar" wx:if="{{selectedName}}">
+  <view class="save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">{{saving ? '保存中...' : '保存小区配置'}}</view>
+</view>

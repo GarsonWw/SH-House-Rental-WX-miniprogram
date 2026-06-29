@@ -58,8 +58,7 @@
     }
   },
   "requiredPrivateInfos": [
-    "chooseLocation",
-    "getLocation"
+    "chooseLocation"
   ],
   "usingComponents": {
     "house-card": "/components/house-card/house-card",

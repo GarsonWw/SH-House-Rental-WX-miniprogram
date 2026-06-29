@@ -9,7 +9,6 @@
     longitude="{{mapLng}}"
     scale="{{scale}}"
     markers="{{markers}}"
-    show-location
     enable-zoom
     enable-scroll
     enable-rotate="{{false}}"
@@ -61,11 +60,6 @@
       bindtap="onDistrictSelect"
       data-district="{{item}}"
     >{{item}}</view>
-  </view>
-
-  <!-- 定位按钮 -->
-  <view class="locate-btn" bindtap="onLocate">
-    <text class="locate-icon">◎</text>
   </view>
 
   <!-- 底部提示卡片（无选中时） -->

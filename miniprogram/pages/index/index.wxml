@@ -1,49 +1,82 @@
 <!-- pages/index/index.wxml -->
 <view class="page-wrap">
 
-  <!-- ① 顶部选择小区 Banner -->
-  <view class="select-banner" bindtap="onSelectNeighborhood">
-    <view class="banner-left">
-      <view class="banner-icon-bg"><text class="banner-icon">🎓</text></view>
-      <view class="banner-texts">
-        <text class="banner-title">选择小区，定制找房</text>
-        <text class="banner-sub">找到心仪小区，直联房东零中介</text>
-      </view>
-    </view>
-    <view class="banner-action">去选择 →</view>
-  </view>
-
-  <view class="trust-card">
-    <view class="trust-head">
-      <text class="trust-title">3年沉淀 · 1000+真实租客服务</text>
-      <text class="trust-badge">只做罗湖</text>
-    </view>
-    <text class="trust-desc">自2023年起，我们专注深圳罗湖租房直租服务，结合深港生活经验、通勤时间、预算需求和生活配套，为港硕学生、香港高校学生及深港通勤人群提供更省心、高效、透明的罗湖租房建议。</text>
-    <view class="trust-points">
-      <text>罗湖直租</text>
-      <text>免中介费</text>
-      <text>深港通勤经验</text>
-      <text>真实房源</text>
-    </view>
-  </view>
-
-  <!-- ② 平台信息卡 -->
-  <view class="platform-card">
-    <view class="platform-left">
-      <view class="platform-avatar"><text>🏠</text></view>
-      <view class="platform-info">
-        <view class="platform-name-row">
-          <text class="platform-name">深港租房双城通</text>
-          <text class="platform-divider">|</text>
-          <text class="platform-tagline">深港找房</text>
+  <!-- 顶部精选房源轮播 -->
+  <view class="hero-wrap" wx:if="{{heroSlides.length}}">
+    <swiper
+      class="hero-swiper"
+      autoplay="{{heroSlides.length > 1}}"
+      circular="{{heroSlides.length > 1}}"
+      interval="4500"
+      duration="450"
+      current="{{heroIndex}}"
+      bindchange="onHeroChange"
+    >
+      <swiper-item wx:for="{{heroSlides}}" wx:key="id">
+        <view class="hero-slide" bindtap="onHeroTap" data-id="{{item.id}}">
+          <image class="hero-image" src="{{item.image}}" mode="aspectFill" />
+          <view class="hero-badge">罗湖直租 · 免中介费</view>
+          <view class="hero-content">
+            <view class="hero-copy">
+              <text class="hero-neighborhood">{{item.neighborhood}}</text>
+              <text class="hero-meta">{{item.meta}} · {{item.statusText}}</text>
+            </view>
+            <view class="hero-conversion">
+              <view class="hero-price"><text class="hero-price-number">{{item.price}}</text><text class="hero-price-unit">元/月</text></view>
+              <view class="hero-cta">查看房源</view>
+            </view>
+          </view>
         </view>
-        <text class="platform-meta">深圳罗湖直租平台 · 房源实测中</text>
-        <text class="platform-desc">3年沉淀 + 上千位真实用户服务 + 免中介费 + 深港生活经验</text>
+      </swiper-item>
+    </swiper>
+    <view class="hero-pagination">
+      <view
+        class="hero-dot {{heroIndex === index ? 'hero-dot-active' : ''}}"
+        wx:for="{{heroSlides}}"
+        wx:key="id"
+      ></view>
+    </view>
+  </view>
+
+  <view class="hero-empty" wx:else>
+    <text class="hero-empty-kicker">深圳罗湖直租</text>
+    <text class="hero-empty-title">真实房源，直联房东</text>
+    <text class="hero-empty-desc">新房源整理中，可先按小区浏览</text>
+  </view>
+
+  <view class="service-proof">
+    <view class="proof-item">
+      <text class="proof-value">3年</text>
+      <text class="proof-label">罗湖沉淀</text>
+    </view>
+    <view class="proof-divider"></view>
+    <view class="proof-item">
+      <text class="proof-value">1000+</text>
+      <text class="proof-label">真实用户服务</text>
+    </view>
+    <view class="proof-divider"></view>
+    <view class="proof-item">
+      <text class="proof-value">{{platformStats.available}}</text>
+      <text class="proof-label">当前可租房源</text>
+    </view>
+  </view>
+
+  <view class="trust-card trust-card-compact">
+    <view class="trust-summary">
+      <view class="trust-summary-copy">
+        <text class="trust-kicker">服务保障</text>
+        <text class="trust-title">深港租房双城通</text>
+        <text class="trust-summary-text">免中介费 · 真实房源 · 深港生活经验</text>
       </view>
     </view>
-    <view class="platform-stat">
-      <text class="stat-num">{{platformStats.available}}</text>
-      <text class="stat-lbl">实测房源</text>
+    <view class="trust-detail">
+      <text class="trust-desc">自2023年起，我们专注深圳罗湖租房直租服务，结合深港生活经验、通勤时间、预算需求和生活配套，为港硕学生、香港高校学生及深港通勤人群提供更省心、高效、透明的罗湖租房建议。</text>
+      <view class="trust-points">
+        <text>罗湖直租</text>
+        <text>免中介费</text>
+        <text>深港通勤经验</text>
+        <text>真实房源</text>
+      </view>
     </view>
   </view>
 

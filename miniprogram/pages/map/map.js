@@ -181,48 +181,6 @@ Page({
     })
   },
 
-  // ── 定位到当前位置 ────────────────────────────────
-  onLocate() {
-    wx.showLoading({ title: '定位中...' })
-    wx.getLocation({
-      type: 'gcj02',
-      isHighAccuracy: true,
-      success: res => {
-        wx.hideLoading()
-        this.setData({
-          mapLat: res.latitude,
-          mapLng: res.longitude,
-          scale: 15,
-          showSheet: false,
-          showDistrictPanel: false
-        })
-        wx.showToast({ title: '已定位到当前位置', icon: 'success' })
-      },
-      fail: err => {
-        wx.hideLoading()
-        const errMsg = err && err.errMsg ? err.errMsg : ''
-        if (errMsg.includes('auth deny') || errMsg.includes('auth denied') || errMsg.includes('authorize')) {
-          wx.showModal({
-            title: '需要位置权限',
-            content: '请允许获取当前位置，用于在地图中查看你附近的房源。',
-            confirmText: '去设置',
-            cancelText: '取消',
-            success: modalRes => {
-              if (modalRes.confirm) wx.openSetting()
-            }
-          })
-          return
-        }
-        wx.showModal({
-          title: '定位失败',
-          content: '暂时无法获取当前位置，请检查手机定位服务和微信位置权限后重试。',
-          showCancel: false,
-          confirmText: '知道了'
-        })
-      }
-    })
-  },
-
   // ── 右侧图层按钮 ──────────────────────────────────
   onLayerTap(e) {
     const key = e.currentTarget.dataset.key

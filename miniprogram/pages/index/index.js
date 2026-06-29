@@ -46,6 +46,8 @@ const ROOM_TYPES = ['不限', '整租', '合租', '单间', '一室', '两室', 
 Page({
   data: {
     platformStats: { neighborhoods: 0, houses: 0, available: 0 },
+    heroSlides: [],
+    heroIndex: 0,
     activeTab: 'overview',
     filterDims: ['区域', '房型', '价格'],
     activeDim: '区域',
@@ -83,8 +85,11 @@ Page({
     const districts = ['全部', ...new Set(houseList.map(h => h.district).filter(Boolean))]
     const matchDistricts = ['不限', ...new Set(houseList.map(h => h.district).filter(Boolean))]
     const sections = this.buildSections(houseList)
+    const heroSlides = this.buildHeroSlides(houseList)
     this.setData({
       platformStats: stats,
+      heroSlides,
+      heroIndex: Math.min(this.data.heroIndex, Math.max(heroSlides.length - 1, 0)),
       districtList: districts,
       overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim, districts),
       matchDistrictList: matchDistricts,
@@ -94,6 +99,42 @@ Page({
     if (this.data.activeTab === 'match') {
       this.runMatch()
     }
+  },
+
+  buildHeroSlides(houseList) {
+    const candidates = (houseList || []).filter(h => {
+      return h.available && h.images && h.images.length > 0 && h.images[0]
+    })
+    const selected = []
+    const selectedIds = new Set()
+    const neighborhoods = new Set()
+
+    candidates.forEach(h => {
+      if (selected.length >= 4 || neighborhoods.has(h.neighborhood)) return
+      selected.push(h)
+      selectedIds.add(h.id)
+      neighborhoods.add(h.neighborhood)
+    })
+
+    candidates.forEach(h => {
+      if (selected.length >= 4 || selectedIds.has(h.id)) return
+      selected.push(h)
+      selectedIds.add(h.id)
+    })
+
+    return selected.map(h => {
+      const meta = [h.roomType || h.rentType, h.area ? `${h.area}㎡` : '面积待确认']
+        .filter(Boolean)
+        .join(' · ')
+      return {
+        id: h.id,
+        image: h.images[0],
+        neighborhood: h.neighborhood || '罗湖精选房源',
+        meta,
+        price: h.price || '面议',
+        statusText: '可预约看房'
+      }
+    })
   },
 
   getOverviewFilterOptions(dim, districts = this.data.districtList) {
@@ -236,8 +277,15 @@ Page({
     wx.navigateTo({ url: `/pages/neighborhood-detail/neighborhood-detail?name=${encodeURIComponent(name)}` })
   },
 
-  onSelectNeighborhood() {
-    wx.switchTab({ url: '/pages/neighborhood/neighborhood' })
+  onHeroChange(e) {
+    this.setData({ heroIndex: e.detail.current })
+  },
+
+  onHeroTap(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    app.incrementViewCount(id)
+    wx.navigateTo({ url: `/pages/detail/detail?id=${id}` })
   },
 
   onPublish() {

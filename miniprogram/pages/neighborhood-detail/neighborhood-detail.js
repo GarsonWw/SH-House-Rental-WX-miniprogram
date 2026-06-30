@@ -35,7 +35,7 @@ Page({
 
   onShow() {
     if (this.data.name) {
-      app.onHouseListReady(() => this.loadNeighborhood(this.data.name))
+      app.ensureHousesFresh(() => this.loadNeighborhood(this.data.name))
     }
   },
 

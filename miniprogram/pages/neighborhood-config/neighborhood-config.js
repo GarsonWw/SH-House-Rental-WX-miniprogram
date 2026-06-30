@@ -93,7 +93,18 @@ Page({
   onLoad(options = {}) {
     const selectedName = options.name ? decodeURIComponent(options.name) : ''
     this.setData({ selectedName })
-    this.loadNeighborhoods()
+    app.requireLandlord((isLandlord, error) => {
+      if (!isLandlord) {
+        wx.showModal({
+          title: '无权访问',
+          content: error ? error.message : '当前微信账号不在管理员名单中',
+          showCancel: false,
+          success: () => wx.navigateBack()
+        })
+        return
+      }
+      this.loadNeighborhoods()
+    })
   },
 
   onShow() {
@@ -151,9 +162,10 @@ Page({
 
   selectNeighborhood(name, houses) {
     const selectedHouses = houses || []
+    const profile = app.getNeighborhoodProfile(name) || {}
     const form = emptyForm()
     CONFIG_FIELDS.forEach(field => {
-      form[field] = pickFirst(selectedHouses, field) || form[field]
+      form[field] = profile[field] || pickFirst(selectedHouses, field) || form[field]
     })
     this.setData({
       selectedName: name,
@@ -284,22 +296,17 @@ Page({
     this.setData({ saving: true })
     wx.showLoading({ title: '保存中...' })
 
-    Promise.all(selectedHouses.map(house => new Promise((resolve, reject) => {
-      app.updateHouse(house.id || house._id, payload, err => {
-        if (err) reject(err)
-        else resolve()
-      })
-    })))
-      .then(() => {
+    app.saveNeighborhood(selectedName, payload, err => {
+      if (!err) {
         wx.hideLoading()
         this.setData({ saving: false })
         wx.showToast({ title: '已保存', icon: 'success' })
         this.loadNeighborhoods()
-      })
-      .catch(() => {
+        return
+      }
         wx.hideLoading()
         this.setData({ saving: false })
-        wx.showToast({ title: '保存失败', icon: 'none' })
-      })
+        wx.showToast({ title: err.code === 'CONFLICT' ? '内容已更新，请刷新后重试' : '保存失败', icon: 'none' })
+    })
   }
 })

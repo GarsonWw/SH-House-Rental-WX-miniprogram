@@ -3,16 +3,44 @@
 const CLOUD_ENV = 'cloud1-d5gtn67zydd66b8de'
 const getCloudConfig = () => CLOUD_ENV ? { env: CLOUD_ENV } : {}
 
-// 房东访问码（可自行修改，用于房东专属页面的入口验证）
-const LANDLORD_CODE = 'swt123'
+const HOUSE_PAGE_SIZE = 20
+const HOUSE_FRESH_INTERVAL = 15000
+const NEIGHBORHOOD_FIELDS = [
+  'neighborhoodNote',
+  'neighborhoodReview',
+  'neighborhoodCover',
+  'neighborhoodSlogan',
+  'commuteInfo',
+  'commuteMode',
+  'safetyInfo',
+  'propertyType',
+  'deliveryInfo',
+  'shortRentInfo',
+  'roomInsight',
+  'priceReference',
+  'surroundings',
+  'suitableCrowd',
+  'scoutTitle',
+  'scoutSummary',
+  'scoutAdvice'
+]
+
+const stripNeighborhoodFields = source => {
+  const data = { ...(source || {}) }
+  NEIGHBORHOOD_FIELDS.forEach(field => delete data[field])
+  return data
+}
 
 App({
   globalData: {
     // 房源数据
     houseList: [],
     neighborhoodList: [],
+    neighborhoodProfiles: {},
     houseListLoaded: false,
     houseLoadCallbacks: [],
+    lastHouseSyncAt: 0,
+    houseDataStale: false,
 
     // 用户登录
     openid: null,
@@ -25,7 +53,8 @@ App({
     favoriteIds: [],         // [houseId, ...]，登录后从云端加载
 
     // 房东模式
-    isLandlord: false
+    isLandlord: false,
+    landlordStatusReady: false
   },
 
   onLaunch() {
@@ -42,9 +71,6 @@ App({
       this.globalData.openid      = cachedOpenid
       this.globalData.userProfile = cachedProfile || null
     }
-
-    // 恢复房东状态
-    this.globalData.isLandlord = !!wx.getStorageSync('isLandlord')
 
     // 并行启动：登录 + 加载房源
     this.silentLogin()
@@ -65,6 +91,7 @@ App({
         wx.setStorageSync('openid', openid)
         this._flushLoginCallbacks()
         this._loadFavoriteIds()
+        this.refreshLandlordStatus()
       })
       .catch(err => {
         console.error('[Login] 登录失败', err)
@@ -104,50 +131,143 @@ App({
     wx.setStorageSync('userProfile', profile)
   },
 
-  getLandlordCode() {
-    return LANDLORD_CODE
-  },
-
-  verifyLandlordCode(code) {
-    if (code === LANDLORD_CODE) {
-      this.globalData.isLandlord = true
-      wx.setStorageSync('isLandlord', true)
-      return true
-    }
-    return false
-  },
-
   exitLandlord() {
     this.globalData.isLandlord = false
-    wx.removeStorageSync('isLandlord')
+  },
+
+  callHouseService(action, data = {}) {
+    return wx.cloud.callFunction({
+      name: 'houseService',
+      data: { action, ...data },
+      config: getCloudConfig()
+    }).then(res => {
+      const result = res.result || {}
+      if (!result.ok) {
+        const error = new Error(result.message || '房源服务请求失败')
+        error.code = result.code || 'SERVICE_ERROR'
+        throw error
+      }
+      return result
+    })
+  },
+
+  refreshLandlordStatus(callback) {
+    if (!this.globalData.openid) {
+      this.globalData.isLandlord = false
+      this.globalData.landlordStatusReady = true
+      if (callback) callback(false, this.globalData.loginError)
+      return
+    }
+    this.callHouseService('getAdminStatus')
+      .then(result => {
+        this.globalData.isLandlord = !!result.isAdmin
+        this.globalData.landlordStatusReady = true
+        if (callback) callback(this.globalData.isLandlord, null, result.openid)
+      })
+      .catch(error => {
+        this.globalData.isLandlord = false
+        this.globalData.landlordStatusReady = true
+        if (callback) callback(false, error, this.globalData.openid)
+      })
+  },
+
+  requireLandlord(callback) {
+    this.onLoginReady((openid, loginError) => {
+      if (!openid) {
+        callback(false, loginError || new Error('登录尚未完成'))
+        return
+      }
+      this.refreshLandlordStatus((isLandlord, error) => callback(isLandlord, error))
+    })
   },
 
   // ── 房源数据 ────────────────────────────────────────────
-  loadHousesFromCloud() {
+  _fetchAll(collectionName, orderField) {
     const db = wx.cloud.database()
-    db.collection('houses').orderBy('createTime', 'desc').limit(100).get()
-      .then(res => {
-        const list = res.data.map(h => ({ ...h, id: h._id }))
-        this.globalData.houseList      = list
+    const loadPage = skip => {
+      let query = db.collection(collectionName)
+      if (orderField) query = query.orderBy(orderField, 'desc')
+      return query.skip(skip).limit(HOUSE_PAGE_SIZE).get().then(res => {
+        const rows = res.data || []
+        if (rows.length < HOUSE_PAGE_SIZE) return rows
+        return loadPage(skip + rows.length).then(next => rows.concat(next))
+      })
+    }
+    return loadPage(0)
+  },
+
+  _applyNeighborhoodProfile(house) {
+    const profile = this.globalData.neighborhoodProfiles[house.neighborhood]
+    if (!profile) return house
+    const overlay = {}
+    NEIGHBORHOOD_FIELDS.forEach(field => {
+      if (profile[field] !== undefined && profile[field] !== null && profile[field] !== '') {
+        overlay[field] = profile[field]
+      }
+    })
+    return { ...house, ...overlay }
+  },
+
+  loadHousesFromCloud() {
+    if (this._houseRefreshPromise) return this._houseRefreshPromise
+    this._houseRefreshPromise = Promise.all([
+      this._fetchAll('houses', 'createTime'),
+      this._fetchAll('neighborhoods', 'updatedAt').catch(() => [])
+    ])
+      .then(([houseRows, neighborhoodRows]) => {
+        const profiles = {}
+        neighborhoodRows.forEach(profile => {
+          if (profile && profile.name) profiles[profile.name] = { ...profile, id: profile._id }
+        })
+        this.globalData.neighborhoodProfiles = profiles
+        const list = houseRows.map(h => this._applyNeighborhoodProfile({ ...h, id: h._id }))
+        this.globalData.houseList = list
         this.globalData.houseListLoaded = true
+        this.globalData.lastHouseSyncAt = Date.now()
+        this.globalData.houseDataStale = false
+        this._staleNoticeShown = false
         this.refreshNeighborhoodList()
         this._flushHouseCallbacks()
         wx.setStorageSync('houseList_cache', list)
+        wx.setStorageSync('neighborhoodProfiles_cache', profiles)
+        return list
       })
       .catch(err => {
         console.error('[Cloud] 加载房源失败', err)
         const cached = wx.getStorageSync('houseList_cache') || []
-        this.globalData.houseList      = cached
+        this.globalData.neighborhoodProfiles = wx.getStorageSync('neighborhoodProfiles_cache') || {}
+        this.globalData.houseList = cached
         this.globalData.houseListLoaded = true
+        this.globalData.houseDataStale = true
         this.refreshNeighborhoodList()
-        this._flushHouseCallbacks()
+        this._flushHouseCallbacks(err)
+        if (!this._staleNoticeShown) {
+          this._staleNoticeShown = true
+          wx.showToast({ title: '网络异常，当前展示缓存房源', icon: 'none', duration: 2500 })
+        }
+        return cached
       })
+      .finally(() => { this._houseRefreshPromise = null })
+    return this._houseRefreshPromise
   },
 
   refreshHouses(callback) {
     this.globalData.houseListLoaded = false
     if (callback) this.globalData.houseLoadCallbacks.push(callback)
-    this.loadHousesFromCloud()
+    return this.loadHousesFromCloud()
+  },
+
+  ensureHousesFresh(callback, maxAge = HOUSE_FRESH_INTERVAL) {
+    const age = Date.now() - Number(this.globalData.lastHouseSyncAt || 0)
+    if (!this.globalData.houseListLoaded) {
+      this.onHouseListReady(callback)
+      return
+    }
+    if (this.globalData.houseDataStale || age > maxAge) {
+      this.refreshHouses(callback)
+      return
+    }
+    callback()
   },
 
   onHouseListReady(cb) {
@@ -158,8 +278,8 @@ App({
     }
   },
 
-  _flushHouseCallbacks() {
-    this.globalData.houseLoadCallbacks.forEach(cb => cb())
+  _flushHouseCallbacks(error) {
+    this.globalData.houseLoadCallbacks.forEach(cb => cb(error))
     this.globalData.houseLoadCallbacks = []
   },
 
@@ -167,15 +287,16 @@ App({
     const map = {}
     this.globalData.houseList.forEach(h => {
       if (!map[h.neighborhood]) {
+        const profile = this.globalData.neighborhoodProfiles[h.neighborhood] || {}
         map[h.neighborhood] = {
           name: h.neighborhood, count: 0,
           district: h.district || '未知区域',
-          coverImg: h.neighborhoodCover || (h.images && h.images[0] ? h.images[0] : ''),
-          note: h.neighborhoodNote || h.neighborhoodDesc || '',
-          review: h.neighborhoodReview || '',
-          commuteInfo: h.commuteInfo || '',
-          propertyType: h.propertyType || '',
-          priceReference: h.priceReference || ''
+          coverImg: profile.neighborhoodCover || h.neighborhoodCover || (h.images && h.images[0] ? h.images[0] : ''),
+          note: profile.neighborhoodNote || h.neighborhoodNote || h.neighborhoodDesc || '',
+          review: profile.neighborhoodReview || h.neighborhoodReview || '',
+          commuteInfo: profile.commuteInfo || h.commuteInfo || '',
+          propertyType: profile.propertyType || h.propertyType || '',
+          priceReference: profile.priceReference || h.priceReference || ''
         }
       }
       map[h.neighborhood].count++
@@ -184,18 +305,17 @@ App({
   },
 
   addHouse(data, callback) {
-    const db = wx.cloud.database()
     const houseData = {
-      ...data,
+      ...stripNeighborhoodFields(data),
       price: Number(data.price),
       area: Number(data.area),
       viewCount: 0,
       available: data.available !== false,
-      createTime: db.serverDate()
+      createTime: new Date()
     }
-    db.collection('houses').add({ data: houseData })
-      .then(res => {
-        const newHouse = { ...houseData, _id: res._id, id: res._id }
+    this.callHouseService('createHouse', { data: houseData })
+      .then(result => {
+        const newHouse = { ...houseData, _id: result.id, id: result.id, version: result.version }
         this.globalData.houseList.unshift(newHouse)
         this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
@@ -208,8 +328,8 @@ App({
   },
 
   deleteHouse(id, callback) {
-    const db = wx.cloud.database()
-    db.collection('houses').doc(id).remove()
+    const house = this.getHouseById(id)
+    this.callHouseService('deleteHouse', { id, expectedVersion: house && house.version })
       .then(() => {
         this.globalData.houseList = this.globalData.houseList.filter(h => h.id !== id)
         this.refreshNeighborhoodList()
@@ -222,11 +342,13 @@ App({
   },
 
   toggleHouseStatus(id, available, callback) {
-    const db = wx.cloud.database()
-    db.collection('houses').doc(id).update({ data: { available } })
-      .then(() => {
-        const house = this.getHouseById(id)
-        if (house) house.available = available
+    const house = this.getHouseById(id)
+    this.callHouseService('toggleStatus', { id, available, expectedVersion: house && house.version })
+      .then(result => {
+        if (house) {
+          house.available = available
+          house.version = result.version
+        }
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
         if (callback) callback(null)
       })
@@ -234,10 +356,12 @@ App({
   },
 
   incrementViewCount(id) {
-    const db = wx.cloud.database()
-    db.collection('houses').doc(id).update({ data: { viewCount: db.command.inc(1) } }).catch(() => {})
     const house = this.getHouseById(id)
-    if (house) house.viewCount = (house.viewCount || 0) + 1
+    this.callHouseService('incrementView', { id })
+      .then(result => {
+        if (house && result.counted) house.viewCount = (house.viewCount || 0) + 1
+      })
+      .catch(() => {})
   },
 
   getHouseById(id) {
@@ -248,29 +372,65 @@ App({
     return this.globalData.houseList.filter(h => h.neighborhood === name)
   },
 
-  getMyHouses(callback) {
-    // 房东管理视图：获取所有房源（本小程序为个人房东平台，房东即管理员）
+  getHouseFresh(id, callback) {
     const db = wx.cloud.database()
-    db.collection('houses')
-      .orderBy('createTime', 'desc')
-      .limit(100)
-      .get()
-      .then(res => callback(res.data.map(h => ({ ...h, id: h._id })), null))
-      .catch(err => { console.error('[Cloud] 获取房源失败', err); callback([], err) })
+    db.collection('houses').doc(id).get()
+      .then(res => {
+        const fresh = this._applyNeighborhoodProfile({ ...res.data, id: res.data._id })
+        const index = this.globalData.houseList.findIndex(h => h.id === id)
+        if (index > -1) this.globalData.houseList[index] = fresh
+        else this.globalData.houseList.unshift(fresh)
+        wx.setStorageSync('houseList_cache', this.globalData.houseList)
+        callback(fresh, null)
+      })
+      .catch(error => callback(null, error))
+  },
+
+  getMyHouses(callback) {
+    if (!this.globalData.isLandlord) {
+      callback([], new Error('无房东管理权限'))
+      return
+    }
+    this.ensureHousesFresh(error => callback([...this.globalData.houseList], error), 0)
   },
 
   updateHouse(id, data, callback) {
-    const db = wx.cloud.database()
-    db.collection('houses').doc(id).update({ data })
-      .then(() => {
-        // 同步更新本地缓存
-        const house = this.getHouseById(id)
-        if (house) Object.assign(house, data)
+    const house = this.getHouseById(id)
+    const houseData = stripNeighborhoodFields(data)
+    this.callHouseService('updateHouse', { id, data: houseData, expectedVersion: house && house.version })
+      .then(result => {
+        if (house) Object.assign(house, houseData, { version: result.version })
         this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
         if (callback) callback(null)
       })
       .catch(err => { if (callback) callback(err) })
+  },
+
+  getNeighborhoodProfile(name) {
+    return this.globalData.neighborhoodProfiles[name] || null
+  },
+
+  saveNeighborhood(name, data, callback) {
+    const current = this.getNeighborhoodProfile(name)
+    this.callHouseService('saveNeighborhood', {
+      name,
+      data,
+      expectedVersion: current && current.version
+    })
+      .then(result => {
+        const profile = { ...(current || {}), ...data, name, id: result.id, version: result.version }
+        this.globalData.neighborhoodProfiles[name] = profile
+        this.globalData.houseList = this.globalData.houseList.map(house => {
+          if (house.neighborhood !== name) return house
+          return this._applyNeighborhoodProfile(house)
+        })
+        this.refreshNeighborhoodList()
+        wx.setStorageSync('houseList_cache', this.globalData.houseList)
+        wx.setStorageSync('neighborhoodProfiles_cache', this.globalData.neighborhoodProfiles)
+        if (callback) callback(null, profile)
+      })
+      .catch(error => { if (callback) callback(error) })
   },
 
   getCloudErrorMessage(err, fallback = '云服务请求失败') {
@@ -281,7 +441,13 @@ App({
   // ── 媒体上传 ────────────────────────────────────────────
   uploadImages(tempPaths, callback, folder = 'houses') {
     if (!tempPaths || tempPaths.length === 0) { callback([], null); return }
-    Promise.all(tempPaths.map((filePath, index) => {
+    if (!this.globalData.isLandlord) {
+      const error = new Error('当前微信账号没有上传房源媒体的权限')
+      error.code = 'FORBIDDEN'
+      callback([], error)
+      return
+    }
+    Promise.allSettled(tempPaths.map((filePath, index) => {
       const cleanPath = String(filePath || '').split('?')[0]
       const extMatch = cleanPath.match(/\.([a-zA-Z0-9]+)$/)
       const ext = extMatch ? extMatch[1] : 'jpg'
@@ -292,11 +458,26 @@ App({
         config: getCloudConfig()
       }).then(r => r.fileID)
     }))
-      .then(ids => callback(ids, null))
-      .catch(err => {
-        console.error('[Cloud] 媒体上传失败', err)
-        callback([], err)
+      .then(results => {
+        const ids = results.filter(result => result.status === 'fulfilled').map(result => result.value)
+        const failed = results.find(result => result.status === 'rejected')
+        if (!failed) {
+          callback(ids, null)
+          return
+        }
+        console.error('[Cloud] 媒体上传失败', failed.reason)
+        this.deleteUploadedFiles(ids, () => callback([], failed.reason))
       })
+  },
+
+  deleteUploadedFiles(fileList, callback) {
+    if (!fileList || !fileList.length) {
+      if (callback) callback()
+      return
+    }
+    this.callHouseService('deleteFiles', { fileList })
+      .catch(() => {})
+      .finally(() => { if (callback) callback() })
   },
 
   // ── 收藏（云同步）──────────────────────────────────────

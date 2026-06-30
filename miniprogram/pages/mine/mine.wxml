@@ -141,26 +141,3 @@
     </view>
   </view>
 </view>
-
-<!-- 房东访问码弹窗 -->
-<view class="modal-mask" wx:if="{{showCodeModal}}" bindtap="onCodeCancel">
-  <view class="modal-box" catchtap="noop">
-    <text class="modal-title">🔑 房东验证</text>
-    <text class="modal-sub">请输入房东专属访问码</text>
-    <input
-      class="code-input"
-      type="text"
-      placeholder="输入访问码"
-      password
-      value="{{codeInput}}"
-      bindinput="onCodeInput"
-      confirm-type="done"
-      bindconfirm="onCodeConfirm"
-      focus
-    />
-    <view class="modal-btns">
-      <view class="modal-cancel" bindtap="onCodeCancel">取消</view>
-      <view class="modal-confirm" bindtap="onCodeConfirm">验证</view>
-    </view>
-  </view>
-</view>

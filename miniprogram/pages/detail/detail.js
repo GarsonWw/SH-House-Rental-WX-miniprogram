@@ -4,6 +4,7 @@ const util = require('../../utils/util')
 
 Page({
   data: {
+    houseId: '',
     house: null,
     isFavorited: false,
     showContactModal: false,
@@ -21,29 +22,53 @@ Page({
   onLoad(options) {
     if (!options.id) return
     const id = options.id
+    this._skipNextShow = true
+    this.setData({ houseId: id })
+    app.onHouseListReady(() => this.loadHouse(id))
+  },
 
-    const tryLoad = () => {
-      const house = app.getHouseById(id)
-      if (house) {
-        this.setData({ house: this.normalizeHouse(house), isFavorited: app.isFavorited(id) })
-        wx.setNavigationBarTitle({ title: house.neighborhood + ' · 房源详情' })
-      } else {
-        // 缓存中没有，直接从云 DB 获取单条
-        const db = wx.cloud.database()
-        db.collection('houses').doc(id).get()
-          .then(res => {
-            const h = { ...res.data, id: res.data._id }
-            this.setData({ house: this.normalizeHouse(h), isFavorited: app.isFavorited(id) })
-            wx.setNavigationBarTitle({ title: h.neighborhood + ' · 房源详情' })
-          })
-          .catch(() => {
-            wx.showToast({ title: '房源不存在', icon: 'error' })
-            setTimeout(() => wx.navigateBack(), 1500)
-          })
-      }
+  onShow() {
+    this.startStatusPolling()
+    if (this._skipNextShow) {
+      this._skipNextShow = false
+      return
     }
+    if (this.data.houseId) this.loadHouse(this.data.houseId)
+  },
 
-    app.onHouseListReady(tryLoad)
+  onHide() {
+    this.stopStatusPolling()
+  },
+
+  onUnload() {
+    this.stopStatusPolling()
+  },
+
+  startStatusPolling() {
+    this.stopStatusPolling()
+    this._statusTimer = setInterval(() => {
+      if (this.data.houseId) this.loadHouse(this.data.houseId)
+    }, 15000)
+  },
+
+  stopStatusPolling() {
+    if (!this._statusTimer) return
+    clearInterval(this._statusTimer)
+    this._statusTimer = null
+  },
+
+  loadHouse(id) {
+    app.getHouseFresh(id, (freshHouse, error) => {
+      const house = freshHouse || app.getHouseById(id)
+      if (!house) {
+        wx.showToast({ title: '房源不存在', icon: 'error' })
+        setTimeout(() => wx.navigateBack(), 1500)
+        return
+      }
+      this.setData({ house: this.normalizeHouse(house), isFavorited: app.isFavorited(id) })
+      wx.setNavigationBarTitle({ title: house.neighborhood + ' · 房源详情' })
+      if (error) wx.showToast({ title: '当前展示缓存信息', icon: 'none' })
+    })
   },
 
   // 拨打电话

@@ -37,7 +37,6 @@
       <view wx:if="{{filteredNeighborhoodList.length === 0}}" class="empty-state">
         <text class="empty-icon">🏘️</text>
         <text class="empty-text">暂无小区数据</text>
-        <view class="empty-action" bindtap="onPublish">发布第一套房源</view>
       </view>
 
       <view class="neighborhood-grid">
@@ -95,7 +94,6 @@
       <view wx:if="{{houseList.length === 0}}" class="empty-state">
         <text class="empty-icon">🏠</text>
         <text class="empty-text">该小区暂无房源</text>
-        <view class="empty-action" bindtap="onPublish">发布房源</view>
       </view>
 
       <view class="house-list">

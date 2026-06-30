@@ -13,10 +13,6 @@ Page({
     // 房东模式
     isLandlord: false,
 
-    // 房东入口弹窗
-    showCodeModal: false,
-    codeInput: '',
-
     // 资料编辑弹窗
     showProfileModal: false,
     profileForm: { nickName: '', avatarUrl: '' }
@@ -129,36 +125,29 @@ Page({
 
   // ── 房东入口 ─────────────────────────────────────
   onLandlordEntry() {
-    if (app.globalData.isLandlord) {
-      wx.navigateTo({ url: '/pages/landlord/landlord' })
-      return
-    }
-    this.setData({ showCodeModal: true, codeInput: '' })
-  },
-
-  onCodeInput(e) {
-    this.setData({ codeInput: e.detail.value })
-  },
-
-  onCodeConfirm() {
-    const code = this.data.codeInput.trim()
-    if (!code) {
-      wx.showToast({ title: '请输入访问码', icon: 'none' })
-      return
-    }
-    if (app.verifyLandlordCode(code)) {
-      this.setData({ showCodeModal: false, isLandlord: true })
-      wx.showToast({ title: '验证成功，欢迎房东！', icon: 'success', duration: 1500 })
-      setTimeout(() => {
+    wx.showLoading({ title: '验证身份...' })
+    app.requireLandlord((isLandlord, error) => {
+      wx.hideLoading()
+      this.refreshState()
+      if (isLandlord) {
         wx.navigateTo({ url: '/pages/landlord/landlord' })
-      }, 1500)
-    } else {
-      wx.showToast({ title: '访问码错误', icon: 'error' })
-    }
-  },
-
-  onCodeCancel() {
-    this.setData({ showCodeModal: false, codeInput: '' })
+        return
+      }
+      const openid = app.globalData.openid || '尚未获取'
+      wx.showModal({
+        title: error ? '管理员服务未就绪' : '当前账号不是房东',
+        content: error
+          ? `请确认 houseService 云函数已部署。\n\n${error.message || error}`
+          : `请在云数据库 admins 集合中添加文档，文档 ID 使用当前账号 OPENID：\n\n${openid}`,
+        confirmText: error ? '知道了' : '复制ID',
+        showCancel: !error,
+        success: res => {
+          if (res.confirm && !error && openid !== '尚未获取') {
+            wx.setClipboardData({ data: openid })
+          }
+        }
+      })
+    })
   },
 
   onAbout() {

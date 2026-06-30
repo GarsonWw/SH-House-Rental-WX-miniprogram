@@ -1,0 +1,9 @@
+{
+  "name": "houseService",
+  "version": "1.0.0",
+  "description": "房源管理、安全鉴权与公共计数服务",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

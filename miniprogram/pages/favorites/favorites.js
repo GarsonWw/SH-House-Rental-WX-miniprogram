@@ -15,7 +15,7 @@ Page({
     this.setData({ loading: true })
     // 从云端重新拉取收藏 ID，再映射到本地缓存的房源数据
     app.reloadFavorites(() => {
-      app.onHouseListReady(() => {
+      app.ensureHousesFresh(() => {
         const houses = app.getFavoriteHouses()
         this.setData({ favoriteHouses: houses, loading: false })
       })

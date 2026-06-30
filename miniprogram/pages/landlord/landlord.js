@@ -35,18 +35,19 @@ Page({
   },
 
   onLoad() {
-    // 验证房东权限
-    if (!app.globalData.isLandlord) {
-      wx.showModal({
-        title: '无权访问',
-        content: '请从"我的"页面输入房东访问码进入',
-        showCancel: false,
-        confirmText: '返回',
-        success: () => wx.navigateBack()
-      })
-      return
-    }
-    this.loadMyHouses()
+    app.requireLandlord((isLandlord, error) => {
+      if (!isLandlord) {
+        wx.showModal({
+          title: '无权访问',
+          content: error ? error.message : '当前微信账号不在管理员名单中',
+          showCancel: false,
+          confirmText: '返回',
+          success: () => wx.navigateBack()
+        })
+        return
+      }
+      this.loadMyHouses()
+    })
   },
 
   onShow() {
@@ -104,7 +105,11 @@ Page({
     wx.showLoading({ title: '更新中...' })
     app.toggleHouseStatus(id, !current, err => {
       wx.hideLoading()
-      if (err) { wx.showToast({ title: '更新失败', icon: 'none' }); return }
+      if (err) {
+        wx.showToast({ title: err.code === 'CONFLICT' ? '状态已变化，正在刷新' : '更新失败', icon: 'none' })
+        this.loadMyHouses()
+        return
+      }
       wx.showToast({ title: !current ? '已设为可租' : '已设为已租', icon: 'success' })
       this.loadMyHouses()
     })
@@ -122,7 +127,11 @@ Page({
         wx.showLoading({ title: '删除中...' })
         app.deleteHouse(id, err => {
           wx.hideLoading()
-          if (err) { wx.showToast({ title: '删除失败，请重试', icon: 'none' }); return }
+          if (err) {
+            wx.showToast({ title: err.code === 'CONFLICT' ? '房源已更新，请刷新后重试' : '删除失败，请重试', icon: 'none' })
+            this.loadMyHouses()
+            return
+          }
           wx.showToast({ title: '已删除', icon: 'success' })
           this.loadMyHouses()
         })
@@ -231,7 +240,7 @@ Page({
   onExitLandlord() {
     wx.showModal({
       title: '退出房东模式',
-      content: '退出后需重新输入访问码',
+      content: '退出当前管理页面，之后仍可使用已授权的微信账号重新进入。',
       confirmText: '退出',
       success: res => {
         if (res.confirm) {

@@ -28,7 +28,7 @@ Page({
   },
 
   onShow() {
-    app.onHouseListReady(() => {
+    app.ensureHousesFresh(() => {
       this.loadData()
       const name = this.data.pendingNeighborhoodName || (this.data.selectedNeighborhood && this.data.selectedNeighborhood.name)
       if (name) {
@@ -120,9 +120,5 @@ Page({
 
   incrementViewCount(id) {
     app.incrementViewCount(id)
-  },
-
-  onPublish() {
-    wx.navigateTo({ url: '/pages/publish/publish' })
   }
 })

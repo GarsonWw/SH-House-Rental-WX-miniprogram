@@ -76,6 +76,21 @@ Page({
   },
 
   onLoad(options = {}) {
+    app.requireLandlord((isLandlord, error) => {
+      if (!isLandlord) {
+        wx.showModal({
+          title: '无权发布房源',
+          content: error ? error.message : '当前微信账号不在管理员名单中',
+          showCancel: false,
+          success: () => wx.navigateBack()
+        })
+        return
+      }
+      this.initializePage(options)
+    })
+  },
+
+  initializePage(options = {}) {
     if (options.id) {
       this.loadEditHouse(options.id)
       return
@@ -146,24 +161,17 @@ Page({
       })
     }
 
-    const cached = app.getHouseById(id)
-    if (cached) {
-      setEditForm(cached)
-      return
-    }
-
-    const db = wx.cloud.database()
     wx.showLoading({ title: '加载房源...' })
-    db.collection('houses').doc(id).get()
-      .then(res => {
+    app.getHouseFresh(id, (house, error) => {
+      if (!error && house) {
         wx.hideLoading()
-        setEditForm({ ...res.data, id: res.data._id })
-      })
-      .catch(err => {
-        wx.hideLoading()
-        this.showCloudError('加载失败', err, '无法获取房源详情，请稍后重试。')
-        setTimeout(() => wx.navigateBack(), 1200)
-      })
+        setEditForm(house)
+        return
+      }
+      wx.hideLoading()
+      this.showCloudError('加载失败', error, '无法获取房源详情，请稍后重试。')
+      setTimeout(() => wx.navigateBack(), 1200)
+    })
   },
 
   // 表单输入处理
@@ -374,6 +382,10 @@ Page({
 
   // 提交发布
   onSubmit() {
+    if (!app.globalData.isLandlord) {
+      wx.showToast({ title: '无房东管理权限', icon: 'none' })
+      return
+    }
     if (!this.validateStep1() || !this.validateStep2()) return
 
     this.setData({ submitting: true })
@@ -406,7 +418,9 @@ Page({
         if (vidErr) {
           wx.hideLoading()
           this.setData({ submitting: false })
-          this.showCloudError('视频上传失败', vidErr, '请确认云开发环境、云存储权限已开启。')
+          app.deleteUploadedFiles(imgIDs, () => {
+            this.showCloudError('视频上传失败', vidErr, '请确认云开发环境、云存储权限已开启。')
+          })
           return
         }
 
@@ -416,6 +430,7 @@ Page({
           ...form,
           images: [...cloudImages, ...imgIDs],
           videos: [...cloudVideos, ...vidIDs],
+          videoCover: isCloud(form.videoCover) ? form.videoCover : '',
           price: Number(form.price),
           area: Number(form.area),
           latitude: Number(form.latitude),

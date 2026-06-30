@@ -71,7 +71,7 @@ Page({
   },
 
   onShow() {
-    app.onHouseListReady(() => this.loadData())
+    app.ensureHousesFresh(() => this.loadData())
   },
 
   loadData() {
@@ -286,10 +286,6 @@ Page({
     if (!id) return
     app.incrementViewCount(id)
     wx.navigateTo({ url: `/pages/detail/detail?id=${id}` })
-  },
-
-  onPublish() {
-    wx.navigateTo({ url: '/pages/publish/publish' })
   },
 
   onPullDownRefresh() {

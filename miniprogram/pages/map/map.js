@@ -58,7 +58,7 @@ Page({
   },
 
   onShow() {
-    app.onHouseListReady(() => this.loadMarkers())
+    app.ensureHousesFresh(() => this.loadMarkers())
   },
 
   // ── 构建地图 Markers ──────────────────────────────

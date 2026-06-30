@@ -31,7 +31,7 @@
       <view class="editor-head">
         <view>
           <text class="editor-title">{{selectedName}}</text>
-          <text class="editor-sub">以下内容会同步展示在该小区详情页，并应用到该小区下的所有房源。</text>
+          <text class="editor-sub">以下内容独立保存为小区资料，并统一展示在小区详情页。</text>
         </view>
         <view class="preview-btn" bindtap="onPreviewNeighborhood">预览</view>
       </view>

@@ -56,7 +56,7 @@
 }
 
 .unavailable {
-  background: #7A746B;
+  background: #D64545;
 }
 
 .room-type-badge {
@@ -236,12 +236,16 @@
 }
 
 .available {
-  background: #28B8BC;
+  background: #2E7D5B;
 }
 
 .unavailable,
 .room-type-badge {
   background: rgba(17, 17, 17, 0.72);
+}
+
+.unavailable {
+  background: #D64545;
 }
 
 .house-title {

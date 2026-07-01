@@ -20,6 +20,10 @@ Page({
 
   onShow() {
     this.refreshState()
+    app.onLoginReady(openid => {
+      if (!openid) return
+      app.refreshLandlordStatus(() => this.refreshState())
+    })
   },
 
   noop() {},

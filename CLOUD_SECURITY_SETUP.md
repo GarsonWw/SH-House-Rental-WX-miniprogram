@@ -37,7 +37,7 @@
 
 需要增加协作者时，为对方的 `OPENID` 再创建一条记录即可。禁用账号时把 `enabled` 改为 `false`。
 
-项目当前内置的首位服务端管理员为 `oA0h43eQhrZqdISgjJctd-hswB_A`。部署后该账号首次点击“房东入口”时，云函数会自动在 `admins` 集合创建记录。如需停用，请把该记录的 `enabled` 设置为 `false`。
+项目当前内置的服务端管理员为 `oA0h43eQhrZqdISgjJctd-hswB_A` 和 `oA0h43Qs4oEFUers_O1EB5aTGLnc`。部署后管理员首次点击“房东入口”时，云函数会自动在 `admins` 集合创建记录。如需停用，请把对应记录的 `enabled` 设置为 `false`。
 
 也可以在 `houseService` 云函数环境变量中设置：
 

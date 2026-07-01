@@ -119,7 +119,7 @@
   font-size: 20rpx; font-weight: 700; padding: 5rpx 16rpx; border-radius: 50rpx;
 }
 .tag-ok     { background: #2E7D5B; color: #FFF; }
-.tag-rented { background: rgba(0,0,0,0.5); color: #FFF; }
+.tag-rented { background: #D64545; color: #FFF; }
 .views-tag {
   position: absolute; top: 16rpx; right: 16rpx;
   background: rgba(0,0,0,0.45); color: #FFF;
@@ -207,7 +207,7 @@
   color: #2E7D5B; background: #EAF6EF; border-color: #2E7D5B; font-weight: 700;
 }
 .edit-status-rented {
-  color: #999; background: #F4F1EA; border-color: #BBB; font-weight: 700;
+  color: #D64545; background: #FFF0F0; border-color: #D64545; font-weight: 700;
 }
 .edit-tags {
   display: flex; flex-wrap: wrap; gap: 14rpx;
@@ -274,8 +274,8 @@
 .edit-confirm,
 .edit-tag-active,
 .edit-status-active {
-  background: #28B8BC;
-  border-color: #28B8BC;
+  background: #2E7D5B;
+  border-color: #2E7D5B;
   color: #FFFFFF;
   border-radius: 999rpx;
 }

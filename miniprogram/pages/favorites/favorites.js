@@ -34,10 +34,15 @@ Page({
       confirmText: '移除', confirmColor: '#FF3B30',
       success: res => {
         if (!res.confirm) return
-        app.toggleFavorite(id)
-        const houses = app.getFavoriteHouses()
-        this.setData({ favoriteHouses: houses })
-        wx.showToast({ title: '已取消收藏', icon: 'none' })
+        app.toggleFavorite(id, (isFavorited, error) => {
+          if (error) {
+            wx.showToast({ title: '移除失败，请检查网络后重试', icon: 'none' })
+            return
+          }
+          const houses = app.getFavoriteHouses()
+          this.setData({ favoriteHouses: houses })
+          wx.showToast({ title: isFavorited ? '操作未完成' : '已取消收藏', icon: 'none' })
+        })
       }
     })
   },

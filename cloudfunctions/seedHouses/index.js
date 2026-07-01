@@ -1,119 +1,223 @@
-// cloudfunctions/seedHouses/index.js
-// 用途：一次性初始化示例房源到云数据库
-// 使用方法：在微信开发者工具中右键此文件夹 → 上传并部署，然后在云函数调用面板点击调用
-
+const crypto = require('crypto')
 const cloud = require('wx-server-sdk')
+
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const db = cloud.database()
+const TEST_BATCH = 'luohu-10-houses-3-neighborhoods-v1'
+const BOOTSTRAP_ADMIN_OPENIDS = [
+  'oA0h43eQhrZqdISgjJctd-hswB_A',
+  'oA0h43Qs4oEFUers_O1EB5aTGLnc'
+]
 
-const IMG = {
-  livingRoom1: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80',
-  livingRoom2: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
-  livingRoom3: 'https://images.unsplash.com/photo-1560185007-5f0bb1866cab?w=800&q=80',
-  bedroom1:    'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
-  bedroom2:    'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80',
-  bedroom3:    'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&q=80',
-  kitchen1:    'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
-  kitchen2:    'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80',
-  bathroom1:   'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&q=80',
-  luxury1:     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-  luxury2:     'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
-  luxury3:     'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80',
-  cozy1:       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
-  cozy2:       'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&q=80',
-  study1:      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+const getAdminOpenids = () => [
+  ...BOOTSTRAP_ADMIN_OPENIDS,
+  ...String(process.env.ADMIN_OPENIDS || '')
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean)
+]
+
+const isAdmin = async openid => {
+  if (!openid) return false
+  try {
+    const result = await db.collection('admins').doc(openid).get()
+    return !!(result.data && result.data.enabled !== false)
+  } catch (error) {
+    return getAdminOpenids().includes(openid)
+  }
 }
 
-const HOUSES = [
+const IMAGES = [
+  'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=82',
+  'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=82',
+  'https://images.unsplash.com/photo-1560185008-b033106af5c3?w=1200&q=82',
+  'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=82',
+  'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=82',
+  'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=1200&q=82'
+]
+
+const NEIGHBORHOODS = [
   {
-    title: '罗湖口岸通勤两室一厅 近大剧院商圈',
-    neighborhood: '京基东方都会', district: '罗湖区',
-    address: '京基东方都会3栋1单元', price: 5200, priceUnit: '元/月',
-    roomType: '2室1厅1卫', area: 85, floor: '8/18层',
-    orientation: '南北', decoration: '精装修',
-    tags: ['近地铁', '拎包入住', '罗湖核心'],
-    description: '房子位于京基东方都会，南北通透，采光好，精装修，家具家电齐全，拎包入住。靠近大剧院、红岭南等地铁站，去福田和罗湖口岸都方便。',
-    landlordName: '王先生', landlordPhone: '13812345678', landlordWechat: 'wangxiansheng2024',
-    images: [IMG.livingRoom1, IMG.bedroom1, IMG.kitchen1, IMG.bathroom1],
-    available: true, viewCount: 128, createTime: new Date('2024-01-15')
+    name: '罗湖口岸测试公寓',
+    district: '罗湖口岸',
+    neighborhoodSlogan: '口岸通勤 · 步行生活圈 · 直租免中介',
+    neighborhoodNote: '口岸通勤测试小区，共4套测试房源。',
+    neighborhoodReview: '适合重视深港通勤效率的租客，周边商业成熟，晚归和日常采购比较方便。',
+    commuteInfo: '步行约12分钟到罗湖口岸，地铁与跨境通勤方便。',
+    commuteMode: '步行 / 地铁',
+    safetyInfo: '公寓大堂门禁，公共区域有监控。',
+    propertyType: '整栋公寓',
+    deliveryInfo: '外卖和快递可送至大堂取件区。',
+    shortRentInfo: '部分房源支持3个月起租。',
+    roomInsight: '房源以单间和一房为主，适合个人居住和口岸通勤。',
+    priceReference: '单间2980-3280元/月，一房4200元/月，两房5200元/月。',
+    surroundings: '步行范围内有商场、便利店、餐饮和口岸交通。',
+    suitableCrowd: '香港学生 / 深港通勤 / 罗湖上班族',
+    scoutTitle: '罗湖口岸通勤测试说明',
+    scoutSummary: '重点测试口岸距离、房源状态、短租标签和公寓类型展示。',
+    scoutAdvice: '实际租房时请再次确认通勤时间、噪音、水电费和租期。',
+    neighborhoodCover: IMAGES[0]
   },
   {
-    title: '黄贝岭温馨一室一厅 地铁换乘方便',
-    neighborhood: '深业东岭', district: '罗湖区',
-    address: '深业东岭B区15栋', price: 3600, priceUnit: '元/月',
-    roomType: '1室1厅1卫', area: 52, floor: '12/26层',
-    orientation: '南', decoration: '精装修',
-    tags: ['近商场', '地铁口', '安静'],
-    description: '一室一厅，精装修，家具齐全，靠近黄贝岭地铁站，周边餐饮、超市和生活服务完善，非常适合罗湖上班族。',
-    landlordName: '李女士', landlordPhone: '13987654321', landlordWechat: 'linv_2088',
-    images: [IMG.cozy1, IMG.bedroom2, IMG.kitchen2],
-    available: true, viewCount: 87, createTime: new Date('2024-01-18')
+    name: '翠竹测试家园',
+    district: '翠竹',
+    neighborhoodSlogan: '成熟社区 · 生活便利 · 户型实用',
+    neighborhoodNote: '住宅小区测试数据，共3套测试房源。',
+    neighborhoodReview: '社区生活氛围成熟，适合更看重居住稳定性和日常配套的租客。',
+    commuteInfo: '步行约8分钟到翠竹地铁站。',
+    commuteMode: '步行 / 地铁',
+    safetyInfo: '住宅门禁和物业值守，夜间出入相对稳定。',
+    propertyType: '住宅小区房',
+    deliveryInfo: '外卖可送至楼下，快递集中存放。',
+    shortRentInfo: '以一年租期为主。',
+    roomInsight: '一房和两房户型齐全，适合个人、情侣和小家庭。',
+    priceReference: '一房3600元/月，两房5600-6200元/月。',
+    surroundings: '周边菜市场、医院、学校和餐饮配套较完整。',
+    suitableCrowd: '罗湖上班族 / 长租 / 注重生活便利',
+    scoutTitle: '翠竹成熟社区测试说明',
+    scoutSummary: '重点测试住宅属性、两房筛选、已租状态和小区详情展示。',
+    scoutAdvice: '看房时建议确认具体楼栋、采光、电梯和物业管理。',
+    neighborhoodCover: IMAGES[2]
   },
   {
-    title: '银湖山景三房带书房 品质安静社区',
-    neighborhood: '华润银湖蓝山', district: '罗湖区',
-    address: '华润银湖蓝山6期18栋', price: 9800, priceUnit: '元/月',
-    roomType: '3室2厅2卫', area: 128, floor: '15/32层',
-    orientation: '东南', decoration: '豪装',
-    tags: ['豪华装修', '山景房', '高楼层'],
-    description: '三室两厅豪华装修，可看银湖山景，高楼层视野开阔，品质小区安保严格，适合希望住得安静、舒适的家庭。',
-    landlordName: '陈先生', landlordPhone: '13611112222', landlordWechat: 'chen_luxuryrent',
-    images: [IMG.luxury1, IMG.luxury2, IMG.luxury3, IMG.study1],
-    available: true, viewCount: 203, createTime: new Date('2024-01-20')
-  },
-  {
-    title: '蔡屋围合租大卧室 独立卫生间',
-    neighborhood: '京基东方都会', district: '罗湖区',
-    address: '京基东方都会5栋302室', price: 2600, priceUnit: '元/月',
-    roomType: '合租/主卧', area: 25, floor: '3/18层',
-    orientation: '南', decoration: '简装',
-    tags: ['独立卫生间', '近地铁', '合租友好'],
-    description: '整套房子4室合租，主卧带独立卫生间，空间宽敞，室友都是上班族。靠近罗湖核心商圈，通勤和日常生活都方便。',
-    landlordName: '张小姐', landlordPhone: '13733334444', landlordWechat: 'zhang_hezhu',
-    images: [IMG.bedroom3, IMG.bathroom1, IMG.livingRoom3],
-    available: true, viewCount: 156, createTime: new Date('2024-01-22')
-  },
-  {
-    title: '黄贝岭整租两室 家电齐全 可短租',
-    neighborhood: '深业东岭', district: '罗湖区',
-    address: '深业东岭A区8栋1201', price: 5600, priceUnit: '元/月',
-    roomType: '2室1厅1卫', area: 78, floor: '12/28层',
-    orientation: '西南', decoration: '精装修',
-    tags: ['可短租', '家电齐全', '随时可看'],
-    description: '两室一厅精装修，冰箱、洗衣机、热水器、空调全套，支持3个月短租，随时可以预约看房，房东本人直租无中介费。',
-    landlordName: '刘先生', landlordPhone: '13855556666', landlordWechat: 'liu_zhuzhu',
-    images: [IMG.livingRoom2, IMG.bedroom1, IMG.kitchen2, IMG.bathroom1],
-    available: true, viewCount: 94, createTime: new Date('2024-01-25')
-  },
-  {
-    title: '翠竹生活圈三室两厅 紧邻学校医院',
-    neighborhood: '合正锦湖逸园', district: '罗湖区',
-    address: '合正锦湖逸园A栋', price: 8200, priceUnit: '元/月',
-    roomType: '3室2厅1卫', area: 110, floor: '6/12层',
-    orientation: '南', decoration: '精装修',
-    tags: ['生活便利', '学校旁', '中低楼层'],
-    description: '翠竹成熟生活圈三室两厅，精装修，家具齐全，小区绿化好安保严。周边学校、医院、菜市场和商业配套步行可达。',
-    landlordName: '吴女士', landlordPhone: '13977778888', landlordWechat: 'wu_xuequ_fang',
-    images: [IMG.cozy2, IMG.bedroom2, IMG.study1, IMG.kitchen1],
-    available: true, viewCount: 312, createTime: new Date('2024-01-28')
+    name: '黄贝岭测试社区',
+    district: '黄贝岭',
+    neighborhoodSlogan: '地铁换乘 · 预算友好 · 深港生活便利',
+    neighborhoodNote: '黄贝岭片区测试数据，共3套测试房源。',
+    neighborhoodReview: '交通选择较多，预算跨度灵活，适合学生、合租和刚到深圳工作的租客。',
+    commuteInfo: '步行约6分钟到黄贝岭地铁站。',
+    commuteMode: '步行 / 地铁',
+    safetyInfo: '社区出入口有门禁，建议看房时确认具体楼栋管理。',
+    propertyType: '新小区房',
+    deliveryInfo: '外卖快递可送至小区入口。',
+    shortRentInfo: '其中1套支持短租。',
+    roomInsight: '覆盖合租、一房和两房，可测试不同预算和租住方式。',
+    priceReference: '合租2200元/月，一房3900元/月，两房5800元/月。',
+    surroundings: '地铁、餐饮、超市和生活服务较集中。',
+    suitableCrowd: '香港学生 / 合租 / 预算明确 / 地铁通勤',
+    scoutTitle: '黄贝岭预算租房测试说明',
+    scoutSummary: '重点测试合租、预算筛选、建筑属性和地图坐标。',
+    scoutAdvice: '合租前建议确认室友情况、公共区域使用和水电分摊。',
+    neighborhoodCover: IMAGES[4]
   }
 ]
 
-exports.main = async () => {
-  // 检查是否已有数据，避免重复导入
-  const { total } = await db.collection('houses').count()
-  if (total > 0) {
-    return { code: 1, message: `数据库中已有 ${total} 条房源，跳过初始化。如需重置请先手动清空 houses 集合。` }
-  }
+const HOUSE_DEFINITIONS = [
+  ['罗湖口岸测试公寓', '口岸步行通勤精装单间', 2980, '单间', 28, '整栋公寓', true, 22.5329, 114.1132, ['近口岸', '拎包入住', '免中介']],
+  ['罗湖口岸测试公寓', '高层采光一室一厅', 4200, '1室1厅1卫', 45, '酒店公寓', true, 22.5334, 114.1126, ['高层采光', '家电齐全', '近地铁']],
+  ['罗湖口岸测试公寓', '可短租独立卫浴单间', 3280, '单间', 30, '商业公寓', true, 22.5325, 114.1140, ['可短租', '独立卫生间', '近口岸']],
+  ['罗湖口岸测试公寓', '口岸家庭整租两房', 5200, '2室1厅1卫', 68, '住宅小区房', false, 22.5340, 114.1118, ['整租', '南向', '已租测试']],
+  ['翠竹测试家园', '翠竹安静南向一房', 3600, '1室1厅1卫', 42, '住宅小区房', true, 22.5579, 114.1292, ['南向', '安静', '近地铁']],
+  ['翠竹测试家园', '成熟社区实用两房', 5600, '2室1厅1卫', 72, '住宅小区房', true, 22.5584, 114.1286, ['生活便利', '家电齐全', '整租']],
+  ['翠竹测试家园', '电梯高层两房两厅', 6200, '2室2厅1卫', 82, '新小区房', false, 22.5575, 114.1300, ['电梯房', '高层', '已租测试']],
+  ['黄贝岭测试社区', '地铁旁合租主卧', 2200, '合租/主卧', 22, '住宅小区房', true, 22.5527, 114.1358, ['合租友好', '近地铁', '独立卫生间']],
+  ['黄贝岭测试社区', '预算友好一室一厅', 3900, '1室1厅1卫', 46, '商业公寓', true, 22.5531, 114.1365, ['预算友好', '拎包入住', '免中介']],
+  ['黄贝岭测试社区', '地铁换乘精装两房', 5800, '2室1厅1卫', 76, '新小区房', true, 22.5522, 114.1370, ['精装修', '近地铁', '家电齐全']]
+]
 
-  // 批量写入
-  const results = await Promise.allSettled(
-    HOUSES.map(h => db.collection('houses').add({ data: h }))
+const NEIGHBORHOOD_AREAS = {
+  '罗湖口岸测试公寓': '罗湖口岸',
+  '翠竹测试家园': '翠竹',
+  '黄贝岭测试社区': '黄贝岭'
+}
+
+const HOUSES = HOUSE_DEFINITIONS.map((item, index) => {
+  const [neighborhood, title, price, roomType, area, buildingAttribute, available, latitude, longitude, tags] = item
+  return {
+    title,
+    neighborhood,
+    district: NEIGHBORHOOD_AREAS[neighborhood] || '其他片区',
+    address: `${neighborhood}${index + 1}号测试房`,
+    locationName: neighborhood,
+    latitude,
+    longitude,
+    price,
+    priceUnit: '元/月',
+    roomType,
+    rentType: roomType.includes('合租') ? '合租' : '整租',
+    buildingAttribute,
+    area,
+    floor: `${index + 3}/${index % 2 ? 28 : 18}层`,
+    orientation: index % 3 === 0 ? '南' : index % 3 === 1 ? '东南' : '南北',
+    decoration: '精装修',
+    tags,
+    description: `${title}，这是用于验证多用户房源展示、筛选、地图、收藏和已租状态同步的测试数据。`,
+    detailGuideTitle: '测试房源看房提示',
+    detailGuideSummary: '请重点验证页面信息、联系方式和状态同步是否正常。',
+    detailGuideContent: '该记录为系统测试数据，不代表真实可租房源。',
+    detailGuideTip: '完成测试后可在数据库按 testBatch 字段批量删除。',
+    landlordName: '孙先生',
+    landlordPhone: '13520174107',
+    landlordWechat: 'weixin123',
+    images: [IMAGES[index % IMAGES.length], IMAGES[(index + 1) % IMAGES.length]],
+    videos: [],
+    available,
+    viewCount: 10 + index * 7,
+    version: 1,
+    isTestData: true,
+    testBatch: TEST_BATCH
+  }
+})
+
+const neighborhoodId = name => crypto.createHash('sha1').update(name).digest('hex')
+
+const removeExistingTestData = async () => {
+  const [houseResult, neighborhoodResult] = await Promise.all([
+    db.collection('houses').where({ testBatch: TEST_BATCH }).limit(100).get(),
+    db.collection('neighborhoods').where({ testBatch: TEST_BATCH }).limit(100).get()
+  ])
+  await Promise.all([
+    ...houseResult.data.map(item => db.collection('houses').doc(item._id).remove()),
+    ...neighborhoodResult.data.map(item => db.collection('neighborhoods').doc(item._id).remove())
+  ])
+}
+
+exports.main = async () => {
+  const { OPENID } = cloud.getWXContext()
+  if (!await isAdmin(OPENID)) {
+    return {
+      ok: false,
+      code: 'FORBIDDEN',
+      message: '仅管理员可以初始化测试房源'
+    }
+  }
+  await removeExistingTestData()
+
+  const neighborhoodResults = await Promise.allSettled(
+    NEIGHBORHOODS.map(profile => db.collection('neighborhoods').doc(neighborhoodId(profile.name)).set({
+      data: {
+        ...profile,
+        version: 1,
+        isTestData: true,
+        testBatch: TEST_BATCH,
+        updatedAt: db.serverDate()
+      }
+    }))
   )
 
-  const success = results.filter(r => r.status === 'fulfilled').length
-  const fail    = results.filter(r => r.status === 'rejected').length
+  const houseResults = await Promise.allSettled(
+    HOUSES.map(house => db.collection('houses').add({
+      data: {
+        ...house,
+        createTime: db.serverDate(),
+        updatedAt: db.serverDate()
+      }
+    }))
+  )
 
-  return { code: 0, message: `初始化完成：成功 ${success} 条，失败 ${fail} 条。` }
+  const housesCreated = houseResults.filter(result => result.status === 'fulfilled').length
+  const neighborhoodsCreated = neighborhoodResults.filter(result => result.status === 'fulfilled').length
+
+  return {
+    ok: housesCreated === 10 && neighborhoodsCreated === 3,
+    testBatch: TEST_BATCH,
+    housesCreated,
+    neighborhoodsCreated,
+    distribution: {
+      '罗湖口岸测试公寓': 4,
+      '翠竹测试家园': 3,
+      '黄贝岭测试社区': 3
+    }
+  }
 }

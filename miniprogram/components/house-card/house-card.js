@@ -17,14 +17,20 @@ Component({
     },
 
     onPhoneCall(e) {
-      e.stopPropagation()
       const { phone } = e.currentTarget.dataset
+      if (!phone) {
+        wx.showToast({ title: '暂无联系电话', icon: 'none' })
+        return
+      }
       wx.makePhoneCall({ phoneNumber: phone })
     },
 
     onCopyWechat(e) {
-      e.stopPropagation()
       const { wechat, name } = e.currentTarget.dataset
+      if (!wechat) {
+        wx.showToast({ title: '暂无微信号', icon: 'none' })
+        return
+      }
       wx.showModal({
         title: `联系 ${name}`,
         content: `微信号：${wechat}\n\n点击确认复制微信号`,

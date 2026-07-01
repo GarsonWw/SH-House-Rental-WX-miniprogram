@@ -14,8 +14,8 @@
       />
     </view>
 
-    <!-- 区域筛选 -->
-    <scroll-view scroll-x class="district-filter" wx:if="{{districtList.length > 1}}">
+    <!-- 罗湖片区筛选 -->
+    <view class="district-filter" wx:if="{{districtList.length > 1}}">
       <view class="district-list">
         <view
           class="district-chip {{selectedDistrict === item ? 'active' : ''}}"
@@ -25,7 +25,7 @@
           data-district="{{item}}"
         >{{item}}</view>
       </view>
-    </scroll-view>
+    </view>
 
     <!-- 小区数量统计 -->
     <view class="stats-bar">
@@ -48,7 +48,15 @@
           data-name="{{item.name}}"
         >
           <view class="card-cover">
-            <text class="card-emoji">🏢</text>
+            <view class="card-cover-fallback"><text class="card-emoji">🏢</text></view>
+            <image
+              wx:if="{{item.coverImg}}"
+              class="card-cover-image"
+              src="{{item.coverImg}}"
+              mode="aspectFill"
+              lazy-load
+            />
+            <view class="card-cover-label">{{item.count}}套房源</view>
           </view>
           <view class="card-info">
             <text class="card-name">{{item.name}}</text>

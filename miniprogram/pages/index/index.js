@@ -26,7 +26,7 @@ const NEIGHBORHOOD_PROFILES = {
 
 const DEFAULT_PROFILE = {
   icon: '🏠', categoryLabel: '精选房源', badge: '',
-  desc: '该区域房源充足，户型多样，直联房东，0中介费，随时可预约看房。',
+  desc: '该片区房源充足，户型多样，直联房东，0中介费，随时可预约看房。',
   review: '房东均为个人直租，联系后可直接微信或电话沟通，看房灵活，无中介费用，价格也更有谈判空间。建议优先实地查看后再做决定。'
 }
 
@@ -49,8 +49,8 @@ Page({
     heroSlides: [],
     heroIndex: 0,
     activeTab: 'overview',
-    filterDims: ['区域', '房型', '价格'],
-    activeDim: '区域',
+    filterDims: ['片区', '房型', '价格'],
+    activeDim: '片区',
     districtList: [],
     selectedDistrict: '全部',
     overviewFilterOptions: [],
@@ -139,7 +139,7 @@ Page({
 
   getOverviewFilterOptions(dim, districts = this.data.districtList) {
     const { selectedDistrict, overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
-    if (dim === '区域') {
+    if (dim === '片区') {
       return districts.map((label, idx) => ({ label, idx, active: selectedDistrict === label }))
     }
     if (dim === '房型') {
@@ -150,12 +150,22 @@ Page({
 
   matchRoomType(h, selectedRoomType) {
     if (selectedRoomType === '不限') return true
-    if (selectedRoomType === '整租' || selectedRoomType === '合租') {
-      if (h.rentType && h.rentType === selectedRoomType) return true
-      const combined = (h.roomType || '') + (h.title || '')
-      return combined.includes(selectedRoomType)
+    const roomType = String(h.roomType || '')
+    const combined = `${roomType}${h.title || ''}`
+    if (selectedRoomType === '合租') {
+      return h.rentType === '合租' || combined.includes('合租')
     }
-    return (h.roomType || '').includes(selectedRoomType.replace('+', ''))
+    if (selectedRoomType === '整租') {
+      if (h.rentType) return h.rentType === '整租'
+      return !combined.includes('合租')
+    }
+    if (selectedRoomType === '一室') return /^1室/.test(roomType)
+    if (selectedRoomType === '两室') return /^2室/.test(roomType)
+    if (selectedRoomType === '三室+') {
+      const count = Number((roomType.match(/^(\d+)室/) || [])[1])
+      return Number.isFinite(count) && count >= 3
+    }
+    return roomType.includes(selectedRoomType)
   },
 
   buildSections(houseList) {
@@ -198,7 +208,7 @@ Page({
     const { value } = e.currentTarget.dataset
     const idx = Number(e.currentTarget.dataset.idx || 0)
     const data = {}
-    if (this.data.activeDim === '区域') {
+    if (this.data.activeDim === '片区') {
       data.selectedDistrict = value
     } else if (this.data.activeDim === '房型') {
       data.overviewSelectedRoomType = value

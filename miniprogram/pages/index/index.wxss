@@ -545,7 +545,7 @@
 }
 
 .mini-rented {
-  background: rgba(0,0,0,0.45);
+  background: #D64545;
 }
 
 .mini-title {
@@ -684,7 +684,7 @@
   font-size: 18rpx; font-weight: 700;
   padding: 4rpx 14rpx; border-radius: 50rpx;
 }
-.avail-rented { background: rgba(0,0,0,0.45); }
+.avail-rented { background: #D64545; }
 
 .result-info {
   flex: 1; min-width: 0; padding: 20rpx 20rpx 20rpx 18rpx;
@@ -951,13 +951,18 @@
 
 .mini-badge,
 .result-avail {
-  background: rgba(17, 17, 17, 0.78);
+  background: #2E7D5B;
   color: #FFFFFF;
+}
+
+.mini-badge.mini-rented,
+.result-avail.avail-rented {
+  background: #D64545;
 }
 
 .available,
 .sh-available {
-  background: #28B8BC;
+  background: #2E7D5B;
 }
 
 .bottom-publish {
@@ -1293,4 +1298,68 @@
 
 .empty-btn {
   background: #111111;
+}
+
+/* 固定布局：筛选项自动换行，房源卡片两列展示 */
+.chips-scroll,
+.house-scroll,
+.filter-scroll {
+  white-space: normal;
+}
+
+.chips-row,
+.filter-chips,
+.house-row {
+  flex-wrap: wrap;
+}
+
+.chips-row,
+.filter-chips {
+  row-gap: 12rpx;
+}
+
+.chip,
+.f-chip {
+  flex-shrink: 1;
+  margin-bottom: 0;
+}
+
+.house-row {
+  justify-content: space-between;
+}
+
+.mini-card {
+  width: calc(50% - 8rpx);
+  margin-right: 0;
+  margin-bottom: 22rpx;
+  flex-shrink: 1;
+}
+
+.mini-img-wrap,
+.mini-img,
+.mini-img-ph {
+  width: 100%;
+  height: 210rpx;
+}
+
+.mini-title {
+  width: 100%;
+}
+
+.mini-more {
+  width: 100%;
+  height: 82rpx;
+  flex-direction: row;
+  margin-top: 2rpx;
+}
+
+.mini-more .more-icon {
+  font-size: 34rpx;
+  margin-right: 10rpx;
+}
+
+.mini-more .more-text {
+  width: auto;
+  margin-top: 0;
+  font-size: 22rpx;
 }

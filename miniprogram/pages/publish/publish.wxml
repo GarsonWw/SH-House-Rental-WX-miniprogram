@@ -88,15 +88,21 @@
         />
       </view>
 
-      <view class="form-item">
-        <text class="form-label">所在区域</text>
-        <input
-          class="form-input"
-          placeholder="如：罗湖区"
-          value="{{form.district}}"
-          bindinput="onInput"
+      <view class="form-item required">
+        <text class="form-label">罗湖片区</text>
+        <picker
+          range="{{districtOptions}}"
+          bindchange="onPickerChange"
           data-field="district"
-        />
+          data-options="districtOptions"
+        >
+          <view class="picker-view">
+            <text class="{{form.district ? 'picker-value' : 'picker-placeholder'}}">
+              {{form.district || '请选择罗湖片区'}}
+            </text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
       </view>
 
       <view class="form-item">

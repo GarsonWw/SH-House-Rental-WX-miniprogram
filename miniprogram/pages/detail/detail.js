@@ -9,7 +9,8 @@ Page({
     isFavorited: false,
     showContactModal: false,
     wechatCopied: false,
-    isGuideExpanded: false
+    isGuideExpanded: false,
+    favoritePending: false
   },
 
   normalizeHouse(house) {
@@ -143,13 +144,24 @@ Page({
 
   onFavorite() {
     const { house } = this.data
-    if (!house) return
-    const nowFav = app.toggleFavorite(house.id)
-    this.setData({ isFavorited: nowFav })
-    wx.showToast({
-      title: nowFav ? '已收藏 ❤️' : '已取消收藏',
-      icon: 'none',
-      duration: 1500
+    if (!house || this.data.favoritePending) return
+    if (!app.globalData.openid) {
+      wx.showToast({ title: '请先登录后收藏', icon: 'none' })
+      return
+    }
+    this.setData({ favoritePending: true })
+    app.toggleFavorite(house.id, (nowFav, error) => {
+      this.setData({ favoritePending: false })
+      if (error) {
+        wx.showToast({ title: '收藏失败，请检查网络后重试', icon: 'none' })
+        return
+      }
+      this.setData({ isFavorited: nowFav })
+      wx.showToast({
+        title: nowFav ? '已收藏 ❤️' : '已取消收藏',
+        icon: 'none',
+        duration: 1500
+      })
     })
   },
 
@@ -157,7 +169,7 @@ Page({
   onNeighborhoodTap() {
     const { house } = this.data
     wx.navigateTo({
-      url: `/pages/neighborhood/neighborhood?name=${encodeURIComponent(house.neighborhood)}`
+      url: `/pages/neighborhood-detail/neighborhood-detail?name=${encodeURIComponent(house.neighborhood)}`
     })
   }
 })

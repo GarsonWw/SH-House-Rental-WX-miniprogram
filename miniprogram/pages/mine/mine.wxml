@@ -21,11 +21,6 @@
       </view>
     </view>
 
-    <!-- 房东入口（未登录也可进） -->
-    <view class="landlord-entry" bindtap="onLandlordEntry">
-      <text class="le-icon">🔑</text>
-      <text class="le-text">房东入口</text>
-    </view>
   </view>
 
   <!-- ══ 已登录状态 ══ -->
@@ -48,14 +43,6 @@
       </view>
       <view class="edit-profile" bindtap="onSetProfile">
         <text>编辑</text>
-      </view>
-    </view>
-
-    <!-- 统计卡 -->
-    <view class="stats-card">
-      <view class="stat-item">
-        <text class="stat-num fav-num">{{favoriteCount}}</text>
-        <text class="stat-lbl">收藏</text>
       </view>
     </view>
 
@@ -98,10 +85,10 @@
       </view>
     </view>
 
-    <!-- 房东入口（已登录也显示，位于底部） -->
-    <view class="landlord-entry {{isLandlord ? 'le-active' : ''}}" bindtap="onLandlordEntry">
+    <!-- 仅管理员 OPENID 显示房东管理中心 -->
+    <view class="landlord-entry le-active" wx:if="{{isLandlord}}" bindtap="onLandlordEntry">
       <text class="le-icon">🔑</text>
-      <text class="le-text">{{isLandlord ? '房东管理中心' : '房东入口'}}</text>
+      <text class="le-text">房东管理中心</text>
       <text class="le-arr">›</text>
     </view>
 

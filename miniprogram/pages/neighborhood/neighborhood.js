@@ -42,9 +42,8 @@ Page({
     const districts = ['全部', ...new Set(neighborhoodList.map(n => n.district))]
     this.setData({
       neighborhoodList,
-      filteredNeighborhoodList: neighborhoodList,
       districtList: districts
-    })
+    }, () => this.filterNeighborhoods())
   },
 
   onDistrictSelect(e) {

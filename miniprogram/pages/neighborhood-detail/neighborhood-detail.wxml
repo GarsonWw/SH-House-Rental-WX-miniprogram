@@ -72,12 +72,12 @@
   </view>
 
   <view id="house-list" class="section-title">该小区在租房源</view>
-  <view wx:if="{{houses.length === 0}}" class="empty-card">
-    <text>暂无房源，房东发布后会自动展示在这里</text>
+  <view wx:if="{{availableHouses.length === 0}}" class="empty-card">
+    <text>暂无在租房源，可稍后再来看看</text>
   </view>
   <view class="house-list">
     <house-card
-      wx:for="{{houses}}"
+      wx:for="{{availableHouses}}"
       wx:key="id"
       house="{{item}}"
       show-contact="{{true}}"
@@ -87,10 +87,13 @@
 
   <view class="bottom-space"></view>
 
-  <view class="bottom-bar">
+  <view class="bottom-bar" wx:if="{{availableHouses.length}}">
     <view class="suggest-input">提交改进建议...</view>
     <view class="contact-main" bindtap="onCopyFirstWechat">联系房东</view>
     <view class="round-btn" bindtap="onCallFirstLandlord">☎</view>
     <view class="round-btn" bindtap="onOpenMap">⌖</view>
+  </view>
+  <view class="bottom-bar" wx:else>
+    <view class="suggest-input">当前暂无在租房源</view>
   </view>
 </view>

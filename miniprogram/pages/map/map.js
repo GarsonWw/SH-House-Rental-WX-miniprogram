@@ -19,9 +19,7 @@ const getHouseCoord = house => {
 
 // 右侧快捷图层
 const LAYERS = [
-  { key: 'filter',   label: '筛选', icon: '⚙️' },
-  { key: 'district', label: '区域', icon: '📍' },
-  { key: 'subway',   label: '地铁', icon: '🚇' },
+  { key: 'district', label: '片区', icon: '📍' },
   { key: 'around',   label: '周边', icon: '🔍' }
 ]
 
@@ -58,15 +56,16 @@ Page({
   },
 
   onShow() {
-    app.ensureHousesFresh(() => this.loadMarkers())
+    app.ensureHousesFresh(() => this.loadMarkers(this.data.selectedDistrict))
   },
 
   // ── 构建地图 Markers ──────────────────────────────
   loadMarkers(districtFilter) {
     const houseList = app.globalData.houseList
+    const availableHouses = houseList.filter(h => h.available === true)
     const nbMap = {}
 
-    houseList.forEach(h => {
+    availableHouses.forEach(h => {
       if (districtFilter && districtFilter !== '全部' && h.district !== districtFilter) return
       const coord = getHouseCoord(h)
       if (!coord) return
@@ -85,8 +84,7 @@ Page({
     })
 
     // 获取区域列表
-    const allHouses = app.globalData.houseList
-    const districts = ['全部', ...new Set(allHouses.map(h => h.district).filter(Boolean))]
+    const districts = ['全部', ...new Set(availableHouses.map(h => h.district).filter(Boolean))]
 
     const markers = Object.values(nbMap).map((n, idx) => ({
       id: idx + 1,
@@ -128,7 +126,7 @@ Page({
     const marker = this.data.markers.find(m => m.id === markerId)
     if (!marker) return
     const name = marker._name
-    const houses = app.globalData.houseList.filter(h => h.neighborhood === name)
+    const houses = app.globalData.houseList.filter(h => h.neighborhood === name && h.available === true)
     this.setData({
       showSheet: true,
       sheetNeighborhood: name,
@@ -158,9 +156,12 @@ Page({
 
   // ── 拨打电话 ──────────────────────────────────────
   onPhoneCall(e) {
-    e.stopPropagation()
     const phone = e.currentTarget.dataset.phone
     const name = e.currentTarget.dataset.name
+    if (!phone) {
+      wx.showToast({ title: '暂无联系电话', icon: 'none' })
+      return
+    }
     wx.showModal({
       title: `联系 ${name}`,
       content: `📞 ${phone}`,
@@ -173,8 +174,11 @@ Page({
 
   // ── 复制微信号 ────────────────────────────────────
   onCopyWechat(e) {
-    e.stopPropagation()
     const wechat = e.currentTarget.dataset.wechat
+    if (!wechat) {
+      wx.showToast({ title: '暂无微信号', icon: 'none' })
+      return
+    }
     wx.setClipboardData({
       data: wechat,
       success: () => wx.showToast({ title: '微信号已复制', icon: 'success' })
@@ -189,17 +193,12 @@ Page({
         showDistrictPanel: !this.data.showDistrictPanel,
         activeLayer: key
       })
-    } else if (key === 'filter') {
-      this.setData({ showDistrictPanel: false, activeLayer: key })
-      wx.showToast({ title: '高级筛选开发中', icon: 'none' })
-    } else if (key === 'subway') {
-      wx.showToast({ title: '地铁图层开发中', icon: 'none' })
     } else if (key === 'around') {
       wx.showToast({ title: '周边配套开发中', icon: 'none' })
     }
   },
 
-  // ── 区域筛选 ──────────────────────────────────────
+  // ── 罗湖片区筛选 ──────────────────────────────────
   onDistrictSelect(e) {
     const district = e.currentTarget.dataset.district
     this.setData({ selectedDistrict: district, showDistrictPanel: false })
@@ -221,16 +220,16 @@ Page({
   onSearch() {
     const kw = this.data.searchValue.trim()
     if (!kw) return
-    const house = app.globalData.houseList.find(h => {
-      return (h.neighborhood && h.neighborhood.includes(kw)) ||
+    const house = app.globalData.houseList.find(h => h.available === true && (
+      (h.neighborhood && h.neighborhood.includes(kw)) ||
         (h.locationName && h.locationName.includes(kw)) ||
         (h.address && h.address.includes(kw))
-    })
+    ))
     const coord = house ? getHouseCoord(house) : null
     if (house && coord) {
       const name = house.neighborhood
       this.setData({ mapLat: coord.latitude, mapLng: coord.longitude, scale: 14 })
-      const houses = app.globalData.houseList.filter(h => h.neighborhood === name)
+      const houses = app.globalData.houseList.filter(h => h.neighborhood === name && h.available === true)
       this.setData({ showSheet: true, sheetNeighborhood: name, sheetHouses: houses })
     } else {
       wx.showToast({ title: '未找到该小区', icon: 'none' })

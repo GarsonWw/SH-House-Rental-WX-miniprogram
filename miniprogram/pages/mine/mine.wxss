@@ -91,21 +91,6 @@
   padding: 8rpx 20rpx; border-radius: 50rpx; flex-shrink: 0;
 }
 
-/* 统计卡 */
-.stats-card {
-  background: #FFF; margin: -32rpx 24rpx 0;
-  border-radius: 20rpx; padding: 28rpx 16rpx;
-  display: flex; justify-content: space-around;
-  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.08); position: relative; z-index: 1;
-}
-.stat-item  { display: flex; flex-direction: column; align-items: center; }
-.stat-num   { font-size: 40rpx; font-weight: 800; color: #222; }
-.fav-num    { color: #FF3B3B; }
-.green-num  { color: #2E7D5B; }
-.blue-num   { color: #0F4C75; }
-.stat-lbl   { font-size: 20rpx; color: #999; margin-top: 6rpx; }
-.stat-div   { width: 1rpx; background: #F0F0F0; height: 50rpx; align-self: center; }
-
 /* 功能入口卡片 */
 .entry-card {
   background: #FFF; margin: 20rpx 24rpx 0;
@@ -145,7 +130,7 @@
 .menu-txt  { flex: 1; font-size: 28rpx; color: #333; }
 .menu-arr  { font-size: 36rpx; color: #CCC; }
 
-/* 房东入口（通用，登录/未登录都显示） */
+/* 管理员房东入口 */
 .landlord-entry {
   display: flex; align-items: center; justify-content: center;
   margin: 28rpx 24rpx 0; padding: 24rpx;
@@ -259,7 +244,6 @@
 }
 
 .brand-trust-card,
-.stats-card,
 .entry-card,
 .menu-card,
 .landlord-entry,

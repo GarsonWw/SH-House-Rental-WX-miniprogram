@@ -41,11 +41,11 @@ Page({
 
   loadNeighborhood(name) {
     const houses = app.getHousesByNeighborhood(name) || []
-    const availableHouses = houses.filter(h => h.available !== false)
-    const prices = houses.map(h => Number(h.price)).filter(Boolean)
+    const availableHouses = houses.filter(h => h.available === true)
+    const prices = availableHouses.map(h => Number(h.price)).filter(Boolean)
     const minPrice = prices.length ? Math.min(...prices) : 0
     const maxPrice = prices.length ? Math.max(...prices) : 0
-    const roomTypes = [...new Set(houses.map(h => h.roomType).filter(Boolean))].slice(0, 4).join(' / ')
+    const roomTypes = [...new Set(availableHouses.map(h => h.roomType).filter(Boolean))].slice(0, 4).join(' / ')
     const district = pick(houses, 'district') || '深圳罗湖'
     const cover = pick(houses, 'neighborhoodCover') || pick(houses, 'videoCover') || this.findCover(houses)
     const profile = {
@@ -117,7 +117,7 @@ Page({
   },
 
   onViewHouses() {
-    if (!this.data.houses.length) {
+    if (!this.data.availableHouses.length) {
       wx.showToast({ title: '暂无在租房源', icon: 'none' })
       return
     }
@@ -125,7 +125,7 @@ Page({
   },
 
   onCallFirstLandlord() {
-    const house = this.data.availableHouses[0] || this.data.houses[0]
+    const house = this.data.availableHouses[0]
     if (!house || !house.landlordPhone) {
       wx.showToast({ title: '暂无联系方式', icon: 'none' })
       return
@@ -134,7 +134,7 @@ Page({
   },
 
   onCopyFirstWechat() {
-    const house = this.data.availableHouses[0] || this.data.houses[0]
+    const house = this.data.availableHouses[0]
     if (!house || !house.landlordWechat) {
       wx.showToast({ title: '暂无微信号', icon: 'none' })
       return
@@ -146,7 +146,7 @@ Page({
   },
 
   onOpenMap() {
-    const house = this.data.houses.find(h => h.latitude && h.longitude)
+    const house = this.data.availableHouses.find(h => h.latitude && h.longitude)
     if (!house) {
       wx.showToast({ title: '暂无地图坐标', icon: 'none' })
       return

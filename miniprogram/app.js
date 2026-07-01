@@ -5,6 +5,31 @@ const getCloudConfig = () => CLOUD_ENV ? { env: CLOUD_ENV } : {}
 
 const HOUSE_PAGE_SIZE = 20
 const HOUSE_FRESH_INTERVAL = 15000
+const LUOHU_AREAS = ['罗湖口岸', '国贸', '东门', '黄贝岭', '翠竹', '笋岗', '银湖', '蔡屋围', '莲塘', '水贝', '布心', '清水河', '其他片区']
+const LUOHU_AREA_KEYWORDS = [
+  ['罗湖口岸', ['罗湖口岸', '口岸']],
+  ['国贸', ['国贸']],
+  ['东门', ['东门']],
+  ['黄贝岭', ['黄贝岭', '深业东岭']],
+  ['翠竹', ['翠竹', '锦湖逸园']],
+  ['笋岗', ['笋岗']],
+  ['银湖', ['银湖']],
+  ['蔡屋围', ['蔡屋围', '京基东方都会', '大剧院']],
+  ['莲塘', ['莲塘']],
+  ['水贝', ['水贝']],
+  ['布心', ['布心']],
+  ['清水河', ['清水河']]
+]
+
+const getLuohuArea = house => {
+  const current = String((house && house.district) || '').trim()
+  if (LUOHU_AREAS.includes(current)) return current
+  const searchable = [house && house.neighborhood, house && house.address, house && house.locationName, current]
+    .filter(Boolean)
+    .join('')
+  const matched = LUOHU_AREA_KEYWORDS.find(([, keywords]) => keywords.some(keyword => searchable.includes(keyword)))
+  return matched ? matched[0] : '其他片区'
+}
 const NEIGHBORHOOD_FIELDS = [
   'neighborhoodNote',
   'neighborhoodReview',
@@ -220,7 +245,7 @@ App({
           if (profile && profile.name) profiles[profile.name] = { ...profile, id: profile._id }
         })
         this.globalData.neighborhoodProfiles = profiles
-        const list = houseRows.map(h => this._applyNeighborhoodProfile({ ...h, id: h._id }))
+        const list = houseRows.map(h => this._applyNeighborhoodProfile({ ...h, id: h._id, district: getLuohuArea(h) }))
         this.globalData.houseList = list
         this.globalData.houseListLoaded = true
         this.globalData.lastHouseSyncAt = Date.now()
@@ -234,7 +259,7 @@ App({
       })
       .catch(err => {
         console.error('[Cloud] 加载房源失败', err)
-        const cached = wx.getStorageSync('houseList_cache') || []
+        const cached = (wx.getStorageSync('houseList_cache') || []).map(h => ({ ...h, district: getLuohuArea(h) }))
         this.globalData.neighborhoodProfiles = wx.getStorageSync('neighborhoodProfiles_cache') || {}
         this.globalData.houseList = cached
         this.globalData.houseListLoaded = true
@@ -376,7 +401,7 @@ App({
     const db = wx.cloud.database()
     db.collection('houses').doc(id).get()
       .then(res => {
-        const fresh = this._applyNeighborhoodProfile({ ...res.data, id: res.data._id })
+        const fresh = this._applyNeighborhoodProfile({ ...res.data, id: res.data._id, district: getLuohuArea(res.data) })
         const index = this.globalData.houseList.findIndex(h => h.id === id)
         if (index > -1) this.globalData.houseList[index] = fresh
         else this.globalData.houseList.unshift(fresh)
@@ -481,17 +506,25 @@ App({
   },
 
   // ── 收藏（云同步）──────────────────────────────────────
+  _favoriteCacheKey() {
+    return `favorites_${this.globalData.openid || 'anonymous'}`
+  },
+
+  _setFavoriteIds(ids) {
+    this.globalData.favoriteIds = [...new Set(Array.isArray(ids) ? ids.filter(Boolean) : [])]
+    wx.setStorageSync(this._favoriteCacheKey(), this.globalData.favoriteIds)
+  },
+
   _loadFavoriteIds() {
     // 只有登录后才能加载云收藏
     if (!this.globalData.openid) return
-    const db = wx.cloud.database()
-    db.collection('favorites').get()
-      .then(res => {
-        this.globalData.favoriteIds = res.data.map(d => d.houseId)
+    this._fetchAll('favorites')
+      .then(rows => {
+        this._setFavoriteIds(rows.map(d => d.houseId))
       })
       .catch(() => {
         // 降级到本地缓存
-        this.globalData.favoriteIds = wx.getStorageSync('favorites') || []
+        this.globalData.favoriteIds = wx.getStorageSync(this._favoriteCacheKey()) || []
       })
   },
 
@@ -499,22 +532,44 @@ App({
     return this.globalData.favoriteIds.includes(id)
   },
 
-  toggleFavorite(id) {
-    const ids = this.globalData.favoriteIds
+  toggleFavorite(id, callback) {
+    if (!this.globalData.openid) {
+      const error = new Error('请先登录后收藏')
+      error.code = 'LOGIN_REQUIRED'
+      if (callback) callback(this.isFavorited(id), error)
+      return
+    }
+    this._favoritePendingIds = this._favoritePendingIds || new Set()
+    if (this._favoritePendingIds.has(id)) {
+      const error = new Error('收藏操作正在进行')
+      error.code = 'PENDING'
+      if (callback) callback(this.isFavorited(id), error)
+      return
+    }
+    this._favoritePendingIds.add(id)
+    const ids = [...this.globalData.favoriteIds]
     const idx = ids.indexOf(id)
     const db  = wx.cloud.database()
+    let operation
+    let nextFavorited
     if (idx > -1) {
-      // 取消收藏
-      ids.splice(idx, 1)
-      this.globalData.favoriteIds = [...ids]
-      db.collection('favorites').where({ houseId: id }).remove().catch(() => {})
-      return false
+      operation = db.collection('favorites').where({ houseId: id }).remove()
+      nextFavorited = false
     } else {
-      // 添加收藏
-      this.globalData.favoriteIds = [id, ...ids]
-      db.collection('favorites').add({ data: { houseId: id, createdAt: db.serverDate() } }).catch(() => {})
-      return true
+      operation = db.collection('favorites').add({ data: { houseId: id, createdAt: db.serverDate() } })
+      nextFavorited = true
     }
+    operation
+      .then(() => {
+        const nextIds = nextFavorited ? [id, ...ids] : ids.filter(item => item !== id)
+        this._setFavoriteIds(nextIds)
+        if (callback) callback(nextFavorited, null)
+      })
+      .catch(error => {
+        console.error('[Favorites] 收藏同步失败', error)
+        if (callback) callback(this.isFavorited(id), error)
+      })
+      .finally(() => this._favoritePendingIds.delete(id))
   },
 
   getFavoriteHouses() {
@@ -525,12 +580,15 @@ App({
 
   // 重新从云端拉取收藏（用于收藏夹页面刷新）
   reloadFavorites(callback) {
-    const db = wx.cloud.database()
-    db.collection('favorites').get()
-      .then(res => {
-        this.globalData.favoriteIds = res.data.map(d => d.houseId)
-        if (callback) callback()
+    if (!this.globalData.openid) {
+      if (callback) callback(new Error('尚未登录'))
+      return
+    }
+    this._fetchAll('favorites')
+      .then(rows => {
+        this._setFavoriteIds(rows.map(d => d.houseId))
+        if (callback) callback(null)
       })
-      .catch(() => { if (callback) callback() })
+      .catch(error => { if (callback) callback(error) })
   }
 })

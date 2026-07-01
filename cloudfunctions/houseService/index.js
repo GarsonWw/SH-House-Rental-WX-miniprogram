@@ -7,7 +7,8 @@ const db = cloud.database()
 const _ = db.command
 
 const BOOTSTRAP_ADMIN_OPENIDS = [
-  'oA0h43eQhrZqdISgjJctd-hswB_A'
+  'oA0h43eQhrZqdISgjJctd-hswB_A',
+  'oA0h43Qs4oEFUers_O1EB5aTGLnc'
 ]
 
 const protectedHouseFields = [

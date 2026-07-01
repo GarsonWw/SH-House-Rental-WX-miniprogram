@@ -3,6 +3,7 @@ const app = getApp()
 const util = require('../../utils/util')
 
 const TAG_OPTIONS = ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全']
+const DISTRICT_OPTIONS = ['罗湖口岸', '国贸', '东门', '黄贝岭', '翠竹', '笋岗', '银湖', '蔡屋围', '莲塘', '水贝', '布心', '清水河', '其他片区']
 
 const buildTagOptions = selectedTags => {
   const selected = Array.isArray(selectedTags) ? selectedTags : []
@@ -60,6 +61,7 @@ Page({
       videos: []     // 最多1个，60秒以内
     },
     roomTypeOptions: ['1室1厅1卫', '2室1厅1卫', '2室2厅1卫', '3室1厅1卫', '3室2厅1卫', '3室2厅2卫', '合租/主卧', '合租/次卧', '整套公寓'],
+    districtOptions: DISTRICT_OPTIONS,
     buildingAttributeOptions: ['住宅小区房', '新小区房', '商业公寓', '整栋公寓', '酒店公寓'],
     orientationOptions: ['南', '北', '东', '西', '南北', '东南', '东北', '西南', '西北'],
     decorationOptions: ['毛坯', '简装', '中装', '精装修', '豪装'],
@@ -97,9 +99,9 @@ Page({
     }
 
     // 获取用户信息填充默认姓名
-    const userInfo = app.globalData.userInfo
-    if (userInfo) {
-      this.setData({ 'form.landlordName': userInfo.nickName })
+    const userProfile = app.globalData.userProfile
+    if (userProfile) {
+      this.setData({ 'form.landlordName': userProfile.nickName })
     }
   },
 
@@ -338,6 +340,10 @@ Page({
     const { form } = this.data
     if (!form.neighborhood.trim()) {
       wx.showToast({ title: '请填写小区名称', icon: 'none' })
+      return false
+    }
+    if (!DISTRICT_OPTIONS.includes(form.district)) {
+      wx.showToast({ title: '请选择罗湖片区', icon: 'none' })
       return false
     }
     if (!form.latitude || !form.longitude) {

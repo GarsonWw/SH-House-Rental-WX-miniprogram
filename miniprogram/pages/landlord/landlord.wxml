@@ -148,8 +148,10 @@
       </view>
 
       <view class="edit-field">
-        <text class="edit-label">所在区域</text>
-        <input class="edit-input" value="{{editForm.district}}" bindinput="onEditInput" data-field="district" placeholder="如：罗湖区" />
+        <text class="edit-label">罗湖片区</text>
+        <picker range="{{districtOptions}}" bindchange="onEditPickerChange" data-field="district" data-options="districtOptions">
+          <view class="edit-input">{{editForm.district || '请选择罗湖片区'}}</view>
+        </picker>
       </view>
 
       <view class="edit-field">

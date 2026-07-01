@@ -496,9 +496,9 @@
 }
 
 .status-opt.opt-rented {
-  background: #F4F1EA;
-  color: #7A746B;
-  border-color: #C9C0B4;
+  background: #FFF0F0;
+  color: #D64545;
+  border-color: #D64545;
 }
 
 /* 按钮 */
@@ -845,9 +845,9 @@
 .prefill-landlord-btn,
 .status-opt.opt-active,
 .tag-option.selected {
-  background: #28B8BC;
+  background: #2E7D5B;
   color: #FFFFFF;
-  border-color: #28B8BC;
+  border-color: #2E7D5B;
   border-radius: 999rpx;
   box-shadow: 0 14rpx 30rpx rgba(40, 184, 188, 0.22);
 }

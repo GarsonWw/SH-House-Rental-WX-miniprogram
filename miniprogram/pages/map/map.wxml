@@ -51,7 +51,7 @@
     </view>
   </view>
 
-  <!-- 区域筛选浮层 -->
+  <!-- 罗湖片区筛选浮层 -->
   <view class="district-panel" wx:if="{{showDistrictPanel}}">
     <view
       class="dp-item {{selectedDistrict === item ? 'dp-active' : ''}}"

@@ -76,11 +76,11 @@
 }
 
 .available {
-  background: rgba(46, 204, 113, 0.9);
+  background: #2E7D5B;
 }
 
 .rented {
-  background: rgba(153, 153, 153, 0.9);
+  background: #D64545;
 }
 
 .share-btn {
@@ -909,7 +909,7 @@
 }
 
 .status-tag.available {
-  background: #28B8BC;
+  background: #2E7D5B;
 }
 
 .share-btn {

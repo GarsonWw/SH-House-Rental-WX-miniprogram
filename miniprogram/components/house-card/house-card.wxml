@@ -55,7 +55,7 @@
         <text class="price-unit">元/月</text>
       </view>
 
-      <view class="contact-section" wx:if="{{showContact}}">
+      <view class="contact-section" wx:if="{{showContact && house.available}}">
         <view 
           class="contact-btn phone-btn" 
           catchtap="onPhoneCall"

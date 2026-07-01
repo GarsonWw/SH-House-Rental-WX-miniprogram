@@ -109,7 +109,7 @@
     </view>
 
     <!-- ⑤ 筛选芯片 -->
-    <scroll-view scroll-x class="chips-scroll">
+    <view class="chips-scroll">
       <view class="chips-row">
         <view
           class="chip {{item.active ? 'chip-active' : ''}}"
@@ -122,12 +122,12 @@
           <text>{{item.label}}</text>
         </view>
       </view>
-    </scroll-view>
+    </view>
 
     <!-- ⑥ 无内容提示 -->
     <view class="empty-tip" wx:if="{{neighborhoodSections.length === 0}}">
       <text class="empty-icon">🏘️</text>
-      <text class="empty-text">该区域暂无房源</text>
+      <text class="empty-text">该片区暂无房源</text>
     </view>
 
     <!-- ⑦ 小区分区块列表 -->
@@ -156,7 +156,7 @@
         </view>
       </view>
 
-      <scroll-view scroll-x class="house-scroll">
+      <view class="house-scroll">
         <view class="house-row">
           <view
             class="mini-card"
@@ -188,7 +188,7 @@
             <text class="more-text">查看{{item.name}}全部房源</text>
           </view>
         </view>
-      </scroll-view>
+      </view>
     </view>
 
 
@@ -201,10 +201,10 @@
     <view class="filter-panel">
       <text class="filter-panel-title">🎯 设置条件，自动为你匹配合适房源</text>
 
-      <!-- 地区选择 -->
+      <!-- 罗湖片区选择 -->
       <view class="filter-row">
-        <text class="filter-label">📍 地区</text>
-        <scroll-view scroll-x class="filter-scroll">
+        <text class="filter-label">📍 罗湖片区</text>
+        <view class="filter-scroll">
           <view class="filter-chips">
             <view
               class="f-chip {{matchSelectedDistrict === item ? 'f-chip-active' : ''}}"
@@ -214,13 +214,13 @@
               data-district="{{item}}"
             >{{item}}</view>
           </view>
-        </scroll-view>
+        </view>
       </view>
 
       <!-- 价格区间 -->
       <view class="filter-row">
         <text class="filter-label">💰 价格</text>
-        <scroll-view scroll-x class="filter-scroll">
+        <view class="filter-scroll">
           <view class="filter-chips">
             <view
               class="f-chip {{selectedPriceIdx === index ? 'f-chip-active' : ''}}"
@@ -230,13 +230,13 @@
               data-idx="{{index}}"
             >{{item}}</view>
           </view>
-        </scroll-view>
+        </view>
       </view>
 
       <!-- 房型 -->
       <view class="filter-row">
         <text class="filter-label">🏡 房型</text>
-        <scroll-view scroll-x class="filter-scroll">
+        <view class="filter-scroll">
           <view class="filter-chips">
             <view
               class="f-chip {{selectedRoomType === item ? 'f-chip-active' : ''}}"
@@ -246,7 +246,7 @@
               data-type="{{item}}"
             >{{item}}</view>
           </view>
-        </scroll-view>
+        </view>
       </view>
     </view>
 
@@ -264,7 +264,7 @@
       <view class="no-result" wx:if="{{hasSearched && matchCount === 0}}">
         <text class="no-result-icon">🔍</text>
         <text class="no-result-text">暂无符合条件的房源</text>
-        <text class="no-result-sub">试试放宽地区或价格条件？</text>
+        <text class="no-result-sub">试试放宽片区或价格条件？</text>
       </view>
 
       <!-- 结果列表 -->

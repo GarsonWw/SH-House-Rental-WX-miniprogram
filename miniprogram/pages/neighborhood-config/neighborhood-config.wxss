@@ -42,19 +42,20 @@
 }
 
 .nb-scroll {
-  white-space: nowrap;
   margin-bottom: 24rpx;
 }
 
 .nb-row {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   padding: 0 30rpx;
 }
 
 .nb-card {
-  flex-shrink: 0;
-  width: 360rpx;
-  margin-right: 18rpx;
+  width: calc(50% - 9rpx);
+  box-sizing: border-box;
+  margin-bottom: 18rpx;
   padding: 24rpx;
   background: rgba(255, 255, 255, 0.78);
   border-radius: 30rpx;

@@ -301,7 +301,7 @@
 }
 
 .sh-rented {
-  background: rgba(0,0,0,0.4);
+  background: #D64545;
 }
 
 .sh-info {
@@ -461,7 +461,7 @@
 }
 
 .sh-available {
-  background: #28B8BC;
+  background: #2E7D5B;
 }
 
 .scale-tip {

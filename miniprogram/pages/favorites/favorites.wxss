@@ -41,7 +41,7 @@
   background: #2E7D5B; color: #FFF;
   font-size: 18rpx; padding: 4rpx 12rpx; border-radius: 50rpx;
 }
-.tag-rented { background: #999; }
+.tag-rented { background: #D64545; }
 
 .fav-body {
   flex: 1; min-width: 0; padding: 24rpx 16rpx;
@@ -103,12 +103,12 @@
 }
 
 .avail-tag {
-  background: #28B8BC;
+  background: #2E7D5B;
   border-radius: 999rpx;
 }
 
 .tag-rented {
-  background: rgba(17, 17, 17, 0.7);
+  background: #D64545;
 }
 
 .fav-remove {

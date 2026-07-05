@@ -28,8 +28,8 @@
   padding: 10rpx 28rpx;
   border-radius: 50rpx;
   font-size: 26rpx;
-  color: #4F4A43;
-  background: #F4F1EA;
+  color: #526A72;
+  background: #E8F4F6;
   margin-right: 16rpx;
   margin-bottom: 12rpx;
   transition: all 0.2s;
@@ -44,12 +44,12 @@
 /* 统计栏 */
 .stats-bar {
   padding: 16rpx 24rpx;
-  background: #F4F1EA;
+  background: #E4F3F5;
 }
 
 .stats-text {
   font-size: 24rpx;
-  color: #7A746B;
+  color: #667A82;
 }
 
 /* 小区网格 */
@@ -254,7 +254,7 @@
 
 /* 提示卡片 */
 .tips-card {
-  background: #F4EFE6;
+  background: #E7F5F7;
   padding: 16rpx 24rpx;
   display: flex;
   align-items: center;

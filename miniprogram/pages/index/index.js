@@ -71,6 +71,7 @@ Page({
   },
 
   onShow() {
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 0 })
     app.ensureHousesFresh(() => this.loadData())
   },
 
@@ -86,15 +87,19 @@ Page({
     const matchDistricts = ['不限', ...new Set(houseList.map(h => h.district).filter(Boolean))]
     const sections = this.buildSections(houseList)
     const heroSlides = this.buildHeroSlides(houseList)
-    this.setData({
+    const heroChanged = JSON.stringify(heroSlides) !== JSON.stringify(this.data.heroSlides || [])
+    const nextData = {
       platformStats: stats,
-      heroSlides,
-      heroIndex: Math.min(this.data.heroIndex, Math.max(heroSlides.length - 1, 0)),
       districtList: districts,
       overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim, districts),
       matchDistrictList: matchDistricts,
       neighborhoodSections: sections
-    })
+    }
+    if (heroChanged) {
+      nextData.heroSlides = heroSlides
+      nextData.heroIndex = 0
+    }
+    this.setData(nextData)
     // 如果已在匹配tab，刷新结果
     if (this.data.activeTab === 'match') {
       this.runMatch()

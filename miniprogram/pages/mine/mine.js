@@ -19,6 +19,7 @@ Page({
   },
 
   onShow() {
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 3 })
     this.refreshState()
     app.onLoginReady(openid => {
       if (!openid) return

@@ -28,6 +28,7 @@ Page({
   },
 
   onShow() {
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 1 })
     app.ensureHousesFresh(() => {
       this.loadData()
       const name = this.data.pendingNeighborhoodName || (this.data.selectedNeighborhood && this.data.selectedNeighborhood.name)

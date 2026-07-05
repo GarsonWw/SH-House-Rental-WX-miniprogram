@@ -56,6 +56,7 @@ Page({
   },
 
   onShow() {
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 2 })
     app.ensureHousesFresh(() => this.loadMarkers(this.data.selectedDistrict))
   },
 

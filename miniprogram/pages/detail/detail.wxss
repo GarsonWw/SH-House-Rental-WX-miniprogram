@@ -916,3 +916,128 @@
   border-radius: 999rpx;
   color: #111111;
 }
+
+/* Refined contact dock */
+.bottom-bar {
+  background: transparent;
+  padding: 0 24rpx calc(18rpx + env(safe-area-inset-bottom));
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.bottom-bar-inner {
+  height: 104rpx;
+  padding: 10rpx;
+  gap: 10rpx;
+  border: 1rpx solid rgba(17, 17, 17, 0.06);
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14rpx 42rpx rgba(30, 91, 102, 0.16);
+  pointer-events: auto;
+}
+
+.bottom-phone,
+.bottom-wechat {
+  min-width: 0;
+  height: 84rpx;
+  flex-direction: row;
+  border-radius: 23rpx;
+}
+
+.bottom-phone {
+  flex: 0 0 43%;
+  justify-content: flex-start;
+  padding: 0 22rpx;
+  background: #F2F9FA;
+}
+
+.bottom-wechat {
+  justify-content: center;
+  background: #28B8BC;
+  box-shadow: 0 8rpx 20rpx rgba(40, 184, 188, 0.2);
+}
+
+.bottom-labels {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bottom-kicker {
+  color: #7B9097;
+  font-size: 20rpx;
+  line-height: 1.2;
+}
+
+.bottom-text {
+  margin-top: 2rpx;
+  color: #111111;
+  font-size: 27rpx;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.bottom-wechat .bottom-text {
+  margin-top: 0;
+  color: #FFFFFF;
+  font-size: 28rpx;
+}
+
+.bottom-icon {
+  position: relative;
+  width: 38rpx;
+  height: 38rpx;
+  margin-right: 14rpx;
+  flex-shrink: 0;
+}
+
+.bottom-icon-phone {
+  border: 3rpx solid #28B8BC;
+  border-width: 0 0 3rpx 3rpx;
+  border-radius: 5rpx 5rpx 5rpx 18rpx;
+  transform: rotate(-45deg) scale(.72);
+}
+
+.bottom-icon-phone::before,
+.bottom-icon-phone::after {
+  content: '';
+  position: absolute;
+  width: 14rpx;
+  height: 8rpx;
+  border-radius: 6rpx;
+  background: #28B8BC;
+}
+
+.bottom-icon-phone::before {
+  left: -6rpx;
+  top: -2rpx;
+  transform: rotate(45deg);
+}
+
+.bottom-icon-phone::after {
+  right: -2rpx;
+  bottom: -5rpx;
+  transform: rotate(45deg);
+}
+
+.bottom-icon-wechat {
+  width: 34rpx;
+  height: 28rpx;
+  border: 3rpx solid rgba(255, 255, 255, .92);
+  border-radius: 50%;
+}
+
+.bottom-icon-wechat::after {
+  content: '';
+  position: absolute;
+  right: -3rpx;
+  bottom: -5rpx;
+  width: 9rpx;
+  height: 9rpx;
+  border-right: 3rpx solid rgba(255, 255, 255, .92);
+  transform: rotate(35deg);
+}
+
+.bottom-divider {
+  display: none;
+}

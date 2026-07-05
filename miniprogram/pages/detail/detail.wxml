@@ -223,12 +223,14 @@
 <view class="bottom-bar" wx:if="{{house && house.available}}">
   <view class="bottom-bar-inner">
     <view class="bottom-phone" bindtap="onPhoneCall">
-      <text class="bottom-icon">📞</text>
-      <text class="bottom-text">电话咨询</text>
+      <view class="bottom-icon bottom-icon-phone"></view>
+      <view class="bottom-labels">
+        <text class="bottom-kicker">电话</text>
+        <text class="bottom-text">立即咨询</text>
+      </view>
     </view>
-    <view class="bottom-divider"></view>
     <view class="bottom-wechat" bindtap="onCopyWechat">
-      <text class="bottom-icon">💬</text>
+      <view class="bottom-icon bottom-icon-wechat"></view>
       <text class="bottom-text">微信联系</text>
     </view>
   </view>

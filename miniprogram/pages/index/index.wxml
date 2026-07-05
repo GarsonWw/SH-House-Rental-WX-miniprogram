@@ -9,7 +9,6 @@
       circular="{{heroSlides.length > 1}}"
       interval="4500"
       duration="450"
-      current="{{heroIndex}}"
       bindchange="onHeroChange"
     >
       <swiper-item wx:for="{{heroSlides}}" wx:key="id">

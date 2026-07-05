@@ -223,14 +223,12 @@
 <view class="bottom-bar" wx:if="{{house && house.available}}">
   <view class="bottom-bar-inner">
     <view class="bottom-phone" bindtap="onPhoneCall">
-      <view class="bottom-icon bottom-icon-phone"></view>
-      <view class="bottom-labels">
-        <text class="bottom-kicker">电话</text>
-        <text class="bottom-text">立即咨询</text>
-      </view>
+      <text class="bottom-icon">📞</text>
+      <text class="bottom-text">电话咨询</text>
     </view>
+    <view class="bottom-divider"></view>
     <view class="bottom-wechat" bindtap="onCopyWechat">
-      <view class="bottom-icon bottom-icon-wechat"></view>
+      <text class="bottom-icon">💬</text>
       <text class="bottom-text">微信联系</text>
     </view>
   </view>
@@ -275,3 +273,5 @@
     <button class="modal-phone-btn" bindtap="onPhoneCall">直接拨打电话</button>
   </view>
 </view>
+
+<consult-modal visible="{{showConsultModal}}" bind:dismiss="onConsultDismiss" />

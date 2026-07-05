@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "房源详情",
-  "usingComponents": {}
+  "usingComponents": {
+    "consult-modal": "/components/consult-modal/consult-modal"
+  }
 }

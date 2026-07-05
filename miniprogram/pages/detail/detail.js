@@ -1,6 +1,7 @@
 // pages/detail/detail.js
 const app = getApp()
 const util = require('../../utils/util')
+const consult = require('../../utils/consult')
 
 Page({
   data: {
@@ -8,6 +9,7 @@ Page({
     house: null,
     isFavorited: false,
     showContactModal: false,
+    showConsultModal: false,
     wechatCopied: false,
     isGuideExpanded: false,
     favoritePending: false
@@ -26,6 +28,7 @@ Page({
     this._skipNextShow = true
     this.setData({ houseId: id })
     app.onHouseListReady(() => this.loadHouse(id))
+    this.trackConsultView()
   },
 
   onShow() {
@@ -34,11 +37,15 @@ Page({
       this._skipNextShow = false
       return
     }
-    if (this.data.houseId) this.loadHouse(this.data.houseId)
+    if (this.data.houseId) {
+      this.loadHouse(this.data.houseId)
+      this.trackConsultView()
+    }
   },
 
   onHide() {
     this.stopStatusPolling()
+    this._consultTrackedThisVisit = false
   },
 
   onUnload() {
@@ -70,6 +77,22 @@ Page({
       wx.setNavigationBarTitle({ title: house.neighborhood + ' · 房源详情' })
       if (error) wx.showToast({ title: '当前展示缓存信息', icon: 'none' })
     })
+  },
+
+  trackConsultView() {
+    if (this._consultTrackedThisVisit) return
+
+    consult.recordDetailView(({ counted, shouldShow }) => {
+      if (!counted) return
+      this._consultTrackedThisVisit = true
+      if (shouldShow && !this.data.showContactModal) {
+        this.setData({ showConsultModal: true })
+      }
+    })
+  },
+
+  onConsultDismiss() {
+    this.setData({ showConsultModal: false })
   },
 
   // 拨打电话

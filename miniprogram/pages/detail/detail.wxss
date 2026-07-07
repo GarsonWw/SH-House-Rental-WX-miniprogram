@@ -45,8 +45,9 @@
   justify-content: center;
 }
 
-.placeholder-emoji {
-  font-size: 120rpx;
+.placeholder-mark {
+  color: #28B8BC;
+  transform: scale(1.55);
 }
 
 .placeholder-name {
@@ -82,18 +83,6 @@
 .rented {
   background: #D64545;
 }
-
-.share-btn {
-  background: rgba(255,255,255,0.85);
-  padding: 8rpx 24rpx;
-  border-radius: 50rpx;
-  font-size: 24rpx;
-  color: #4F4A43;
-  border: 0;
-  line-height: 1.4;
-  margin: 0;
-}
-.share-btn::after { border: 0; }
 
 /* 通用卡片 */
 .info-card,
@@ -142,14 +131,31 @@
   justify-content: center;
 }
 
-.heart-icon {
-  font-size: 36rpx;
-  color: #C9C0B4;
+.favorite-heart {
+  position: relative;
+  width: 42rpx;
+  height: 42rpx;
+}
+
+.favorite-heart::before {
+  content: '♡';
+  position: absolute;
+  inset: 0;
+  color: #8FA1A7;
+  font-size: 48rpx;
+  font-weight: 900;
+  line-height: 42rpx;
+  text-align: center;
 }
 
 .favorite-btn.favorited {
-  border-color: #0F2F4A;
-  background: #F4EFE6;
+  border-color: rgba(255, 49, 84, 0.18);
+  background: #FFF2F5;
+}
+
+.favorite-btn.favorited .favorite-heart::before {
+  content: '♥';
+  color: #FF3154;
 }
 
 .house-title {
@@ -387,7 +393,7 @@
   font-size: 24rpx;
 }
 
-/* 房东信息（核心） */
+/* 管家信息 */
 .landlord-card {
   border: 2rpx solid #E6D7BF;
 }
@@ -440,7 +446,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48rpx;
+  color: #28B8BC;
+}
+
+.avatar-placeholder .ui-icon {
+  transform: scale(1.12);
 }
 
 .landlord-detail {
@@ -502,7 +512,8 @@
 }
 
 .method-icon {
-  font-size: 40rpx;
+  color: #28B8BC;
+  transform: scale(.82);
 }
 
 .method-info {
@@ -570,6 +581,10 @@
 .meta-item {
   font-size: 22rpx;
   color: #A8A196;
+}
+
+.detail-bottom-space {
+  height: calc(230rpx + env(safe-area-inset-bottom));
 }
 
 /* 底部固定联系栏 */
@@ -854,6 +869,11 @@
   border-color: transparent;
 }
 
+.favorite-btn.favorited {
+  background: #FFF2F5;
+  border-color: rgba(255, 49, 84, 0.18);
+}
+
 .guide-expand-card {
   border-color: rgba(40, 184, 188, 0.26);
   background: #FFFFFF;
@@ -912,11 +932,6 @@
   background: #2E7D5B;
 }
 
-.share-btn {
-  border-radius: 999rpx;
-  color: #111111;
-}
-
 /* Refined contact dock */
 .bottom-bar {
   background: transparent;
@@ -961,6 +976,22 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+.bottom-action-icon {
+  width: 34rpx;
+  height: 34rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+  transform: scale(.72);
+}
+
+.bottom-phone .bottom-action-icon {
+  color: #28B8BC;
+}
+
+.bottom-wechat .bottom-action-icon {
+  color: #FFFFFF;
 }
 
 .bottom-kicker {
@@ -1040,4 +1071,432 @@
 
 .bottom-divider {
   display: none;
+}
+
+/* Product detail rebuild */
+.hero-image-section,
+.hero-image-section .image-swiper,
+.hero-image-section .house-img,
+.hero-image-section .image-placeholder {
+  height: 620rpx;
+}
+
+.intro-card,
+.review-card,
+.housekeeper-card {
+  margin: 18rpx 30rpx 0;
+  padding: 30rpx;
+  border-radius: 34rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+  box-sizing: border-box;
+}
+
+.intro-card {
+  margin-top: -34rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.intro-head,
+.intro-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.intro-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.intro-neighborhood {
+  display: block;
+}
+
+.intro-neighborhood {
+  font-size: 42rpx;
+  color: #111111;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.intro-bottom {
+  margin-top: 8rpx;
+  margin-bottom: 18rpx;
+}
+
+.location-link {
+  flex-shrink: 0;
+  margin-left: 18rpx;
+  padding: 12rpx 18rpx;
+  border-radius: 999rpx;
+  background: #DDF5F8;
+  color: #111111;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.facts-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14rpx;
+}
+
+.fact-pill {
+  margin: 0 10rpx 10rpx 0;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: #F2F9FA;
+  color: #33464D;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.inline-video-section {
+  margin: 18rpx 30rpx 0;
+  overflow: hidden;
+  border-radius: 34rpx;
+  background: #111111;
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.inline-video-section .detail-video {
+  border-radius: 34rpx;
+}
+
+.review-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.review-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 28rpx;
+  bottom: 28rpx;
+  width: 7rpx;
+  border-radius: 0 8rpx 8rpx 0;
+  background: #28B8BC;
+}
+
+.review-card-scout {
+  border-color: rgba(40, 184, 188, 0.28);
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18rpx;
+}
+
+.review-label,
+.review-title,
+.review-text {
+  display: block;
+}
+
+.review-label {
+  font-size: 22rpx;
+  color: #28B8BC;
+  font-weight: 900;
+  margin-bottom: 8rpx;
+}
+
+.review-title {
+  font-size: 34rpx;
+  color: #111111;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.review-text {
+  font-size: 28rpx;
+  color: #455960;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.review-points {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.review-point {
+  display: flex;
+  align-items: flex-start;
+  padding: 16rpx 18rpx;
+  border-radius: 22rpx;
+  background: #F5FCFD;
+}
+
+.point-label {
+  flex-shrink: 0;
+  min-width: 120rpx;
+  margin-right: 14rpx;
+  color: #111111;
+  font-size: 24rpx;
+  font-weight: 900;
+}
+
+.point-value {
+  flex: 1;
+  min-width: 0;
+  color: #667A82;
+  font-size: 25rpx;
+  line-height: 1.55;
+}
+
+.housekeeper-card .card-title {
+  border-bottom-color: rgba(17, 17, 17, 0.06);
+}
+
+.housekeeper-card {
+  border-color: rgba(40, 184, 188, 0.24);
+}
+
+.housekeeper-card .avatar-placeholder {
+  background: #DDF5F8;
+  color: #111111;
+  font-size: 38rpx;
+  font-weight: 900;
+}
+
+.online-method,
+.bottom-wechat,
+.modal-copy-btn {
+  margin: 0;
+  border: 0;
+  padding: 20rpx;
+  text-align: left;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+.online-method::after,
+.bottom-wechat::after,
+.modal-copy-btn::after {
+  border: 0;
+}
+
+.online-method {
+  width: 100%;
+  color: inherit;
+  border-radius: 26rpx;
+  background: #F5FCFD;
+}
+
+.bottom-wechat {
+  padding: 0 24rpx;
+  color: #FFFFFF;
+}
+
+.bottom-wechat .bottom-icon {
+  width: auto;
+  height: auto;
+  margin-right: 12rpx;
+  font-size: 32rpx;
+}
+
+/* Housekeeper card redesign */
+.housekeeper-card {
+  margin: 22rpx 24rpx 0;
+  padding: 28rpx;
+  border: 1rpx solid rgba(40, 184, 188, 0.22);
+  border-radius: 34rpx;
+  background: #FFFFFF;
+  box-shadow: 0 14rpx 38rpx rgba(39, 122, 139, 0.08);
+}
+
+.housekeeper-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid rgba(17, 17, 17, 0.06);
+}
+
+.housekeeper-card .card-title {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 32rpx;
+  color: #111111;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.housekeeper-subtitle {
+  display: block;
+  margin-top: 8rpx;
+  color: #667A82;
+  font-size: 23rpx;
+  line-height: 1.35;
+}
+
+.housekeeper-pill {
+  flex-shrink: 0;
+  margin-left: 18rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: #DDF5F8;
+  color: #0F4C75;
+  font-size: 22rpx;
+  font-weight: 900;
+}
+
+.housekeeper-card .landlord-info {
+  margin: 24rpx 0 0;
+  align-items: center;
+}
+
+.housekeeper-card .landlord-avatar,
+.housekeeper-card .avatar-img,
+.housekeeper-card .avatar-placeholder {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.housekeeper-card .landlord-avatar {
+  margin-right: 22rpx;
+  border-radius: 50%;
+  background: #DDF5F8;
+}
+
+.housekeeper-card .avatar-placeholder {
+  background: #DDF5F8;
+  color: #28B8BC;
+}
+
+.housekeeper-card .landlord-name {
+  font-size: 34rpx;
+  color: #111111;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.housekeeper-card .landlord-badge {
+  margin-top: 10rpx;
+  padding: 7rpx 16rpx;
+  background: #F2F9FA;
+  color: #0F4C75;
+  font-size: 23rpx;
+  font-weight: 800;
+  border-radius: 999rpx;
+}
+
+.housekeeper-card .trust-mini {
+  margin: 24rpx 0 22rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 26rpx;
+  background: #F5FCFD;
+}
+
+.housekeeper-card .trust-mini text:first-child {
+  margin-bottom: 8rpx;
+  color: #0F4C75;
+  font-size: 25rpx;
+  font-weight: 900;
+}
+
+.housekeeper-card .trust-mini text:last-child {
+  color: #667A82;
+  font-size: 24rpx;
+  line-height: 1.65;
+}
+
+.housekeeper-card .contact-methods {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.housekeeper-card .contact-method {
+  width: 100%;
+  min-height: 92rpx;
+  margin: 0;
+  padding: 18rpx 20rpx;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.housekeeper-card .primary-contact {
+  background: linear-gradient(135deg, #E8FBFC, #F6FEFF);
+  border: 1rpx solid rgba(40, 184, 188, 0.22);
+}
+
+.housekeeper-card .secondary-contact {
+  background: #F5FCFD;
+  border: 1rpx solid rgba(17, 17, 17, 0.04);
+}
+
+.housekeeper-card .method-icon-wrap {
+  width: 68rpx;
+  height: 68rpx;
+  margin-right: 18rpx;
+  background: #DDF5F8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.housekeeper-card .method-icon {
+  color: #28B8BC;
+}
+
+.housekeeper-card .method-label {
+  margin-bottom: 4rpx;
+  color: #667A82;
+  font-size: 22rpx;
+}
+
+.housekeeper-card .method-value {
+  color: #111111;
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.housekeeper-card .method-action {
+  flex-shrink: 0;
+  min-width: 112rpx;
+  height: 56rpx;
+  padding: 0 22rpx;
+  border-radius: 999rpx;
+  background: #DDF5F8;
+  color: #0F4C75;
+  font-size: 24rpx;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+}
+
+.housekeeper-card .primary-contact .method-action,
+.housekeeper-card .secondary-contact .method-action {
+  background: #28B8BC;
+  color: #FFFFFF;
+}
+
+.bottom-phone .bottom-icon {
+  width: auto;
+  height: auto;
+  margin-right: 12rpx;
+  font-size: 30rpx;
+}
+
+.meta-card {
+  margin: 18rpx 30rpx 0;
+  border-radius: 24rpx;
+  background: transparent;
 }

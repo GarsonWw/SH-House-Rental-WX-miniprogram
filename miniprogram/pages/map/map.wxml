@@ -20,10 +20,10 @@
   <!-- 顶部搜索栏 -->
   <view class="search-bar">
     <view class="search-inner">
-      <text class="search-icon-txt">🔍</text>
+      <view class="search-mark ui-icon ui-icon-search"></view>
       <input
         class="search-input"
-        placeholder="搜索小区或地址，点击 Marker 查看房源"
+        placeholder="搜索小区或地址，点击标记查看房源"
         placeholder-class="search-ph"
         value="{{searchValue}}"
         bindinput="onSearchInput"
@@ -46,8 +46,12 @@
       bindtap="onLayerTap"
       data-key="{{item.key}}"
     >
-      <text class="layer-icon">{{item.icon}}</text>
+      <view class="layer-mark ui-icon ui-icon-{{item.icon}}"></view>
       <text class="layer-label">{{item.label}}</text>
+    </view>
+    <view class="reset-map-btn" bindtap="onResetMap">
+      <view class="reset-map-icon">◎</view>
+      <text class="reset-map-text">回正</text>
     </view>
   </view>
 
@@ -65,10 +69,12 @@
   <!-- 底部提示卡片（无选中时） -->
   <view class="hint-cards" wx:if="{{!showSheet}}">
     <view class="hint-card">
-      <text class="hint-txt">💡 点击地图上的蓝色 Marker 查看该小区房源</text>
+      <view class="hint-mark ui-icon ui-icon-map"></view>
+      <text class="hint-txt">点击地图标记查看该小区房源</text>
     </view>
     <view class="hint-card">
-      <text class="hint-txt">📍 共 {{markers.length}} 个小区有在租房源</text>
+      <view class="hint-mark ui-icon ui-icon-home"></view>
+      <text class="hint-txt">共 {{markers.length}} 个小区有在租房源</text>
     </view>
   </view>
 
@@ -80,11 +86,10 @@
     <!-- 标题行 -->
     <view class="sheet-header">
       <view class="sheet-title-wrap">
-        <text class="sheet-icon">🏠</text>
         <text class="sheet-title">{{sheetNeighborhood}}</text>
         <text class="sheet-count">{{sheetHouses.length}}套在租</text>
       </view>
-      <view class="sheet-close" bindtap="onCloseSheet">✕</view>
+      <view class="sheet-close" bindtap="onCloseSheet">关闭</view>
     </view>
 
     <!-- 房源列表 -->
@@ -105,9 +110,11 @@
             mode="aspectFill"
             lazy-load
           />
-          <view wx:else class="sh-img-ph"><text>🏠</text></view>
-          <view class="sh-status {{item.available ? '' : 'sh-rented'}}">
-            {{item.available ? '可租' : '已租'}}
+          <view wx:else class="sh-img-ph">
+            <view class="ui-icon ui-icon-home"></view>
+          </view>
+          <view class="sh-status" wx:if="{{item.available}}">
+            可租
           </view>
         </view>
 
@@ -126,12 +133,22 @@
                 catchtap="onPhoneCall"
                 data-phone="{{item.landlordPhone}}"
                 data-name="{{item.landlordName}}"
-              >📞 电话</view>
-              <view
+              >
+                <view class="sh-contact-icon ui-icon ui-icon-phone"></view>
+                <text>电话</text>
+              </view>
+              <button
                 class="sh-contact-btn sh-wechat"
-                catchtap="onCopyWechat"
-                data-wechat="{{item.landlordWechat}}"
-              >💬 微信</view>
+                open-type="contact"
+                show-message-card="true"
+                send-message-title="{{item.neighborhood}}在线咨询"
+                send-message-path="/pages/detail/detail?id={{item.id}}"
+                session-from="map-sheet"
+                hover-class="none"
+              >
+                <view class="sh-contact-icon ui-icon ui-icon-chat"></view>
+                <text>咨询</text>
+              </button>
             </view>
           </view>
         </view>

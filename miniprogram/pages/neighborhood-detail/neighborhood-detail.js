@@ -5,6 +5,18 @@ const pick = (houses, field) => {
   return found ? found[field] : ''
 }
 
+const withFallback = (value, fallback) => String(value || fallback).trim()
+const toBulletItems = value => String(value || '')
+  .split('\n')
+  .map(item => item.trim())
+  .filter(Boolean)
+const buildRentReferenceItems = (profile) => [
+  profile.priceReference,
+  `水电：${withFallback(profile.waterElectricFee, '以实际账单为准，建议看房时确认民水民电或商水商电。')}`,
+  `网费/宽带：${withFallback(profile.broadbandFee, '建议确认是否已包含在租金内，或是否需要租客自理。')}`,
+  `停车费：${withFallback(profile.parkingFee, '如需停车，建议咨询管家确认固定车位月租和临停标准。')}`
+].filter(Boolean)
+
 const splitTags = text => {
   if (!text) return []
   return String(text)
@@ -52,33 +64,36 @@ Page({
       name,
       district,
       cover,
-      slogan: pick(houses, 'neighborhoodSlogan') || pick(houses, 'neighborhoodNote') || '直连房东，真实房源，适合先做小区判断再看房。',
-      commuteInfo: pick(houses, 'commuteInfo') || '房东暂未填写通勤信息，可先查看地图位置与在租房源。',
+      slogan: pick(houses, 'neighborhoodSlogan') || pick(houses, 'neighborhoodNote') || '先看实地测评，再决定是否约看。',
+      commuteInfo: pick(houses, 'commuteInfo') || '通勤信息待补充，可在线咨询管家确认到口岸、学校或公司的实际路线。',
       commuteMode: pick(houses, 'commuteMode') || '步行',
-      safetyInfo: pick(houses, 'safetyInfo') || '房东暂未填写门禁与安保信息，建议看房时确认门禁、保安和夜间出入情况。',
+      safetyInfo: pick(houses, 'safetyInfo') || '门禁、保安和夜间出入情况建议看房时重点确认。',
       propertyType: pick(houses, 'propertyType') || '住宅小区',
+      parkingInfo: pick(houses, 'parkingInfo') || '是否有停车场、固定车位和临停入口，建议看房时同步确认。',
       deliveryInfo: pick(houses, 'deliveryInfo') || '建议看房时确认外卖、快递是否可上楼，以及收件点位置。',
-      shortRentInfo: pick(houses, 'shortRentInfo') || (houses.some(h => (h.tags || []).includes('可短租')) ? '有房源支持短租' : '短租情况请联系房东确认'),
+      shortRentInfo: pick(houses, 'shortRentInfo') || (houses.some(h => (h.tags || []).includes('可短租')) ? '有房源支持短租' : '租期情况请在线咨询管家确认'),
       roomInsight: pick(houses, 'roomInsight') || pick(houses, 'neighborhoodReview') || '该小区已有房源发布，可结合户型、楼层、朝向和照片判断是否适合。',
       priceReference: pick(houses, 'priceReference') || this.buildPriceText(minPrice, maxPrice),
-      surroundings: pick(houses, 'surroundings') || '房东暂未填写周边配套，可结合地图和实地看房确认餐饮、商超、通勤动线。',
+      waterElectricFee: pick(houses, 'waterElectricFee'),
+      broadbandFee: pick(houses, 'broadbandFee'),
+      parkingFee: pick(houses, 'parkingFee'),
+      surroundings: pick(houses, 'surroundings') || '周边配套可结合地图和实地看房确认餐饮、商超、通勤动线。',
       scoutTitle: pick(houses, 'scoutTitle') || '深港租房实探笔记',
       scoutSummary: pick(houses, 'scoutSummary') || pick(houses, 'neighborhoodReview') || '先判断通勤、预算和噪音接受度，再决定是否约看，可以明显提高看房效率。',
       scoutAdvice: pick(houses, 'scoutAdvice') || '建议优先确认：通勤时间、楼层采光、噪音来源、水电收费、是否可短租、押付方式。',
       suitableCrowd: pick(houses, 'suitableCrowd') || '通勤党 / 省心找房 / 预算明确'
     }
     const detailCards = [
-      { title: '通勤', value: profile.commuteInfo, sub: profile.commuteMode },
-      { title: '安全', value: profile.safetyInfo, sub: '门禁 / 保安 / 出入' },
-      { title: '居住类型', value: profile.propertyType, sub: roomTypes || '户型待补充' },
-      { title: '快递外卖', value: profile.deliveryInfo, sub: '生活便利度' },
-      { title: '短租', value: profile.shortRentInfo, sub: '租期灵活度' }
+      { title: '安保', value: profile.safetyInfo, sub: '门禁 / 保安 / 夜间出入' },
+      { title: '周边配套', value: profile.surroundings, sub: '餐饮 / 商超 / 交通' },
+      { title: '公区环境', value: profile.propertyType, sub: roomTypes || '户型待补充' },
+      { title: '停车场', value: profile.parkingInfo, sub: '车位 / 临停 / 出入口' },
+      { title: '电动车充电', value: pick(houses, 'chargingInfo') || pick(houses, 'evChargingInfo') || '充电桩与停车规范建议咨询管家确认', sub: '充电桩 / 停放' }
     ]
     const guideSections = [
-      { title: '房间', value: profile.roomInsight },
-      { title: '户型参考', value: profile.priceReference },
-      { title: '周边配套', value: profile.surroundings },
-      { title: '学长建议', value: profile.scoutAdvice }
+      { title: '租金参考', items: buildRentReferenceItems(profile) },
+      { title: '小区环境', items: toBulletItems(profile.roomInsight) },
+      { title: '管家建议', items: toBulletItems(profile.scoutAdvice) }
     ]
     this.setData({
       houses,
@@ -133,16 +148,8 @@ Page({
     wx.makePhoneCall({ phoneNumber: house.landlordPhone })
   },
 
-  onCopyFirstWechat() {
-    const house = this.data.availableHouses[0]
-    if (!house || !house.landlordWechat) {
-      wx.showToast({ title: '暂无微信号', icon: 'none' })
-      return
-    }
-    wx.setClipboardData({
-      data: house.landlordWechat,
-      success: () => wx.showToast({ title: '微信号已复制', icon: 'success' })
-    })
+  onConsultHousekeeper() {
+    wx.switchTab({ url: '/pages/messages/messages' })
   },
 
   onOpenMap() {

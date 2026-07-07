@@ -131,17 +131,18 @@
 
     <!-- ⑦ 小区分区块列表 -->
     <view class="section-block" wx:for="{{neighborhoodSections}}" wx:key="name">
-      <view class="sb-head">
+      <view class="sb-head" bindtap="onNeighborhoodTap" data-name="{{item.name}}">
         <view class="sb-title-col">
           <view class="sb-title-row">
-            <text class="sb-icon">{{item.icon}}</text>
+            <view class="sb-icon ui-icon ui-icon-home"></view>
             <text class="sb-name">{{item.name}}</text>
             <view class="sb-badge" wx:if="{{item.badge}}">{{item.badge}}</view>
           </view>
           <text class="sb-category">{{item.categoryLabel}} · {{item.district}}</text>
         </view>
         <view class="sb-link" catchtap="onNeighborhoodTap" data-name="{{item.name}}">
-          <text>查看联系方式</text>
+          <text>看小区测评</text>
+          <text class="sb-link-arrow">›</text>
         </view>
       </view>
 
@@ -173,18 +174,16 @@
                 mode="aspectFill"
                 lazy-load
               />
-              <view wx:else class="mini-img-ph"><text>🏠</text></view>
-              <view class="mini-badge {{h.available ? '' : 'mini-rented'}}">
-                {{h.available ? '可租' : '已租'}}
+              <view wx:else class="mini-img-ph">
+                <view class="ui-icon ui-icon-home"></view>
+              </view>
+              <view class="mini-badge" wx:if="{{h.available}}">
+                可租
               </view>
             </view>
             <text class="mini-title">{{h.title}}</text>
             <text class="mini-meta">{{h.roomType}} · {{h.area}}㎡</text>
             <text class="mini-price">{{h.price}}元/月</text>
-          </view>
-          <view class="mini-more" catchtap="onNeighborhoodTap" data-name="{{item.name}}">
-            <text class="more-icon">›</text>
-            <text class="more-text">查看{{item.name}}全部房源</text>
           </view>
         </view>
       </view>
@@ -284,8 +283,8 @@
             lazy-load
           />
           <view wx:else class="result-img-ph"><text>🏠</text></view>
-          <view class="result-avail {{item.available ? '' : 'avail-rented'}}">
-            {{item.available ? '可租' : '已租'}}
+          <view class="result-avail" wx:if="{{item.available}}">
+            可租
           </view>
         </view>
 
@@ -309,5 +308,5 @@
 
   </view>
 
-  <view style="height: 50rpx;"></view>
+  <view class="tab-bottom-space"></view>
 </view>

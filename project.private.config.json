@@ -1,6 +1,6 @@
 {
   "libVersion": "3.16.1",
-  "projectname": "%E6%B7%B1%E6%B8%AF%E7%A7%9F%E6%88%BF%E5%8F%8C%E5%9F%8E%E9%80%9A",
+  "projectname": "SH-House-Rental-WX-miniprogram",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
   "condition": {},

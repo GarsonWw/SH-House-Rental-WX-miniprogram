@@ -9,10 +9,14 @@ const CONFIG_FIELDS = [
   'commuteMode',
   'safetyInfo',
   'propertyType',
+  'parkingInfo',
   'deliveryInfo',
   'shortRentInfo',
   'roomInsight',
   'priceReference',
+  'waterElectricFee',
+  'broadbandFee',
+  'parkingFee',
   'surroundings',
   'suitableCrowd',
   'scoutTitle',
@@ -24,7 +28,11 @@ const RECOMMENDED_FIELDS = [
   'neighborhoodSlogan',
   'commuteInfo',
   'propertyType',
+  'parkingInfo',
   'priceReference',
+  'waterElectricFee',
+  'broadbandFee',
+  'parkingFee',
   'scoutSummary'
 ]
 
@@ -32,7 +40,11 @@ const FIELD_LABELS = {
   neighborhoodSlogan: '顶部宣传语',
   commuteInfo: '通勤信息',
   propertyType: '居住类型',
+  parkingInfo: '停车场情况',
   priceReference: '价格参考',
+  waterElectricFee: '水电费',
+  broadbandFee: '网费宽带',
+  parkingFee: '停车费',
   scoutSummary: '测评总结'
 }
 
@@ -45,10 +57,14 @@ const emptyForm = () => ({
   commuteMode: '步行',
   safetyInfo: '',
   propertyType: '',
+  parkingInfo: '',
   deliveryInfo: '',
   shortRentInfo: '',
   roomInsight: '',
   priceReference: '',
+  waterElectricFee: '',
+  broadbandFee: '',
+  parkingFee: '',
   surroundings: '',
   suitableCrowd: '',
   scoutTitle: '',
@@ -116,7 +132,7 @@ Page({
     if (!app.globalData.isLandlord) {
       wx.showModal({
         title: '无权访问',
-        content: '请先从“我的”页面进入房东模式。',
+        content: '请先从“我的”页面进入管理模式。',
         showCancel: false,
         success: () => wx.navigateBack()
       })
@@ -237,10 +253,14 @@ Page({
       commuteMode: '步行 / 地铁',
       safetyInfo: '建议看房时确认门禁、保安、夜间出入和楼栋公共区域情况。',
       propertyType: pickFirst(selectedHouses, 'buildingAttribute') || pickFirst(selectedHouses, 'propertyType') || '住宅小区房',
+      parkingInfo: '停车场情况建议看房时确认，如是否有地下/地面停车场、固定车位和临停入口。',
       deliveryInfo: '外卖、快递情况建议看房时同步确认，可重点关注是否能送上楼。',
-      shortRentInfo: '短租情况请以房东实际沟通为准。',
+      shortRentInfo: '短租情况请以管家实际沟通为准。',
       roomInsight: `${selectedName}已有${selectedHouses.length}套房源发布，可结合户型、楼层、朝向、照片和预算判断是否适合。`,
       priceReference: priceText || '价格参考可结合当前在租房源更新。',
+      waterElectricFee: '水电费以实际账单为准，建议确认民水民电或商水商电。',
+      broadbandFee: '宽带/网费是否包含在租金内，建议看房时同步确认。',
+      parkingFee: '如需停车，建议咨询管家确认固定车位月租和临停标准。',
       surroundings: '周边配套建议结合实地看房确认餐饮、超市、交通和生活便利度。',
       suitableCrowd: '罗湖上班族 / 深港通勤 / 预算明确 / 省心找房',
       scoutTitle: `${selectedName}实探说明`,
@@ -274,7 +294,7 @@ Page({
     this.applyTemplate({
       safetyInfo: '建议看房时确认门禁、保安、夜间出入和楼栋公共区域情况。',
       deliveryInfo: '外卖、快递情况建议看房时同步确认，可重点关注是否能送上楼。',
-      shortRentInfo: '短租情况请以房东实际沟通为准。',
+      shortRentInfo: '短租情况请以管家实际沟通为准。',
       suitableCrowd: '罗湖上班族 / 深港通勤 / 预算明确 / 省心找房'
     }, true)
     wx.showToast({ title: '已补充常用项', icon: 'success' })

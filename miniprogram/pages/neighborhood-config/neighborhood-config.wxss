@@ -265,7 +265,7 @@
 }
 
 .bottom-space {
-  height: 160rpx;
+  height: calc(180rpx + env(safe-area-inset-bottom));
 }
 
 .bottom-bar {

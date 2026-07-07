@@ -3,9 +3,11 @@
 
   <!-- 空收藏夹 -->
   <view class="empty-wrap" wx:if="{{favoriteHouses.length === 0}}">
-    <text class="empty-icon">🤍</text>
+    <view class="empty-icon">
+      <view class="ui-icon ui-icon-bookmark"></view>
+    </view>
     <text class="empty-title">收藏夹是空的</text>
-    <text class="empty-sub">在房源详情页点击 ♡ 收藏喜欢的房源</text>
+    <text class="empty-sub">在房源详情页点击收藏，保存备选房源</text>
     <view class="empty-btn" bindtap="onGoFind">去找房</view>
   </view>
 
@@ -29,9 +31,11 @@
           mode="aspectFill"
           lazy-load
         />
-        <view wx:else class="fav-img-ph"><text>🏠</text></view>
-        <view class="avail-tag {{item.available ? '' : 'tag-rented'}}">
-          {{item.available ? '可租' : '已租'}}
+        <view wx:else class="fav-img-ph">
+          <view class="ui-icon ui-icon-home"></view>
+        </view>
+        <view class="avail-tag" wx:if="{{item.available}}">
+          可租
         </view>
       </view>
 
@@ -45,11 +49,11 @@
 
       <!-- 删除按钮 -->
       <view class="fav-remove" catchtap="onRemoveFavorite" data-id="{{item.id}}">
-        <text class="remove-icon">🗑</text>
+        <view class="remove-icon ui-icon ui-icon-trash"></view>
       </view>
     </view>
 
-    <view style="height: 60rpx;"></view>
+    <view class="tab-bottom-space"></view>
   </view>
 
 </view>

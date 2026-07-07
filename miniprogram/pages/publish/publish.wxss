@@ -172,9 +172,10 @@
 }
 
 .add-icon {
-  font-size: 56rpx;
-  color: #C9C0B4;
-  line-height: 1;
+  width: 42rpx;
+  height: 42rpx;
+  color: #28B8BC;
+  transform: scale(.86);
 }
 
 .add-text {
@@ -619,7 +620,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 70rpx;
+  color: #28B8BC;
+}
+
+.preview-no-img-icon {
+  transform: scale(1.42);
 }
 
 .preview-no-img text:last-child {
@@ -750,7 +755,6 @@
 }
 
 .preview-avatar {
-  font-size: 48rpx;
   width: 80rpx;
   height: 80rpx;
   background: #F4EFE6;
@@ -761,6 +765,11 @@
   text-align: center;
   line-height: 80rpx;
   margin-right: 16rpx;
+  color: #28B8BC;
+}
+
+.preview-avatar .ui-icon {
+  transform: scale(.95);
 }
 
 .preview-landlord-name {

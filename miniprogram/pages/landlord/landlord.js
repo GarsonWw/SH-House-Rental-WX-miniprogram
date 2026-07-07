@@ -169,11 +169,11 @@ Page({
 
   onPrefillEditLandlordInfo() {
     this.setData({
-      'editForm.landlordName': '孙先生',
+      'editForm.landlordName': '管家居居侠',
       'editForm.landlordPhone': '13520174107',
-      'editForm.landlordWechat': 'weixin123'
+      'editForm.landlordWechat': ''
     })
-    wx.showToast({ title: '已填充房东信息', icon: 'success' })
+    wx.showToast({ title: '已填充管家信息', icon: 'success' })
   },
 
   onEditTagToggle(e) {
@@ -203,9 +203,8 @@ Page({
     if (!price || isNaN(price) || Number(price) <= 0) { wx.showToast({ title: '请填写正确的价格', icon: 'none' }); return }
     if (!roomType) { wx.showToast({ title: '请选择房型', icon: 'none' }); return }
     if (!area || isNaN(area) || Number(area) <= 0) { wx.showToast({ title: '请填写正确的面积', icon: 'none' }); return }
-    if (!landlordName.trim()) { wx.showToast({ title: '请填写房东姓名', icon: 'none' }); return }
+    if (!landlordName.trim()) { wx.showToast({ title: '请填写管家姓名', icon: 'none' }); return }
     if (!landlordPhone.trim()) { wx.showToast({ title: '请填写联系电话', icon: 'none' }); return }
-    if (!landlordWechat.trim()) { wx.showToast({ title: '请填写微信号', icon: 'none' }); return }
 
     wx.showLoading({ title: '保存中...' })
     app.updateHouse(id, {
@@ -240,7 +239,7 @@ Page({
 
   onExitLandlord() {
     wx.showModal({
-      title: '退出房东模式',
+      title: '退出管理模式',
       content: '退出当前管理页面，之后仍可使用已授权的微信账号重新进入。',
       confirmText: '退出',
       success: res => {

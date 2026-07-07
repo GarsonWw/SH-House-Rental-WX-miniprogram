@@ -30,7 +30,8 @@
 }
 
 .placeholder-icon {
-  font-size: 80rpx;
+  color: #28B8BC;
+  transform: scale(1.35);
 }
 
 .placeholder-text {
@@ -76,6 +77,27 @@
   padding: 20rpx 24rpx 20rpx;
 }
 
+.card-main-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.card-main-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-side-info {
+  flex: 0 0 178rpx;
+  min-height: 116rpx;
+  padding: 8rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .house-title {
   font-size: 30rpx;
   font-weight: 600;
@@ -114,6 +136,7 @@
 .house-info-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 14rpx;
 }
 
@@ -148,48 +171,108 @@
 .card-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 16rpx;
+  justify-content: flex-end;
+  padding-top: 18rpx;
   border-top: 1rpx solid #F4F1EA;
 }
 
 .price-section {
   display: flex;
   align-items: baseline;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .price-number {
-  font-size: 44rpx;
-  font-weight: 700;
+  font-size: 42rpx;
+  font-weight: 900;
   color: #0F2F4A;
+  line-height: 1;
 }
 
 .price-unit {
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: #0F2F4A;
   margin-left: 4rpx;
+  white-space: nowrap;
+}
+
+.side-status {
+  margin-top: 14rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: #E2F6F8;
+  color: #111111;
+  font-size: 21rpx;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .contact-section {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-width: 0;
+  margin-left: 0;
+  gap: 14rpx;
 }
 
 .contact-btn {
-  width: 68rpx;
-  height: 68rpx;
-  border-radius: 50%;
+  min-width: 0;
+  height: 76rpx;
+  border-radius: 999rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  padding: 0;
+  border: 0;
+  line-height: 1;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0;
+  color: #111111;
+  white-space: nowrap;
+}
+
+.contact-icon {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 8rpx;
+  transform: scale(.62);
+}
+
+.phone-symbol {
+  margin-right: 8rpx;
+  color: #111111;
+  font-size: 28rpx;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.contact-btn text {
+  display: block;
+  line-height: 1;
+}
+
+.contact-btn::after {
+  border: 0;
 }
 
 .phone-btn {
-  background: #EAF1F6;
+  background: #F2F9FA;
+  width: 156rpx;
+  flex: 0 0 156rpx;
 }
 
 .wechat-btn {
   background: #EAF6EF;
+  flex: 1;
+  min-width: 0;
+  margin-left: 0;
 }
 
 .meta-info {
@@ -273,4 +356,15 @@
 .phone-btn,
 .wechat-btn {
   background: #DDF5F8;
+}
+
+.phone-btn {
+  color: #111111;
+  box-shadow: inset 0 0 0 1rpx rgba(40, 184, 188, 0.16);
+}
+
+.wechat-btn {
+  background: #28B8BC;
+  color: #FFFFFF;
+  box-shadow: 0 10rpx 24rpx rgba(40, 184, 188, 0.22);
 }

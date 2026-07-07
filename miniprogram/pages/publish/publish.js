@@ -71,7 +71,7 @@ Page({
     isEditMode: false,
     editHouseId: '',
     showAdvancedHouseFields: false,
-    currentStep: 1, // 1:基本信息 2:房东信息 3:预览确认
+    currentStep: 1, // 1:基本信息 2:管家信息 3:预览确认
     showRoomTypePicker: false,
     showOrientationPicker: false,
     showDecorationPicker: false
@@ -316,11 +316,11 @@ Page({
 
   onPrefillLandlordInfo() {
     this.setData({
-      'form.landlordName': '孙先生',
+      'form.landlordName': '管家居居侠',
       'form.landlordPhone': '13520174107',
-      'form.landlordWechat': 'weixin123'
+      'form.landlordWechat': ''
     })
-    wx.showToast({ title: '已填充房东信息', icon: 'success' })
+    wx.showToast({ title: '已填充管家信息', icon: 'success' })
   },
 
   // 步骤切换
@@ -379,17 +379,13 @@ Page({
       wx.showToast({ title: '请填写正确的手机号', icon: 'none' })
       return false
     }
-    if (!form.landlordWechat.trim()) {
-      wx.showToast({ title: '请填写微信号', icon: 'none' })
-      return false
-    }
     return true
   },
 
   // 提交发布
   onSubmit() {
     if (!app.globalData.isLandlord) {
-      wx.showToast({ title: '无房东管理权限', icon: 'none' })
+      wx.showToast({ title: '无管理权限', icon: 'none' })
       return
     }
     if (!this.validateStep1() || !this.validateStep2()) return
@@ -480,7 +476,7 @@ Page({
           }
 
           wx.showModal({
-            title: '🎉 发布成功！',
+            title: '发布成功',
             content: '您的房源已发布到云端，所有用户均可搜索到您的房源并联系您。',
             confirmText: '查看房源',
             cancelText: '再发一套',

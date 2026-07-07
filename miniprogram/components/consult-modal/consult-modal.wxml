@@ -1,27 +1,23 @@
 <view class="consult-mask" wx:if="{{visible}}" catchtouchmove="noop">
   <view class="consult-card" catchtap="noop">
-    <view class="consult-badge">3年沉淀 · 1000+租客服务</view>
-    <view class="consult-title">让学长帮你缩小范围</view>
+    <view class="consult-badge">从业10年 · 深港通勤多年经验</view>
+    <view class="consult-title">让管家帮你缩小范围</view>
     <view class="consult-sub">根据预算、通勤和片区偏好</view>
     <view class="consult-sub consult-sub-last">免费精选 3～5 套合适房源</view>
 
-    <view class="consult-qr-box">
-      <view class="consult-qr-image-wrap">
-        <image
-          class="consult-qr-image"
-          src="/images/landlord-wechat-qr.png"
-          mode="aspectFit"
-          show-menu-by-longpress
-        />
-      </view>
-      <text class="consult-qr-label">学长微信</text>
-    </view>
-
     <view class="consult-mentor">
-      <text class="consult-mentor-strong">学长一对一</text>帮你精选匹配房源
+      <text class="consult-mentor-strong">管家居居侠</text>帮你精选匹配房源
     </view>
 
-    <view class="consult-btn-primary" bindtap="onAddWechat">添加学长微信</view>
+    <button
+      class="consult-btn-primary"
+      open-type="contact"
+      show-message-card="true"
+      send-message-title="在线咨询管家居居侠"
+      send-message-path="/pages/messages/messages"
+      session-from="consult-modal"
+      hover-class="none"
+    >在线咨询</button>
     <view class="consult-btn-ghost" bindtap="onDismiss">稍后再说</view>
   </view>
 </view>

@@ -5,47 +5,103 @@
   bottom: 0;
   z-index: 999;
   padding-bottom: env(safe-area-inset-bottom);
-  background: rgba(239, 248, 251, 0.97);
-  box-shadow: 0 -12rpx 36rpx rgba(39, 122, 139, 0.055);
+  background: #FFFFFF;
+  box-shadow: 0 -8rpx 24rpx rgba(0, 0, 0, 0.05);
 }
 
 .tab-bar {
-  height: 102rpx;
+  height: 100rpx;
   display: flex;
-  align-items: stretch;
-  padding: 0 24rpx;
+  align-items: center;
+  padding: 0 20rpx;
+  box-sizing: border-box;
 }
 
 .tab-item {
   position: relative;
   flex: 1;
+  min-width: 0;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7B8D93;
+  color: #9A9A9A;
 }
 
 .tab-text {
-  font-size: 27rpx;
-  font-weight: 500;
-  letter-spacing: 1rpx;
+  max-width: 100%;
+  color: inherit;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tab-item-active {
   color: #111111;
 }
 
-.tab-item-active .tab-text {
-  font-weight: 800;
+.tab-item-center {
+  flex: 0 0 146rpx;
 }
 
-.active-line {
+.center-tab {
+  width: 106rpx;
+  height: 106rpx;
+  border-radius: 50%;
+  background: #0CB8B5;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-22rpx);
+  box-shadow: 0 14rpx 30rpx rgba(12, 184, 181, 0.26);
+}
+
+.center-chat-icon {
+  position: relative;
+  width: 48rpx;
+  height: 38rpx;
+  border: 5rpx solid #FFFFFF;
+  border-radius: 18rpx;
+  box-sizing: border-box;
+}
+
+.center-chat-icon::after {
+  content: '';
   position: absolute;
-  left: 50%;
-  bottom: 15rpx;
-  width: 30rpx;
-  height: 5rpx;
-  border-radius: 999rpx;
-  background: #28B8BC;
-  transform: translateX(-50%);
+  left: 9rpx;
+  bottom: -12rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border-left: 5rpx solid #FFFFFF;
+  border-bottom: 5rpx solid #FFFFFF;
+  border-radius: 0 0 0 5rpx;
+  transform: rotate(-18deg);
+  box-sizing: border-box;
+}
+
+.center-chat-icon::before {
+  content: '';
+  position: absolute;
+  left: 10rpx;
+  top: 14rpx;
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 12rpx 0 0 #FFFFFF, 24rpx 0 0 #FFFFFF;
+}
+
+.tab-badge {
+  position: absolute;
+  top: 22rpx;
+  right: 24rpx;
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background: #FF1414;
+  box-shadow: 0 0 0 4rpx #FFFFFF;
 }

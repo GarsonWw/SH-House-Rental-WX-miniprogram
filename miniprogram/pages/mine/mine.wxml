@@ -4,7 +4,9 @@
   <!-- ══ 未登录状态 ══ -->
   <view wx:if="{{!isLoggedIn}}" class="login-page">
     <view class="login-hero">
-      <text class="login-big-icon">🏠</text>
+      <view class="login-big-icon">
+        <view class="ui-icon ui-icon-route"></view>
+      </view>
       <text class="login-title">深港租房双城通</text>
       <text class="login-sub">登录后使用收藏夹、个人资料等个性化功能</text>
     </view>
@@ -12,8 +14,8 @@
     <view class="login-hint">登录后您的收藏数据将同步云端，换设备不丢失</view>
 
     <view class="brand-trust-card">
-      <text class="brand-trust-title">3年沉淀 · 1000+真实租客服务</text>
-      <text class="brand-trust-desc">自2023年起专注深圳罗湖直租，坚持免中介费、真实房源、高效匹配，结合深港生活经验帮你更安心找罗湖房。</text>
+      <text class="brand-trust-title">从业10年 · 深港通勤多年经验</text>
+      <text class="brand-trust-desc">专注深圳罗湖租房服务，坚持免中介费、真实房源、实地测评，结合深港通勤经验帮你更安心找罗湖房。</text>
       <view class="brand-trust-tags">
         <text>只做罗湖</text>
         <text>免中介费</text>
@@ -35,7 +37,9 @@
           class="user-avatar-img"
           mode="aspectFill"
         />
-        <view wx:else class="user-avatar-ph"><text>👤</text></view>
+        <view wx:else class="user-avatar-ph">
+          <view class="ui-icon ui-icon-user"></view>
+        </view>
         <view class="user-info">
           <text class="user-name">{{userProfile ? userProfile.nickName : '点击设置昵称'}}</text>
           <text class="user-sub">深港找房 · 0中介费</text>
@@ -50,7 +54,7 @@
       <text class="brand-trust-title">可靠的罗湖租房直租服务</text>
       <text class="brand-trust-desc">累计服务超过1000+位租客，深耕罗湖口岸、国贸、东门、黄贝岭、翠竹、笋岗等片区，陪伴用户完成从看房到入住的全过程。</text>
       <view class="brand-trust-tags">
-        <text>3年沉淀</text>
+        <text>从业10年</text>
         <text>免中介费</text>
         <text>只做罗湖</text>
       </view>
@@ -62,7 +66,9 @@
 
       <view class="entry-item" bindtap="onGoFavorites">
         <view class="entry-left">
-          <view class="entry-icon-bg fav-bg"><text class="entry-icon">❤️</text></view>
+          <view class="entry-icon-bg fav-bg">
+            <view class="ui-icon ui-icon-bookmark"></view>
+          </view>
           <view class="entry-info">
             <text class="entry-name">我的收藏夹</text>
             <text class="entry-sub">已收藏 {{favoriteCount}} 套房源</text>
@@ -79,22 +85,26 @@
     <!-- 菜单 -->
     <view class="menu-card">
       <view class="menu-item" bindtap="onAbout">
-        <text class="menu-icon">ℹ️</text>
+        <view class="menu-icon">
+          <view class="ui-icon ui-icon-info"></view>
+        </view>
         <text class="menu-txt">关于平台</text>
         <text class="menu-arr">›</text>
       </view>
     </view>
 
-    <!-- 仅管理员 OPENID 显示房东管理中心 -->
+    <!-- 仅管理员 OPENID 显示管理中心 -->
     <view class="landlord-entry le-active" wx:if="{{isLandlord}}" bindtap="onLandlordEntry">
-      <text class="le-icon">🔑</text>
-      <text class="le-text">房东管理中心</text>
+      <view class="le-icon">
+        <view class="ui-icon ui-icon-shield"></view>
+      </view>
+      <text class="le-text">管家管理中心</text>
       <text class="le-arr">›</text>
     </view>
 
   </view>
 
-  <view style="height: 60rpx;"></view>
+  <view class="tab-bottom-space"></view>
 </view>
 
 <!-- 资料编辑弹窗 -->
@@ -110,7 +120,9 @@
         class="avatar-picker-img"
         mode="aspectFill"
       />
-      <view wx:else class="avatar-picker-ph">👤</view>
+      <view wx:else class="avatar-picker-ph">
+        <view class="ui-icon ui-icon-user"></view>
+      </view>
       <text class="avatar-picker-text">选择头像</text>
     </button>
 

@@ -4,10 +4,12 @@
   <!-- 顶部身份卡 -->
   <view class="landlord-hero">
     <view class="hero-left">
-      <view class="hero-badge">🏠</view>
+      <view class="hero-badge">
+        <view class="ui-icon ui-icon-shield"></view>
+      </view>
       <view class="hero-info">
-        <text class="hero-title">房东管理中心</text>
-        <text class="hero-sub">直联租客 · 0中介费</text>
+        <text class="hero-title">管家管理中心</text>
+        <text class="hero-sub">实地测评 · 小程序私信 · 0中介费</text>
       </view>
     </view>
     <view class="exit-btn" bindtap="onExitLandlord">退出</view>
@@ -38,7 +40,7 @@
 
   <!-- 发布新房源按钮 -->
   <view class="publish-btn" bindtap="onPublish">
-    <text class="publish-icon">＋</text>
+    <view class="publish-icon ui-icon ui-icon-plus"></view>
     <text class="publish-text">发布新房源</text>
   </view>
 
@@ -68,7 +70,6 @@
   <!-- 房源列表 -->
   <view wx:else>
     <view class="empty-wrap" wx:if="{{myHouseList.length === 0}}">
-      <text class="empty-icon">🏘️</text>
       <text class="empty-title">还没有发布任何房源</text>
       <text class="empty-sub">点击上方按钮开始发布</text>
     </view>
@@ -85,11 +86,13 @@
           wx:if="{{item.images && item.images.length}}"
           src="{{item.images[0]}}" class="card-img" mode="aspectFill" lazy-load
         />
-        <view wx:else class="card-img-ph"><text>🏠</text></view>
+        <view wx:else class="card-img-ph">
+          <view class="ui-icon ui-icon-home"></view>
+        </view>
         <view class="status-tag {{item.available ? 'tag-ok' : 'tag-rented'}}">
           {{item.available ? '可租' : '已租'}}
         </view>
-        <view class="views-tag">👁 {{item.viewCount || 0}}</view>
+        <view class="views-tag">浏览 {{item.viewCount || 0}}</view>
       </view>
 
       <!-- 信息区 -->
@@ -105,7 +108,7 @@
           class="act-btn act-edit"
           bindtap="onEditHouse"
           data-id="{{item.id}}"
-        >✏️ 编辑</view>
+        >编辑</view>
         <view
           class="act-btn act-community"
           bindtap="onEditNeighborhood"
@@ -211,22 +214,17 @@
         <textarea class="edit-textarea" value="{{editForm.description}}" bindinput="onEditInput" data-field="description" placeholder="补充描述（可选）" />
       </view>
 
-      <view class="edit-section-title">房东联系方式</view>
-      <view class="edit-prefill-btn" bindtap="onPrefillEditLandlordInfo">一键填充：孙先生 · 13520174107 · weixin123</view>
+      <view class="edit-section-title">管家信息</view>
+      <view class="edit-prefill-btn" bindtap="onPrefillEditLandlordInfo">一键填充：管家居居侠 · 13520174107</view>
 
       <view class="edit-field">
-        <text class="edit-label">房东姓名</text>
-        <input class="edit-input" value="{{editForm.landlordName}}" bindinput="onEditInput" data-field="landlordName" placeholder="房东姓名" />
+        <text class="edit-label">管家姓名</text>
+        <input class="edit-input" value="{{editForm.landlordName}}" bindinput="onEditInput" data-field="landlordName" placeholder="管家姓名" />
       </view>
 
       <view class="edit-field">
         <text class="edit-label">联系电话</text>
         <input class="edit-input" value="{{editForm.landlordPhone}}" bindinput="onEditInput" data-field="landlordPhone" placeholder="联系电话" type="number" maxlength="11" />
-      </view>
-
-      <view class="edit-field">
-        <text class="edit-label">微信号</text>
-        <input class="edit-input" value="{{editForm.landlordWechat}}" bindinput="onEditInput" data-field="landlordWechat" placeholder="微信号" />
       </view>
 
       <view class="edit-section-title">状态与标签</view>

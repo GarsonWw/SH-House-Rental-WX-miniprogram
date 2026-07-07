@@ -65,20 +65,10 @@ const copyToClipboard = (text, successMsg = '已复制到剪贴板') => {
 }
 
 /**
- * 跳转到微信联系人（通过复制微信号提示用户）
+ * 打开小程序后台私信入口。
  */
-const contactByWechat = (wechatId, name) => {
-  wx.showModal({
-    title: `联系 ${name || '房东'}`,
-    content: `微信号：${wechatId}\n\n点击确认复制微信号，然后在微信中搜索添加`,
-    confirmText: '复制微信号',
-    cancelText: '取消',
-    success: (res) => {
-      if (res.confirm) {
-        copyToClipboard(wechatId, '微信号已复制')
-      }
-    }
-  })
+const contactByWechat = () => {
+  wx.switchTab({ url: '/pages/messages/messages' })
 }
 
 /**
@@ -109,17 +99,17 @@ const validatePhone = (phone) => {
  */
 const getOrientationIcon = (orientation) => {
   const icons = {
-    '南': '☀️',
-    '北': '❄️',
-    '东': '🌅',
-    '西': '🌇',
-    '南北': '↕️',
-    '东南': '↗️',
-    '东北': '↖️',
-    '西南': '↙️',
-    '西北': '↘️'
+    '南': '南',
+    '北': '北',
+    '东': '东',
+    '西': '西',
+    '南北': '南北',
+    '东南': '东南',
+    '东北': '东北',
+    '西南': '西南',
+    '西北': '西北'
   }
-  return icons[orientation] || '📐'
+  return icons[orientation] || ''
 }
 
 /**

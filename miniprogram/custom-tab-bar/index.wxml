@@ -1,14 +1,21 @@
 <view class="tab-shell">
   <view class="tab-bar">
     <view
-      class="tab-item {{selected === index ? 'tab-item-active' : ''}}"
+      class="tab-item {{selected === index ? 'tab-item-active' : ''}} {{item.center ? 'tab-item-center' : ''}}"
       wx:for="{{list}}"
-      wx:key="pagePath"
+      wx:key="key"
       data-index="{{index}}"
       catchtap="onSwitchTab"
     >
-      <text class="tab-text">{{item.text}}</text>
-      <view class="active-line" wx:if="{{selected === index}}"></view>
+      <block wx:if="{{item.center}}">
+        <view class="center-tab">
+          <view class="center-chat-icon"></view>
+        </view>
+      </block>
+      <block wx:else>
+        <text class="tab-text">{{item.text}}</text>
+        <view class="tab-badge" wx:if="{{item.badge}}"></view>
+      </block>
     </view>
   </view>
 </view>

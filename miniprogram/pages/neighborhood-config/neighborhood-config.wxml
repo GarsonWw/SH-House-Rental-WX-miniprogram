@@ -102,6 +102,10 @@
             <input class="input" value="{{form.propertyType}}" data-field="propertyType" bindinput="onInput" placeholder="如：传统住宅小区 / 商业公寓 / 酒店公寓" placeholder-class="form-placeholder" />
           </view>
           <view class="field">
+            <text class="label">停车场情况</text>
+            <input class="input" value="{{form.parkingInfo}}" data-field="parkingInfo" bindinput="onInput" placeholder="如：有地下停车场 / 无停车场 / 仅临停" placeholder-class="form-placeholder" />
+          </view>
+          <view class="field">
             <text class="label">快递外卖</text>
             <input class="input" value="{{form.deliveryInfo}}" data-field="deliveryInfo" bindinput="onInput" placeholder="如：外卖/快递可直接送上楼" placeholder-class="form-placeholder" />
           </view>
@@ -127,6 +131,18 @@
             <input class="input" value="{{form.priceReference}}" data-field="priceReference" bindinput="onInput" placeholder="如：1房3k-4k / 2房6k-6k5" placeholder-class="form-placeholder" />
           </view>
           <view class="field">
+            <text class="label">水电费</text>
+            <input class="input" value="{{form.waterElectricFee}}" data-field="waterElectricFee" bindinput="onInput" placeholder="如：民水民电 / 商水商电 / 水8电1.5" placeholder-class="form-placeholder" />
+          </view>
+          <view class="field">
+            <text class="label">网费宽带</text>
+            <input class="input" value="{{form.broadbandFee}}" data-field="broadbandFee" bindinput="onInput" placeholder="如：已含宽带 / 需自理约100元/月" placeholder-class="form-placeholder" />
+          </view>
+          <view class="field">
+            <text class="label">停车费</text>
+            <input class="input" value="{{form.parkingFee}}" data-field="parkingFee" bindinput="onInput" placeholder="如：固定车位600元/月 / 临停按物业标准" placeholder-class="form-placeholder" />
+          </view>
+          <view class="field">
             <text class="label">周边配套</text>
             <textarea class="textarea small" maxlength="300" value="{{form.surroundings}}" data-field="surroundings" bindinput="onInput" placeholder="如：楼下小卖部，餐饮偏少，吃饭需步行或依赖外卖" placeholder-class="form-placeholder" auto-height></textarea>
           </view>
@@ -136,14 +152,14 @@
           </view>
           <view class="field">
             <text class="label">实探标题</text>
-            <input class="input" value="{{form.scoutTitle}}" data-field="scoutTitle" bindinput="onInput" placeholder="如：学长实探｜罗湖通勤 ID: 250001" placeholder-class="form-placeholder" />
+            <input class="input" value="{{form.scoutTitle}}" data-field="scoutTitle" bindinput="onInput" placeholder="如：管家实探｜罗湖通勤 ID: 250001" placeholder-class="form-placeholder" />
           </view>
           <view class="field">
-            <text class="label">学长测评总结</text>
+            <text class="label">管家测评总结</text>
             <textarea class="textarea" maxlength="800" value="{{form.scoutSummary}}" data-field="scoutSummary" bindinput="onInput" placeholder="写一段像实地探盘笔记一样的客观总结" placeholder-class="form-placeholder" auto-height></textarea>
           </view>
           <view class="field">
-            <text class="label">学长建议 / 避坑提醒</text>
+            <text class="label">管家建议 / 避坑提醒</text>
             <textarea class="textarea" maxlength="600" value="{{form.scoutAdvice}}" data-field="scoutAdvice" bindinput="onInput" placeholder="如：声音敏感慎选低楼层；优先看北向高楼层" placeholder-class="form-placeholder" auto-height></textarea>
           </view>
         </view>

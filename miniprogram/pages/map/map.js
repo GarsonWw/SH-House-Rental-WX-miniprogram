@@ -1,5 +1,6 @@
 // pages/map/map.js
 const app = getApp()
+const DEFAULT_CENTER = { latitude: 22.5550, longitude: 114.1200, scale: 12 }
 
 // 各小区近似坐标（深圳罗湖）
 const COORDS = {
@@ -19,16 +20,15 @@ const getHouseCoord = house => {
 
 // 右侧快捷图层
 const LAYERS = [
-  { key: 'district', label: '片区', icon: '📍' },
-  { key: 'around',   label: '周边', icon: '🔍' }
+  { key: 'district', label: '片区', icon: 'map' }
 ]
 
 Page({
   data: {
     // 地图基础
-    mapLat: 22.5550,
-    mapLng: 114.1200,
-    scale: 12,
+    mapLat: DEFAULT_CENTER.latitude,
+    mapLng: DEFAULT_CENTER.longitude,
+    scale: DEFAULT_CENTER.scale,
     markers: [],
     polyline: [],
 
@@ -48,7 +48,7 @@ Page({
     searchValue: '',
 
     // 缩放级别展示
-    currentScale: 12
+    currentScale: DEFAULT_CENTER.scale
   },
 
   onLoad() {
@@ -56,7 +56,7 @@ Page({
   },
 
   onShow() {
-    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 2 })
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ selected: 3 })
     app.ensureHousesFresh(() => this.loadMarkers(this.data.selectedDistrict))
   },
 
@@ -165,24 +165,11 @@ Page({
     }
     wx.showModal({
       title: `联系 ${name}`,
-      content: `📞 ${phone}`,
+      content: phone,
       confirmText: '立即拨打',
       success: res => {
         if (res.confirm) wx.makePhoneCall({ phoneNumber: phone })
       }
-    })
-  },
-
-  // ── 复制微信号 ────────────────────────────────────
-  onCopyWechat(e) {
-    const wechat = e.currentTarget.dataset.wechat
-    if (!wechat) {
-      wx.showToast({ title: '暂无微信号', icon: 'none' })
-      return
-    }
-    wx.setClipboardData({
-      data: wechat,
-      success: () => wx.showToast({ title: '微信号已复制', icon: 'success' })
     })
   },
 
@@ -194,8 +181,25 @@ Page({
         showDistrictPanel: !this.data.showDistrictPanel,
         activeLayer: key
       })
-    } else if (key === 'around') {
-      wx.showToast({ title: '周边配套开发中', icon: 'none' })
+    }
+  },
+
+  onResetMap() {
+    this.setData({
+      mapLat: DEFAULT_CENTER.latitude,
+      mapLng: DEFAULT_CENTER.longitude,
+      scale: DEFAULT_CENTER.scale,
+      currentScale: DEFAULT_CENTER.scale,
+      showSheet: false,
+      showDistrictPanel: false,
+      activeLayer: ''
+    })
+    const mapCtx = wx.createMapContext('myMap', this)
+    if (mapCtx && mapCtx.moveToLocation) {
+      mapCtx.moveToLocation({
+        latitude: DEFAULT_CENTER.latitude,
+        longitude: DEFAULT_CENTER.longitude
+      })
     }
   },
 

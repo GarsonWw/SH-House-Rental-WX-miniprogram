@@ -9,12 +9,12 @@
       mode="aspectFill"
     />
     <view wx:else class="cover-placeholder">
-      <text class="placeholder-icon">🏠</text>
+      <view class="placeholder-icon ui-icon ui-icon-home"></view>
       <text class="placeholder-text">{{house.neighborhood}}</text>
     </view>
     <!-- 可用状态标签 -->
-    <view class="status-badge {{house.available ? 'available' : 'unavailable'}}">
-      {{house.available ? '可租' : '已租'}}
+    <view class="status-badge available" wx:if="{{house.available}}">
+      可租
     </view>
     <!-- 房型标签 -->
     <view class="room-type-badge">{{house.roomType}}</view>
@@ -22,25 +22,36 @@
 
   <!-- 信息区 -->
   <view class="card-content">
-    <!-- 标题 -->
-    <text class="house-title">{{house.title}}</text>
+    <view class="card-main-row">
+      <view class="card-main-info">
+        <!-- 标题 -->
+        <text class="house-title">{{house.title}}</text>
 
-    <!-- 小区和地区 -->
-    <view class="location-row">
-      <text class="location-icon">📍</text>
-      <text class="neighborhood">{{house.neighborhood}}</text>
-      <text class="district">{{house.district}}</text>
-    </view>
+        <!-- 小区和地区 -->
+        <view class="location-row">
+          <text class="neighborhood">{{house.neighborhood}}</text>
+          <text class="district">{{house.district}}</text>
+        </view>
 
-    <!-- 房屋信息 -->
-    <view class="house-info-row">
-      <text class="info-item">{{house.area}}㎡</text>
-      <text class="info-divider">·</text>
-      <text class="info-item">{{house.floor}}</text>
-      <text class="info-divider">·</text>
-      <text class="info-item">{{house.orientation}}</text>
-      <text class="info-divider">·</text>
-      <text class="info-item">{{house.decoration}}</text>
+        <!-- 房屋信息 -->
+        <view class="house-info-row">
+          <text class="info-item">{{house.area}}㎡</text>
+          <text class="info-divider">·</text>
+          <text class="info-item">{{house.floor}}</text>
+          <text class="info-divider">·</text>
+          <text class="info-item">{{house.orientation}}</text>
+          <text class="info-divider">·</text>
+          <text class="info-item">{{house.decoration}}</text>
+        </view>
+      </view>
+
+      <view class="card-side-info">
+        <view class="price-section">
+          <text class="price-number">{{house.price}}</text>
+          <text class="price-unit">元/月</text>
+        </view>
+        <text class="side-status" wx:if="{{house.available}}">可预约</text>
+      </view>
     </view>
 
     <!-- 标签 -->
@@ -50,31 +61,31 @@
 
     <!-- 底部：价格和联系 -->
     <view class="card-footer">
-      <view class="price-section">
-        <text class="price-number">{{house.price}}</text>
-        <text class="price-unit">元/月</text>
-      </view>
-
       <view class="contact-section" wx:if="{{showContact && house.available}}">
         <view 
           class="contact-btn phone-btn" 
           catchtap="onPhoneCall"
           data-phone="{{house.landlordPhone}}"
         >
-          <text>📞</text>
+          <text class="phone-symbol">☎</text>
+          <text>电话</text>
         </view>
-        <view 
+        <button
           class="contact-btn wechat-btn"
-          catchtap="onCopyWechat"
-          data-wechat="{{house.landlordWechat}}"
-          data-name="{{house.landlordName}}"
+          open-type="contact"
+          show-message-card="true"
+          send-message-title="{{house.neighborhood}}在线咨询"
+          send-message-path="/pages/detail/detail?id={{house.id}}"
+          session-from="house-card"
+          hover-class="none"
         >
-          <text>💬</text>
-        </view>
+          <view class="contact-icon ui-icon ui-icon-chat"></view>
+          <text>咨询</text>
+        </button>
       </view>
 
       <view class="meta-info" wx:else>
-        <text class="view-count">👁 {{house.viewCount || 0}}</text>
+        <text class="view-count">浏览 {{house.viewCount || 0}}</text>
         <text class="create-time">{{house.createTime}}</text>
       </view>
     </view>

@@ -1363,3 +1363,38 @@
   margin-top: 0;
   font-size: 22rpx;
 }
+
+/* 社区入口优化：头部整块可点，测评按钮更明确 */
+.sb-head {
+  cursor: pointer;
+}
+
+.sb-icon {
+  width: 42rpx;
+  height: 42rpx;
+  margin-right: 12rpx;
+  color: #28B8BC;
+  transform: scale(.76);
+}
+
+.sb-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54rpx;
+  padding: 0 18rpx 0 22rpx;
+  border-radius: 999rpx;
+  background: #DDF5F8;
+  color: #111111;
+  font-size: 23rpx;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 16rpx;
+}
+
+.sb-link-arrow {
+  margin-left: 6rpx;
+  font-size: 28rpx;
+  line-height: 1;
+  color: #28B8BC;
+}

@@ -39,10 +39,14 @@ const NEIGHBORHOOD_FIELDS = [
   'commuteMode',
   'safetyInfo',
   'propertyType',
+  'parkingInfo',
   'deliveryInfo',
   'shortRentInfo',
   'roomInsight',
   'priceReference',
+  'waterElectricFee',
+  'broadbandFee',
+  'parkingFee',
   'surroundings',
   'suitableCrowd',
   'scoutTitle',
@@ -77,7 +81,7 @@ App({
     // 收藏（云同步）
     favoriteIds: [],         // [houseId, ...]，登录后从云端加载
 
-    // 房东模式
+    // 管理员模式
     isLandlord: false,
     landlordStatusReady: false
   },
@@ -321,7 +325,11 @@ App({
           review: profile.neighborhoodReview || h.neighborhoodReview || '',
           commuteInfo: profile.commuteInfo || h.commuteInfo || '',
           propertyType: profile.propertyType || h.propertyType || '',
-          priceReference: profile.priceReference || h.priceReference || ''
+          parkingInfo: profile.parkingInfo || h.parkingInfo || '',
+          priceReference: profile.priceReference || h.priceReference || '',
+          waterElectricFee: profile.waterElectricFee || h.waterElectricFee || '',
+          broadbandFee: profile.broadbandFee || h.broadbandFee || '',
+          parkingFee: profile.parkingFee || h.parkingFee || ''
         }
       }
       map[h.neighborhood].count++
@@ -413,7 +421,7 @@ App({
 
   getMyHouses(callback) {
     if (!this.globalData.isLandlord) {
-      callback([], new Error('无房东管理权限'))
+      callback([], new Error('无管理权限'))
       return
     }
     this.ensureHousesFresh(error => callback([...this.globalData.houseList], error), 0)

@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/neighborhood/neighborhood",
+    "pages/messages/messages",
     "pages/neighborhood-detail/neighborhood-detail",
     "pages/map/map",
     "pages/detail/detail",
@@ -20,9 +21,9 @@
   },
   "tabBar": {
     "custom": true,
-    "color": "#8A9AA1",
+    "color": "#9A9A9A",
     "selectedColor": "#111111",
-    "backgroundColor": "#EFF8FB",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
       {
@@ -31,7 +32,11 @@
       },
       {
         "pagePath": "pages/neighborhood/neighborhood",
-        "text": "小区"
+        "text": "转转"
+      },
+      {
+        "pagePath": "pages/messages/messages",
+        "text": "消息"
       },
       {
         "pagePath": "pages/map/map",

@@ -37,10 +37,12 @@
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.15);
 }
 
-.search-icon-txt {
-  font-size: 30rpx;
-  margin-right: 10rpx;
-  flex-shrink: 0;
+.search-mark {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 12rpx;
+  color: #28B8BC;
+  transform: scale(.66);
 }
 
 .search-input {
@@ -97,7 +99,7 @@
 .layer-btn {
   width: 100rpx;
   background: #FFFFFF;
-  border-radius: 16rpx;
+  border-radius: 999rpx;
   padding: 16rpx 8rpx;
   display: flex;
   flex-direction: column;
@@ -107,18 +109,49 @@
 }
 
 .layer-active {
-  background: #EAF1F6;
-  border: 2rpx solid #0F4C75;
+  background: #DDF5F8;
+  border: 2rpx solid rgba(40, 184, 188, 0.42);
 }
 
-.layer-icon {
-  font-size: 36rpx;
+.reset-map-btn {
+  width: 100rpx;
+  min-height: 92rpx;
+  border-radius: 999rpx;
+  background: #FFFFFF;
+  border: 2rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.reset-map-icon {
+  color: #28B8BC;
+  font-size: 32rpx;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6rpx;
+}
+
+.reset-map-text {
+  color: #45413B;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.layer-mark {
+  width: 34rpx;
+  height: 34rpx;
+  color: #28B8BC;
+  margin-bottom: 6rpx;
+  transform: scale(.68);
 }
 
 .layer-label {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #45413B;
-  margin-top: 6rpx;
   font-weight: 500;
 }
 
@@ -144,12 +177,12 @@
   padding: 16rpx 28rpx;
   font-size: 26rpx;
   color: #27241F;
-  border-radius: 10rpx;
+  border-radius: 8rpx;
   white-space: nowrap;
 }
 
 .dp-active {
-  background: #EAF1F6;
+  background: #DDF5F8;
   color: #0F4C75;
   font-weight: 700;
 }
@@ -157,7 +190,7 @@
 /* ── 底部提示卡片 ────────────────────────────── */
 .hint-cards {
   position: absolute;
-  bottom: 24rpx;
+  bottom: calc(160rpx + env(safe-area-inset-bottom));
   left: 24rpx;
   right: 24rpx;
   z-index: 100;
@@ -173,7 +206,15 @@
   box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.hint-mark {
+  width: 34rpx;
+  height: 34rpx;
+  margin-right: 12rpx;
+  color: #28B8BC;
+  transform: scale(.68);
 }
 
 .hint-txt {
@@ -184,7 +225,7 @@
 /* ── 底部房源浮层 ────────────────────────────── */
 .bottom-sheet {
   position: absolute;
-  bottom: 0;
+  bottom: calc(136rpx + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
   background: #FFFFFF;
@@ -285,7 +326,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 52rpx;
+  color: #28B8BC;
+}
+
+.sh-img-ph .ui-icon {
+  transform: scale(.98);
 }
 
 .sh-status {
@@ -350,12 +395,14 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 8rpx;
+  min-width: 0;
 }
 
 .sh-price {
   font-size: 32rpx;
   font-weight: 800;
   color: #0F2F4A;
+  flex-shrink: 0;
 }
 
 .sh-price-unit {
@@ -365,24 +412,55 @@
 
 .sh-contacts {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 0;
+  margin-left: 16rpx;
 }
 
 .sh-contact-btn {
   font-size: 21rpx;
   font-weight: 600;
-  padding: 8rpx 18rpx;
+  height: 58rpx;
+  padding: 0;
   border-radius: 50rpx;
-  margin-left: 10rpx;
+  margin: 0;
+  border: 0;
+  line-height: normal;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.sh-contact-icon {
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 4rpx;
+  transform: scale(.52);
+}
+
+.sh-contact-btn::after {
+  border: 0;
 }
 
 .sh-phone {
   background: #EAF1F6;
   color: #0F4C75;
+  width: 96rpx;
+  flex: 0 0 96rpx;
 }
 
 .sh-wechat {
   background: #EAF6EF;
   color: #1F8A5B;
+  flex: 1;
+  min-width: 132rpx;
+  max-width: 210rpx;
+  margin-left: 10rpx;
 }
 
 .sheet-bottom-space {
@@ -420,11 +498,23 @@
 .search-btn,
 .layer-active,
 .dp-active,
-.sh-phone,
 .sh-wechat {
   background: #28B8BC;
   color: #FFFFFF;
   border-color: #28B8BC;
+}
+
+.layer-active,
+.dp-active {
+  border-radius: 8rpx;
+}
+
+.layer-active {
+  border-radius: 999rpx;
+}
+
+.district-panel {
+  border-radius: 18rpx;
 }
 
 .search-input,

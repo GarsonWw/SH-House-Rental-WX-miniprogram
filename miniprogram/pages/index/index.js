@@ -77,16 +77,17 @@ Page({
 
   loadData() {
     const houseList = app.globalData.houseList || []
-    const neighborhoods = new Set(houseList.map(h => h.neighborhood))
+    const availableHouseList = houseList.filter(h => h && h.available === true)
+    const neighborhoods = new Set(availableHouseList.map(h => h.neighborhood))
     const stats = {
       neighborhoods: neighborhoods.size,
-      houses: houseList.length,
-      available: houseList.filter(h => h.available).length
+      houses: availableHouseList.length,
+      available: availableHouseList.length
     }
-    const districts = ['全部', ...new Set(houseList.map(h => h.district).filter(Boolean))]
-    const matchDistricts = ['不限', ...new Set(houseList.map(h => h.district).filter(Boolean))]
-    const sections = this.buildSections(houseList)
-    const heroSlides = this.buildHeroSlides(houseList)
+    const districts = ['全部', ...new Set(availableHouseList.map(h => h.district).filter(Boolean))]
+    const matchDistricts = ['不限', ...new Set(availableHouseList.map(h => h.district).filter(Boolean))]
+    const sections = this.buildSections(availableHouseList)
+    const heroSlides = this.buildHeroSlides(availableHouseList)
     const heroChanged = JSON.stringify(heroSlides) !== JSON.stringify(this.data.heroSlides || [])
     const nextData = {
       platformStats: stats,
@@ -223,7 +224,7 @@ Page({
     this.setData(data, () => {
       this.setData({
         overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim),
-        neighborhoodSections: this.buildSections(app.globalData.houseList || [])
+        neighborhoodSections: this.buildSections((app.globalData.houseList || []).filter(h => h && h.available === true))
       })
     })
   },
@@ -260,7 +261,7 @@ Page({
   },
 
   runMatch() {
-    const houseList = app.globalData.houseList || []
+    const houseList = (app.globalData.houseList || []).filter(h => h && h.available === true)
     const { matchSelectedDistrict, selectedPriceIdx, selectedRoomType } = this.data
     const range = PRICE_RANGES[selectedPriceIdx]
 
@@ -273,9 +274,6 @@ Page({
       }
       return true
     })
-
-    // 按可租状态排序：可租的排前面
-    results.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0))
 
     this.setData({ matchResults: results, matchCount: results.length, hasSearched: true })
   },

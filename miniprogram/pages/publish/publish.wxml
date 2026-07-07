@@ -4,12 +4,12 @@
   <!-- 步骤指示器 -->
   <view class="step-indicator">
     <view class="step {{currentStep >= 1 ? 'active' : ''}} {{currentStep > 1 ? 'done' : ''}}">
-      <view class="step-circle">{{currentStep > 1 ? '✓' : '1'}}</view>
+      <view class="step-circle">1</view>
       <text class="step-label">房源信息</text>
     </view>
     <view class="step-line {{currentStep > 1 ? 'done' : ''}}"></view>
     <view class="step {{currentStep >= 2 ? 'active' : ''}} {{currentStep > 2 ? 'done' : ''}}">
-      <view class="step-circle">{{currentStep > 2 ? '✓' : '2'}}</view>
+      <view class="step-circle">2</view>
       <text class="step-label">联系方式</text>
     </view>
     <view class="step-line {{currentStep > 2 ? 'done' : ''}}"></view>
@@ -24,7 +24,7 @@
 
     <!-- 图片上传 -->
     <view class="form-card">
-      <text class="form-section-title">📸 房间照片（可选，最多6张）</text>
+      <text class="form-section-title">房间照片（可选，最多6张）</text>
       <view class="image-upload-grid">
         <view
           class="img-item"
@@ -32,10 +32,10 @@
           wx:key="index"
         >
           <image src="{{item}}" class="uploaded-img" mode="aspectFill" />
-          <view class="img-delete" catchtap="onDeleteImage" data-index="{{index}}">✕</view>
+          <view class="img-delete" catchtap="onDeleteImage" data-index="{{index}}">删除</view>
         </view>
         <view class="add-img-btn" bindtap="onChooseImage" wx:if="{{form.images.length < 6}}">
-          <text class="add-icon">+</text>
+          <view class="add-icon ui-icon ui-icon-plus"></view>
           <text class="add-text">添加照片</text>
           <text class="add-hint">{{form.images.length}}/6</text>
         </view>
@@ -45,7 +45,7 @@
     <!-- 视频上传 -->
     <view class="form-card">
       <view class="video-title-row">
-        <text class="form-section-title">🎬 带看视频（可选，60秒以内）</text>
+        <text class="form-section-title">带看视频（可选，60秒以内）</text>
         <text class="video-tip">1个视频</text>
       </view>
 
@@ -60,14 +60,12 @@
           object-fit="cover"
         ></video>
         <view class="video-delete-btn" catchtap="onDeleteVideo">
-          <text class="vd-icon">✕</text>
           <text class="vd-text">删除视频</text>
         </view>
       </view>
 
       <!-- 添加视频 -->
       <view class="add-video-btn" bindtap="onChooseVideo" wx:else>
-        <text class="add-video-icon">▶</text>
         <text class="add-video-text">拍摄 / 选择视频</text>
         <text class="add-video-hint">限60秒，建议横拍</text>
       </view>
@@ -75,7 +73,7 @@
 
     <!-- 基本信息 -->
     <view class="form-card">
-      <text class="form-section-title">🏠 基本信息</text>
+      <text class="form-section-title">基本信息</text>
 
       <view class="form-item required">
         <text class="form-label">小区名称</text>
@@ -129,7 +127,7 @@
         </view>
       </view>
 
-      <view class="field-helper">小区详情、通勤配套、点评等复杂内容已移到「房东管理中心 → 小区详情配置」。发布房源时先填必要信息即可。</view>
+      <view class="field-helper">小区详情、通勤配套、点评等复杂内容已移到「管家管理中心 → 小区详情配置」。发布房源时先填必要信息即可。</view>
 
       <view class="form-item required">
         <text class="form-label">月租金</text>
@@ -243,7 +241,7 @@
 
     <!-- 标签 -->
     <view class="form-card">
-      <text class="form-section-title">🏷️ 特色标签（最多5个）</text>
+      <text class="form-section-title">特色标签（最多5个）</text>
       <view class="tags-grid">
         <view
           class="tag-option {{item.selected ? 'selected' : ''}}"
@@ -257,7 +255,7 @@
 
     <!-- 描述 -->
     <view class="form-card">
-      <text class="form-section-title">📝 房源描述</text>
+      <text class="form-section-title">房源描述</text>
       <textarea
         class="form-textarea"
         placeholder="描述一下您的房子，如：装修情况、配套设施、周边环境、入住要求等..."
@@ -273,7 +271,7 @@
     <view class="form-card advanced-card">
       <view class="advanced-head" bindtap="onToggleAdvancedHouseFields">
         <view>
-          <text class="form-section-title">📖 补充房源详情（可选）</text>
+          <text class="form-section-title">补充房源详情（可选）</text>
           <text class="field-helper compact">非必填，适合后续补充。填写后详情页会默认展示三行概述，用户点击后阅读完整内容。</text>
         </view>
         <text class="advanced-toggle">{{showAdvancedHouseFields ? '收起' : '展开'}}</text>
@@ -336,20 +334,19 @@
       </view>
     </view>
 
-    <button class="next-btn" bindtap="onNextStep">下一步：填写联系方式</button>
+    <button class="next-btn" bindtap="onNextStep">下一步：填写管家信息</button>
   </view>
 
-  <!-- Step 2: 联系方式 -->
+  <!-- Step 2: 管家信息 -->
   <view wx:if="{{currentStep === 2}}" class="form-section">
     <view class="form-card">
-      <text class="form-section-title">👤 房东信息</text>
+      <text class="form-section-title">管家信息</text>
       <view class="info-notice">
-        <text class="notice-icon">🔒</text>
-        <text class="notice-text">平台已有3年沉淀、服务1000+真实租客，专注罗湖直租，坚持免中介费和真实房源，联系方式用于直连高意向租客。</text>
+        <text class="notice-text">前台默认使用小程序后台私信咨询；电话作为备用咨询方式。请优先把实地测评、通勤和小区环境写清楚。</text>
       </view>
 
       <view class="prefill-landlord-btn" bindtap="onPrefillLandlordInfo">
-        一键填充：孙先生 · 13520174107 · weixin123
+        一键填充：管家居居侠 · 13520174107
       </view>
 
       <view class="form-item required">
@@ -376,20 +373,10 @@
         />
       </view>
 
-      <view class="form-item required">
-        <text class="form-label">微信号</text>
-        <input
-          class="form-input"
-          placeholder="请输入微信号，租客可直接添加"
-          value="{{form.landlordWechat}}"
-          bindinput="onInput"
-          data-field="landlordWechat"
-        />
-      </view>
     </view>
 
     <view class="form-card">
-      <text class="form-section-title">🔖 出租状态</text>
+      <text class="form-section-title">出租状态</text>
       <view class="switch-row">
         <text class="switch-label">当前状态</text>
         <view class="status-options">
@@ -418,7 +405,7 @@
   <!-- Step 3: 预览确认 -->
   <view wx:if="{{currentStep === 3}}" class="form-section">
     <view class="preview-header">
-      <text class="preview-title">📋 {{isEditMode ? '编辑预览' : '发布预览'}}</text>
+      <text class="preview-title">{{isEditMode ? '编辑预览' : '发布预览'}}</text>
       <text class="preview-sub">{{isEditMode ? '确认信息无误后保存修改' : '确认信息无误后发布'}}</text>
     </view>
 
@@ -439,7 +426,7 @@
         </scroll-view>
       </view>
       <view wx:else class="preview-no-img">
-        <text>🏠</text>
+        <view class="preview-no-img-icon ui-icon ui-icon-home"></view>
         <text>{{form.neighborhood || '待填写小区名称'}}</text>
       </view>
 
@@ -469,7 +456,7 @@
         </view>
 
         <!-- 位置 -->
-        <text class="preview-location">📍 {{form.neighborhood}} {{form.district}}</text>
+        <text class="preview-location">{{form.neighborhood}} {{form.district}}</text>
         <text class="preview-location-detail" wx:if="{{form.locationName || form.address}}">
           {{form.locationName || ''}} {{form.address || ''}}
         </text>
@@ -489,18 +476,19 @@
 
         <view class="preview-divider"></view>
 
-        <!-- 房东信息 -->
+        <!-- 管家信息 -->
         <view class="preview-landlord">
           <view class="landlord-left">
-            <view class="preview-avatar">👤</view>
+            <view class="preview-avatar">
+              <view class="ui-icon ui-icon-shield"></view>
+            </view>
             <view>
-              <text class="preview-landlord-name">{{form.landlordName}}</text>
-              <text class="preview-landlord-badge">直租房东</text>
+              <text class="preview-landlord-name">{{form.landlordName || '管家居居侠'}}</text>
+              <text class="preview-landlord-badge">管家咨询</text>
             </view>
           </view>
           <view class="preview-contact">
-            <text class="contact-phone">📞 {{form.landlordPhone}}</text>
-            <text class="contact-wechat">💬 {{form.landlordWechat}}</text>
+            <text class="contact-phone">{{form.landlordPhone}}</text>
           </view>
         </view>
       </view>
@@ -513,7 +501,7 @@
         bindtap="onSubmit"
         loading="{{submitting}}"
         disabled="{{submitting}}"
-      >{{isEditMode ? '保存修改' : '🚀 立即发布'}}</button>
+      >{{isEditMode ? '保存修改' : '立即发布'}}</button>
     </view>
   </view>
 

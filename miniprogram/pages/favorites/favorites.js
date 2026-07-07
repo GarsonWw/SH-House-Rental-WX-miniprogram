@@ -16,7 +16,7 @@ Page({
     // 从云端重新拉取收藏 ID，再映射到本地缓存的房源数据
     app.reloadFavorites(() => {
       app.ensureHousesFresh(() => {
-        const houses = app.getFavoriteHouses()
+        const houses = app.getFavoriteHouses().filter(house => house && house.available === true)
         this.setData({ favoriteHouses: houses, loading: false })
       })
     })
@@ -39,7 +39,7 @@ Page({
             wx.showToast({ title: '移除失败，请检查网络后重试', icon: 'none' })
             return
           }
-          const houses = app.getFavoriteHouses()
+          const houses = app.getFavoriteHouses().filter(house => house && house.available === true)
           this.setData({ favoriteHouses: houses })
           wx.showToast({ title: isFavorited ? '操作未完成' : '已取消收藏', icon: 'none' })
         })

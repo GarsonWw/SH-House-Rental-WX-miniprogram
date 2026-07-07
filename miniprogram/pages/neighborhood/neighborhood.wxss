@@ -1,315 +1,272 @@
 /* pages/neighborhood/neighborhood.wxss */
-.page-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+.turn-page {
+  min-height: 100vh;
   background: #EFF8FB;
-}
-
-/* 搜索区 */
-.search-section {
-  background: #FFFFFF;
-  padding: 20rpx 24rpx;
-}
-
-/* 区域筛选 */
-.district-filter {
-  background: #FFFFFF;
-  padding: 0 24rpx 16rpx;
-}
-
-.district-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.district-chip {
-  display: inline-block;
-  padding: 10rpx 28rpx;
-  border-radius: 50rpx;
-  font-size: 26rpx;
-  color: #526A72;
-  background: #E8F4F6;
-  margin-right: 16rpx;
-  margin-bottom: 12rpx;
-  transition: all 0.2s;
-}
-
-.district-chip.active {
-  background: #0F2F4A;
-  color: #FFFFFF;
-  font-weight: 600;
-}
-
-/* 统计栏 */
-.stats-bar {
-  padding: 16rpx 24rpx;
-  background: #E4F3F5;
-}
-
-.stats-text {
-  font-size: 24rpx;
-  color: #667A82;
-}
-
-/* 小区网格 */
-.neighborhood-grid-scroll {
-  flex: 1;
-  height: 0;
-}
-
-.neighborhood-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 16rpx;
-}
-
-.neighborhood-card {
-}
-
-.neighborhood-card {
-  width: calc(50% - 8rpx);
-  margin-bottom: 16rpx;
+  padding: 26rpx 30rpx 0;
   box-sizing: border-box;
+}
+
+.turn-hero {
+  padding: 30rpx;
+  border-radius: 34rpx;
   background: #FFFFFF;
-  border-radius: 28rpx;
-  overflow: hidden;
   border: 1rpx solid rgba(17, 17, 17, 0.05);
-  box-shadow: 0 14rpx 32rpx rgba(39, 122, 139, 0.09);
-}
-
-.card-cover {
-  position: relative;
-  width: 100%;
-  height: 190rpx;
-  overflow: hidden;
-  background: #DDEFF2;
-}
-
-.card-cover-fallback {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-cover-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.card-cover-label {
-  position: absolute;
-  left: 14rpx;
-  bottom: 14rpx;
-  padding: 7rpx 14rpx;
-  border-radius: 999rpx;
-  background: rgba(239, 245, 246, 0.94);
-  color: #33464D;
-  font-size: 19rpx;
-  font-weight: 700;
-}
-
-.card-emoji {
-  font-size: 72rpx;
-}
-
-.card-info {
-  padding: 16rpx;
-}
-
-.card-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #171512;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 8rpx;
-}
-
-.card-district {
-  font-size: 22rpx;
-  color: #7A746B;
-  display: block;
-  margin-bottom: 12rpx;
-}
-
-.card-footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-count {
-  font-size: 26rpx;
-  color: #0F2F4A;
-  font-weight: 600;
-}
-
-.card-arrow {
-  font-size: 32rpx;
-  color: #0F2F4A;
-}
-
-/* 空状态 */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100rpx 40rpx;
-}
-
-.empty-icon {
-  font-size: 100rpx;
-}
-
-.empty-text {
-  font-size: 28rpx;
-  color: #7A746B;
-  margin-top: 20rpx;
-}
-
-.empty-action {
-  margin-top: 32rpx;
-  background: #0F2F4A;
-  color: #FFFFFF;
-  padding: 16rpx 48rpx;
-  border-radius: 50rpx;
-  font-size: 28rpx;
-  font-weight: 600;
-}
-
-/* 小区头部（房源列表视图） */
-.neighborhood-header {
-  background: linear-gradient(135deg, #0F2F4A, #1C4966);
-  padding: 24rpx;
-  display: flex;
-  align-items: center;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  color: #FFFFFF;
-  margin-right: 20rpx;
-}
-
-.back-icon {
-  font-size: 48rpx;
-  line-height: 1;
-}
-
-.back-text {
-  font-size: 26rpx;
-  margin-left: 4rpx;
-}
-
-.header-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.header-name {
-  font-size: 34rpx;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-
-.header-district {
-  font-size: 24rpx;
-  color: rgba(255,255,255,0.8);
-  margin-top: 4rpx;
-}
-
-.header-count {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.count-num {
-  font-size: 48rpx;
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1;
-}
-
-.count-unit {
-  font-size: 22rpx;
-  color: rgba(255,255,255,0.8);
-}
-
-/* 提示卡片 */
-.tips-card {
-  background: #E7F5F7;
-  padding: 16rpx 24rpx;
-  display: flex;
-  align-items: center;
-}
-
-.tips-icon {
-  font-size: 28rpx;
-  margin-right: 12rpx;
-}
-
-.tips-text {
-  font-size: 24rpx;
-  color: #0F2F4A;
-}
-
-/* 房源列表 */
-.house-list-scroll {
-  flex: 1;
-  height: 0;
-}
-
-.house-list {
-  padding: 16rpx 24rpx;
-}
-
-/* 2026 UI refresh */
-.page-bg,
-.container {
-  background: #EFF8FB;
-}
-
-.neighborhood-header {
-  background: linear-gradient(180deg, #DDF5F8, #EFF8FB);
-  padding: 30rpx 30rpx 42rpx;
-}
-
-.back-btn,
-.header-name,
-.count-num,
-.tips-text {
-  color: #111111;
-}
-
-.header-district,
-.count-unit {
-  color: #667A82;
-}
-
-.tips-card {
-  margin: -22rpx 30rpx 18rpx;
-  background: #FFFFFF;
-  border-radius: 999rpx;
   box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
 }
 
-.house-list {
-  padding: 18rpx 30rpx;
+.turn-kicker,
+.turn-title,
+.turn-sub {
+  display: block;
+}
+
+.turn-kicker {
+  font-size: 24rpx;
+  color: #28B8BC;
+  font-weight: 800;
+  margin-bottom: 8rpx;
+}
+
+.turn-title {
+  font-size: 40rpx;
+  color: #111111;
+  font-weight: 900;
+  line-height: 1.28;
+}
+
+.turn-sub {
+  margin-top: 10rpx;
+  font-size: 27rpx;
+  color: #667A82;
+  line-height: 1.55;
+}
+
+.category-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 18rpx;
+  margin-top: 22rpx;
+}
+
+.category-card {
+  flex: 1;
+  min-width: 0;
+  min-height: 172rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  border-radius: 28rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 12rpx 30rpx rgba(39, 122, 139, 0.07);
+}
+
+.category-mark {
+  width: 44rpx;
+  height: 44rpx;
+  margin-bottom: 18rpx;
+  border-radius: 16rpx;
+  background: #DDF5F8;
+  color: #28B8BC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-mark .ui-icon {
+  transform: scale(.72);
+}
+
+.category-title,
+.category-desc {
+  display: block;
+}
+
+.category-title {
+  font-size: 28rpx;
+  color: #111111;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.category-desc {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #667A82;
+  line-height: 1.45;
+}
+
+.section-block {
+  margin-top: 24rpx;
+  padding: 26rpx;
+  border-radius: 30rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(17, 17, 17, 0.05);
+  box-shadow: 0 14rpx 36rpx rgba(39, 122, 139, 0.08);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 900;
+  color: #111111;
+}
+
+.section-note {
+  font-size: 22rpx;
+  color: #28B8BC;
+  font-weight: 700;
+  background: #DDF5F8;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+}
+
+.port-card {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-top: 1rpx solid rgba(17, 17, 17, 0.06);
+}
+
+.port-card:first-of-type {
+  border-top: 0;
+}
+
+.port-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.port-name,
+.port-route {
+  display: block;
+}
+
+.port-name {
+  font-size: 28rpx;
+  color: #111111;
+  font-weight: 800;
+}
+
+.port-route {
+  margin-top: 8rpx;
+  font-size: 23rpx;
+  color: #667A82;
+  line-height: 1.55;
+}
+
+.port-time {
+  margin-left: 20rpx;
+  min-width: 140rpx;
+  height: 58rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111111;
+  background: #F2F9FA;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.featured-card {
+  display: flex;
+  padding: 18rpx 0;
+  border-top: 1rpx solid rgba(17, 17, 17, 0.06);
+}
+
+.featured-card:first-of-type {
+  border-top: 0;
+}
+
+.featured-img {
+  width: 168rpx;
+  height: 138rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+  background: #DDF5F8;
+}
+
+.placeholder-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #28B8BC;
+}
+
+.placeholder-img .ui-icon {
+  transform: scale(1.05);
+}
+
+.featured-info {
+  flex: 1;
+  min-width: 0;
+  margin-left: 18rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.featured-title {
+  font-size: 28rpx;
+  color: #111111;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.featured-meta {
+  font-size: 22rpx;
+  color: #667A82;
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.featured-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.featured-price {
+  font-size: 27rpx;
+  color: #138F94;
+  font-weight: 900;
+}
+
+.featured-action {
+  font-size: 23rpx;
+  color: #28B8BC;
+  font-weight: 800;
+}
+
+.empty-state {
+  padding: 42rpx 0;
+  text-align: center;
+}
+
+.empty-title,
+.empty-sub {
+  display: block;
+}
+
+.empty-title {
+  font-size: 28rpx;
+  color: #111111;
+  font-weight: 800;
+}
+
+.empty-sub {
+  margin-top: 8rpx;
+  color: #667A82;
+  font-size: 23rpx;
 }

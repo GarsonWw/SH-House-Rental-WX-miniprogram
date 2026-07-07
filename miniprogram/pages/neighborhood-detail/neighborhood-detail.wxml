@@ -2,7 +2,7 @@
   <view class="hero">
     <image wx:if="{{profile.cover}}" class="hero-img" src="{{profile.cover}}" mode="aspectFill" />
     <view wx:else class="hero-fallback">
-      <text class="hero-icon">🏘</text>
+      <view class="hero-icon ui-icon ui-icon-home"></view>
     </view>
     <view class="hero-mask"></view>
     <view class="hero-content">
@@ -12,7 +12,7 @@
   </view>
 
   <view class="join-strip">
-    <text class="join-text">{{stats.available}} 套在租 · 3年沉淀 · 1000+真实租客服务 · 免中介费</text>
+    <text class="join-text">{{stats.available}} 套在租 · 从业10年 · 深港通勤多年经验 · 免中介费</text>
     <view class="join-btn" bindtap="onViewHouses">立即看房</view>
   </view>
 
@@ -36,39 +36,57 @@
     </view>
   </view>
 
-  <view class="section-title">详细信息</view>
-  <view class="commute-card">
-    <view class="card-head">
-      <text class="card-title">通勤</text>
-      <view class="mode-pill">{{profile.commuteMode}}</view>
-    </view>
-    <text class="card-desc">{{profile.commuteInfo}}</text>
-  </view>
-
-  <view class="detail-grid">
-    <view class="detail-card" wx:for="{{detailCards}}" wx:key="title">
-      <text class="detail-title">{{item.title}}</text>
-      <text class="detail-value">{{item.value}}</text>
-      <text class="detail-sub">{{item.sub}}</text>
-    </view>
-  </view>
-
+  <view class="section-title">实地测评</view>
   <view class="guide-card">
     <view class="guide-head">
-      <view class="avatar">深</view>
+      <view class="avatar">
+        <view class="ui-icon ui-icon-shield"></view>
+      </view>
       <view>
         <text class="guide-title">{{profile.scoutTitle}}</text>
         <text class="guide-sub">实地踩盘 · 租房避坑经验</text>
       </view>
     </view>
     <view class="advisor-badge">小区实探总结</view>
-    <text class="trust-line">我们只做罗湖，结合深港通勤、预算需求和生活配套，帮助用户从看房到入住更省心。</text>
+    <text class="trust-line">管家只做罗湖，结合深港通勤、预算需求和生活配套，帮助用户从看房到入住更省心。</text>
     <text class="guide-summary">{{profile.scoutSummary}}</text>
+  </view>
+
+  <view class="section-title">通勤</view>
+  <view class="commute-card">
+    <view class="card-head">
+      <text class="card-title">{{profile.commuteMode}}通勤</text>
+      <view class="mode-pill">参考路线</view>
+    </view>
+    <text class="card-desc">{{profile.commuteInfo}}</text>
+  </view>
+
+  <view class="section-title">小区环境</view>
+  <view class="detail-grid">
+    <view class="detail-card" wx:for="{{detailCards}}" wx:key="title">
+      <text class="detail-title">{{item.title}}</text>
+      <view class="detail-value-row">
+        <text class="bullet-dot">•</text>
+        <text class="detail-value">{{item.value}}</text>
+      </view>
+      <text class="detail-sub">{{item.sub}}</text>
+    </view>
   </view>
 
   <view class="info-section" wx:for="{{guideSections}}" wx:key="title">
     <view class="info-head">{{item.title}}</view>
-    <text class="info-text">{{item.value}}</text>
+    <view class="info-bullets">
+      <view
+        class="bullet-line"
+        wx:for="{{item.items}}"
+        wx:key="*this"
+        wx:for-item="point"
+        wx:for-index="pointIndex"
+      >
+        <text class="bullet-dot">•</text>
+        <text class="info-text">{{point}}</text>
+      </view>
+    </view>
   </view>
 
   <view id="house-list" class="section-title">该小区在租房源</view>
@@ -88,12 +106,28 @@
   <view class="bottom-space"></view>
 
   <view class="bottom-bar" wx:if="{{availableHouses.length}}">
-    <view class="suggest-input">提交改进建议...</view>
-    <view class="contact-main" bindtap="onCopyFirstWechat">联系房东</view>
-    <view class="round-btn" bindtap="onCallFirstLandlord">☎</view>
-    <view class="round-btn" bindtap="onOpenMap">⌖</view>
+    <button
+      class="contact-main"
+      open-type="contact"
+      show-message-card="true"
+      send-message-title="{{profile.name}}联系管家"
+      send-message-path="/pages/messages/messages"
+      session-from="neighborhood-detail"
+      hover-class="none"
+    >
+      <view class="bar-icon ui-icon ui-icon-chat"></view>
+      <text>联系管家</text>
+    </button>
+    <view class="round-btn" bindtap="onCallFirstLandlord">
+      <view class="bar-icon ui-icon ui-icon-phone"></view>
+      <text>电话</text>
+    </view>
+    <view class="round-btn" bindtap="onOpenMap">
+      <view class="bar-icon ui-icon ui-icon-map"></view>
+      <text>地图</text>
+    </view>
   </view>
   <view class="bottom-bar" wx:else>
-    <view class="suggest-input">当前暂无在租房源</view>
+    <view class="bottom-hint">当前暂无在租房源</view>
   </view>
 </view>

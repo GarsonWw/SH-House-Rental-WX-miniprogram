@@ -24,9 +24,9 @@ const protectedHouseFields = [
 
 const neighborhoodFields = [
   'neighborhoodNote', 'neighborhoodReview', 'neighborhoodCover', 'neighborhoodSlogan',
-  'commuteInfo', 'commuteMode', 'safetyInfo', 'propertyType', 'deliveryInfo',
-  'shortRentInfo', 'roomInsight', 'priceReference', 'surroundings', 'suitableCrowd',
-  'scoutTitle', 'scoutSummary', 'scoutAdvice'
+  'commuteInfo', 'commuteMode', 'safetyInfo', 'propertyType', 'parkingInfo', 'deliveryInfo',
+  'shortRentInfo', 'roomInsight', 'priceReference', 'waterElectricFee', 'broadbandFee',
+  'parkingFee', 'surroundings', 'suitableCrowd', 'scoutTitle', 'scoutSummary', 'scoutAdvice'
 ]
 
 const makeError = (code, message) => {

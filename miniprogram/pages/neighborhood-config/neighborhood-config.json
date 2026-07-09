@@ -2,5 +2,8 @@
   "navigationBarTitleText": "小区详情配置",
   "navigationBarBackgroundColor": "#EFF8FB",
   "navigationBarTextStyle": "black",
-  "backgroundColor": "#EFF8FB"
+  "backgroundColor": "#EFF8FB",
+  "requiredPrivateInfos": [
+    "chooseLocation"
+  ]
 }

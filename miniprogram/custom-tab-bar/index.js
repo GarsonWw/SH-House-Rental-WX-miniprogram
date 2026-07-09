@@ -6,7 +6,7 @@ Component({
       { key: 'turn', pagePath: '/pages/neighborhood/neighborhood', text: '转转' },
       { key: 'messages', pagePath: '/pages/messages/messages', text: '消息', center: true },
       { key: 'map', pagePath: '/pages/map/map', text: '地图' },
-      { key: 'mine', pagePath: '/pages/mine/mine', text: '我的', badge: true }
+      { key: 'mine', pagePath: '/pages/mine/mine', text: '我的' }
     ]
   },
 

@@ -215,6 +215,22 @@
         </view>
       </view>
 
+      <!-- 片区内小区（选完片区后显示） -->
+      <view class="filter-row" wx:if="{{matchSelectedDistrict !== '不限' && matchNeighborhoodList.length > 1}}">
+        <text class="filter-label">🏘️ 小区</text>
+        <view class="filter-scroll">
+          <view class="filter-chips">
+            <view
+              class="f-chip {{matchSelectedNeighborhood === item ? 'f-chip-active' : ''}}"
+              wx:for="{{matchNeighborhoodList}}"
+              wx:key="index"
+              bindtap="onMatchNeighborhoodSelect"
+              data-name="{{item}}"
+            >{{item}}</view>
+          </view>
+        </view>
+      </view>
+
       <!-- 价格区间 -->
       <view class="filter-row">
         <text class="filter-label">💰 价格</text>

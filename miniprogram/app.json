@@ -52,7 +52,7 @@
   "sitemapLocation": "sitemap.json",
   "permission": {
     "scope.userLocation": {
-      "desc": "用于选择房源所在小区位置并在地图中展示"
+      "desc": "用于在小区配置和地图中标注、展示小区位置"
     }
   },
   "requiredPrivateInfos": [

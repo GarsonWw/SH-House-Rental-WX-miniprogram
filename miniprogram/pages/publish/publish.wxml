@@ -24,7 +24,7 @@
 
     <!-- 图片上传 -->
     <view class="form-card">
-      <text class="form-section-title">房间照片（可选，最多6张）</text>
+      <text class="form-section-title">房间照片（建议上传，最多15张）</text>
       <view class="image-upload-grid">
         <view
           class="img-item"
@@ -34,10 +34,10 @@
           <image src="{{item}}" class="uploaded-img" mode="aspectFill" />
           <view class="img-delete" catchtap="onDeleteImage" data-index="{{index}}">删除</view>
         </view>
-        <view class="add-img-btn" bindtap="onChooseImage" wx:if="{{form.images.length < 6}}">
+        <view class="add-img-btn" bindtap="onChooseImage" wx:if="{{form.images.length < 15}}">
           <view class="add-icon ui-icon ui-icon-plus"></view>
           <text class="add-text">添加照片</text>
-          <text class="add-hint">{{form.images.length}}/6</text>
+          <text class="add-hint">{{form.images.length}}/15</text>
         </view>
       </view>
     </view>
@@ -45,7 +45,7 @@
     <!-- 视频上传 -->
     <view class="form-card">
       <view class="video-title-row">
-        <text class="form-section-title">带看视频（可选，60秒以内）</text>
+        <text class="form-section-title">带看视频（可选，120秒以内）</text>
         <text class="video-tip">1个视频</text>
       </view>
 
@@ -67,7 +67,7 @@
       <!-- 添加视频 -->
       <view class="add-video-btn" bindtap="onChooseVideo" wx:else>
         <text class="add-video-text">拍摄 / 选择视频</text>
-        <text class="add-video-hint">限60秒，建议横拍</text>
+        <text class="add-video-hint">限120秒，建议横拍</text>
       </view>
     </view>
 
@@ -75,32 +75,65 @@
     <view class="form-card">
       <text class="form-section-title">基本信息</text>
 
-      <view class="form-item required">
-        <text class="form-label">小区名称</text>
+      <view class="form-item">
+        <text class="form-label">房源标题</text>
         <input
           class="form-input"
-          placeholder="请输入小区名称"
-          value="{{form.neighborhood}}"
+          placeholder="如：布心地铁口精装一房一厅"
+          value="{{form.title}}"
           bindinput="onInput"
-          data-field="neighborhood"
+          data-field="title"
         />
+        <text class="field-hint">不填则自动生成：小区名 + 房型 + 装修 + 出租</text>
       </view>
 
       <view class="form-item required">
-        <text class="form-label">罗湖片区</text>
-        <picker
-          range="{{districtOptions}}"
-          bindchange="onPickerChange"
-          data-field="district"
-          data-options="districtOptions"
-        >
-          <view class="picker-view">
-            <text class="{{form.district ? 'picker-value' : 'picker-placeholder'}}">
-              {{form.district || '请选择罗湖片区'}}
-            </text>
-            <text class="picker-arrow">›</text>
-          </view>
-        </picker>
+        <text class="form-label">小区名称</text>
+        <view class="neighborhood-mode-tabs">
+          <view
+            class="mode-tab {{neighborhoodMode === 'select' ? 'active' : ''}}"
+            bindtap="onNeighborhoodModeChange"
+            data-mode="select"
+          >选择已有</view>
+          <view
+            class="mode-tab {{neighborhoodMode === 'custom' ? 'active' : ''}}"
+            bindtap="onNeighborhoodModeChange"
+            data-mode="custom"
+          >新建小区</view>
+        </view>
+        <block wx:if="{{neighborhoodMode === 'select'}}">
+          <picker
+            wx:if="{{neighborhoodNameOptions.length > 0}}"
+            range="{{neighborhoodNameOptions}}"
+            value="{{neighborhoodPickerIndex}}"
+            bindchange="onNeighborhoodPickerChange"
+          >
+            <view class="picker-view">
+              <text class="{{form.neighborhood ? 'picker-value' : 'picker-placeholder'}}">
+                {{form.neighborhood || '请选择已有小区'}}
+              </text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+          <view wx:else class="neighborhood-empty-tip">暂无已有小区，请切换到「新建小区」，或在小区配置页先创建。</view>
+        </block>
+        <block wx:else>
+          <input
+            class="form-input"
+            placeholder="请输入新小区名称"
+            value="{{form.neighborhood}}"
+            bindinput="onNeighborhoodCustomInput"
+          />
+          <text wx:if="{{neighborhoodDuplicateHint}}" class="field-hint warning">{{neighborhoodDuplicateHint}}</text>
+        </block>
+      </view>
+
+      <view class="form-item neighborhood-location-hint" wx:if="{{form.neighborhood}}">
+        <text class="form-label">小区定位</text>
+        <view class="location-hint-box {{neighborhoodLocationHint && neighborhoodLocationHint.indexOf('请先在') === 0 ? 'warning' : ''}}">
+          <text class="location-hint-text">{{neighborhoodLocationHint || '选择小区后显示定位信息'}}</text>
+          <text class="location-hint-link" bindtap="onGoNeighborhoodConfig">去配置</text>
+        </view>
       </view>
 
       <view class="form-item">
@@ -112,19 +145,6 @@
           bindinput="onInput"
           data-field="address"
         />
-      </view>
-
-      <view class="form-item required">
-        <text class="form-label">地图位置</text>
-        <view class="location-picker" bindtap="onChooseLocation">
-          <view class="location-picker-main">
-            <text class="{{form.latitude && form.longitude ? 'location-picker-value' : 'location-picker-placeholder'}}">
-              {{form.locationName || (form.latitude && form.longitude ? '已选择小区位置' : '点击选择小区地图位置')}}
-            </text>
-            <text class="location-picker-sub" wx:if="{{form.address}}">{{form.address}}</text>
-          </view>
-          <text class="location-picker-action">选择</text>
-        </view>
       </view>
 
       <view class="field-helper">小区详情、通勤配套、点评等复杂内容已移到「管家管理中心 → 小区详情配置」。发布房源时先填必要信息即可。</view>
@@ -259,13 +279,13 @@
       <textarea
         class="form-textarea"
         placeholder="描述一下您的房子，如：装修情况、配套设施、周边环境、入住要求等..."
-        maxlength="500"
+        maxlength="1200"
         value="{{form.description}}"
         bindinput="onInput"
         data-field="description"
         auto-height
       />
-      <text class="textarea-count">{{form.description.length}}/500</text>
+      <text class="textarea-count">{{form.description.length}}/1200</text>
     </view>
 
     <view class="form-card advanced-card">
@@ -456,10 +476,9 @@
         </view>
 
         <!-- 位置 -->
-        <text class="preview-location">{{form.neighborhood}} {{form.district}}</text>
-        <text class="preview-location-detail" wx:if="{{form.locationName || form.address}}">
-          {{form.locationName || ''}} {{form.address || ''}}
-        </text>
+        <text class="preview-location">{{form.neighborhood}}</text>
+        <text class="preview-location-detail" wx:if="{{neighborhoodLocationHint}}">{{neighborhoodLocationHint}}</text>
+        <text class="preview-location-detail" wx:if="{{form.address}}">{{form.address}}</text>
 
         <!-- 标签 -->
         <view class="preview-tags" wx:if="{{form.tags.length > 0}}">

@@ -27,7 +27,7 @@
 
 .consult-badge {
   display: inline-block;
-  font-size: 20rpx;
+  font-size: 24rpx;
   font-weight: 700;
   color: #8a6a3d;
   background: rgba(138, 106, 61, 0.1);
@@ -54,7 +54,17 @@
 }
 
 .consult-qr-box {
-  display: none;
+  width: 480rpx;
+  height: 480rpx;
+  margin: 24rpx auto 20rpx;
+  border-radius: 32rpx;
+  background: #f5fcfd;
+  border: 1rpx dashed rgba(40, 184, 188, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx 10rpx 8rpx;
+  box-sizing: border-box;
 }
 
 .consult-qr-image-wrap {
@@ -104,12 +114,6 @@
   box-shadow: 0 12rpx 32rpx rgba(40, 184, 188, 0.28);
   margin-bottom: 16rpx;
   box-sizing: border-box;
-  padding: 0;
-  border: 0;
-}
-
-.consult-btn-primary::after {
-  border: 0;
 }
 
 .consult-btn-ghost {

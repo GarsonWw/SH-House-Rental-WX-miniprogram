@@ -12,9 +12,19 @@ const COORDS = {
 }
 
 const getHouseCoord = house => {
+  const profile = getApp().getNeighborhoodProfile(house.neighborhood)
+  if (profile) {
+    const latitude = Number(profile.latitude)
+    const longitude = Number(profile.longitude)
+    if (Number.isFinite(latitude) && Number.isFinite(longitude) && latitude && longitude) {
+      return { latitude, longitude }
+    }
+  }
   const latitude = Number(house.latitude)
   const longitude = Number(house.longitude)
-  if (latitude && longitude) return { latitude, longitude }
+  if (Number.isFinite(latitude) && Number.isFinite(longitude) && latitude && longitude) {
+    return { latitude, longitude }
+  }
   return COORDS[house.neighborhood]
 }
 
@@ -85,7 +95,7 @@ Page({
     })
 
     // 获取区域列表
-    const districts = ['全部', ...new Set(availableHouses.map(h => h.district).filter(Boolean))]
+    const districts = app.getDistrictFilterOptions(availableHouses, '全部')
 
     const markers = Object.values(nbMap).map((n, idx) => ({
       id: idx + 1,

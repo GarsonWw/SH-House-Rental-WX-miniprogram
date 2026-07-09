@@ -4,13 +4,20 @@
     <text class="hero-sub">房源发布只管房源本身；小区通勤、配套、点评和转化内容在这里单独维护。</text>
   </view>
 
+  <view class="section-head-row" wx:if="{{!loading}}">
+    <text class="section-label inline">选择小区</text>
+    <view class="add-nb-btn" bindtap="onOpenAddModal">
+      <text class="add-nb-icon">+</text>
+      <text>新增小区</text>
+    </view>
+  </view>
+
   <view class="empty-card" wx:if="{{!loading && neighborhoods.length === 0}}">
     <text class="empty-title">还没有可配置的小区</text>
-    <text class="empty-sub">先发布至少一套房源，系统会自动生成对应小区的配置入口。</text>
+    <text class="empty-sub">点击右上角「新增小区」先创建小区资料，或发布房源后系统会自动出现对应小区。</text>
   </view>
 
   <view wx:if="{{neighborhoods.length > 0}}">
-    <view class="section-label">选择小区</view>
     <view class="nb-scroll">
       <view class="nb-row">
         <view
@@ -22,7 +29,7 @@
         >
           <text class="nb-name">{{item.name}}</text>
           <text class="nb-meta">{{item.district}} · {{item.count}}套房源 · {{item.available}}套在租</text>
-          <text class="nb-progress">{{item.progressText}}</text>
+          <text class="nb-progress">{{item.progressText}}{{item.count === 0 ? ' · 暂无房源' : ''}}</text>
         </view>
       </view>
     </view>
@@ -33,7 +40,106 @@
           <text class="editor-title">{{selectedName}}</text>
           <text class="editor-sub">以下内容独立保存为小区资料，并统一展示在小区详情页。</text>
         </view>
-        <view class="preview-btn" bindtap="onPreviewNeighborhood">预览</view>
+        <view class="editor-actions">
+          <view class="preview-btn" bindtap="onPreviewNeighborhood">预览</view>
+          <view class="delete-btn" bindtap="onDeleteNeighborhood">{{deleting ? '删除中' : '删除配置'}}</view>
+        </view>
+      </view>
+
+      <view class="name-card">
+        <text class="name-card-title">小区名称</text>
+        <text class="name-card-sub">修改后会同步更新该小区下的全部房源。</text>
+        <input
+          class="input name-input"
+          value="{{editingName}}"
+          bindinput="onEditingNameInput"
+          placeholder="请输入小区名称"
+          placeholder-class="form-placeholder"
+        />
+        <text wx:if="{{nameDuplicateHint}}" class="name-hint warning">{{nameDuplicateHint}}</text>
+        <view class="name-save-btn {{renaming || editingName === selectedName ? 'disabled' : ''}}" bindtap="onSaveNeighborhoodName">
+          {{renaming ? '保存中...' : '保存名称'}}
+        </view>
+      </view>
+
+      <view class="district-card">
+        <text class="district-card-title">罗湖片区</text>
+        <text class="district-card-sub">修改后会同步更新该小区下的全部房源，并影响首页片区筛选。</text>
+        <picker range="{{districtOptions}}" value="{{location.districtPickerIndex}}" bindchange="onEditorDistrictChange">
+          <view class="location-picker">{{location.district || '请选择罗湖片区'}}</view>
+        </picker>
+        <view
+          class="district-save-btn {{savingDistrict || location.district === savedDistrict ? 'disabled' : ''}}"
+          bindtap="onSaveDistrict"
+        >
+          {{savingDistrict ? '保存中...' : '保存片区'}}
+        </view>
+      </view>
+
+      <view class="location-card">
+        <text class="location-card-title">地图位置</text>
+        <text class="location-card-sub">同一小区下的所有房源共用此定位，保存后会同步到该小区全部房源。</text>
+        <view class="field">
+          <view class="location-choose-btn" bindtap="onChooseNeighborhoodLocation">
+            <text class="{{location.latitude && location.longitude ? 'location-value' : 'location-placeholder'}}">
+              {{location.locationName || (location.latitude && location.longitude ? '已选择小区位置' : '点击选择小区地图位置')}}
+            </text>
+            <text class="location-action">选择</text>
+          </view>
+        </view>
+        <view class="field">
+          <text class="label">小区地址</text>
+          <input class="input" value="{{location.address}}" bindinput="onLocationAddressInput" placeholder="如：罗湖区XX路XX号（可选）" placeholder-class="form-placeholder" />
+        </view>
+        <text class="location-coords" wx:if="{{location.latitude && location.longitude}}">
+          坐标：{{location.latitude}}, {{location.longitude}}
+        </text>
+        <view class="location-actions">
+          <view class="location-save-btn {{savingLocation ? 'disabled' : ''}}" bindtap="onSaveLocation">
+            {{savingLocation ? '保存中...' : '保存位置'}}
+          </view>
+          <view class="location-preview-btn" wx:if="{{location.latitude && location.longitude}}" bindtap="onPreviewLocation">查看位置</view>
+        </view>
+      </view>
+
+      <view class="media-card">
+        <text class="media-title">小区封面照片（可选，最多15张）</text>
+        <text class="media-sub">首张将作为详情页头图；不填则自动使用房源首图。</text>
+        <view class="image-upload-grid">
+          <view class="img-item" wx:for="{{media.images}}" wx:key="index">
+            <image src="{{item}}" class="uploaded-img" mode="aspectFill" />
+            <view class="img-delete" catchtap="onDeleteCoverImage" data-index="{{index}}">删除</view>
+          </view>
+          <view class="add-img-btn" bindtap="onChooseCoverImage" wx:if="{{media.images.length < 15}}">
+            <view class="add-icon ui-icon ui-icon-plus"></view>
+            <text class="add-text">添加照片</text>
+            <text class="add-hint">{{media.images.length}}/15</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="media-card">
+        <view class="video-title-row">
+          <text class="media-title">小区带看视频（可选，120秒以内）</text>
+          <text class="video-tip">1个视频</text>
+        </view>
+        <view class="video-preview-wrap" wx:if="{{media.videos.length > 0}}">
+          <video
+            src="{{media.videos[0]}}"
+            poster="{{media.videoCover}}"
+            class="preview-video"
+            controls
+            show-mute-btn
+            object-fit="cover"
+          ></video>
+          <view class="video-delete-btn" catchtap="onDeleteNeighborhoodVideo">
+            <text class="vd-text">删除视频</text>
+          </view>
+        </view>
+        <view class="add-video-btn" bindtap="onChooseNeighborhoodVideo" wx:else>
+          <text class="add-video-text">拍摄 / 选择视频</text>
+          <text class="add-video-hint">限120秒，建议横拍</text>
+        </view>
       </view>
 
       <view class="assist-card">
@@ -67,10 +173,6 @@
           <view class="field">
             <text class="label">首页点评</text>
             <textarea class="textarea" maxlength="500" value="{{form.neighborhoodReview}}" data-field="neighborhoodReview" bindinput="onInput" placeholder="写给租客看的真实点评，如通勤、生活便利度、适合人群等" placeholder-class="form-placeholder" auto-height></textarea>
-          </view>
-          <view class="field">
-            <text class="label">详情页封面图地址</text>
-            <input class="input" value="{{form.neighborhoodCover}}" data-field="neighborhoodCover" bindinput="onInput" placeholder="可选，不填则自动使用房源首图" placeholder-class="form-placeholder" />
           </view>
           <view class="field">
             <text class="label">顶部宣传语</text>
@@ -169,6 +271,27 @@
 
   <view class="bottom-space"></view>
 </scroll-view>
+
+<view class="modal-mask" wx:if="{{showAddModal}}" catchtap="onCloseAddModal">
+  <view class="modal-card" catchtap="noop">
+    <text class="modal-title">新增小区</text>
+    <text class="modal-sub">先创建小区资料，可暂不挂房源；发布房源时可直接选择该小区。</text>
+    <view class="modal-field">
+      <text class="modal-label">小区名称</text>
+      <input class="modal-input" value="{{newNeighborhoodName}}" bindinput="onAddNameInput" placeholder="如：翠竹家园" placeholder-class="form-placeholder" />
+    </view>
+    <view class="modal-field">
+      <text class="modal-label">罗湖片区</text>
+      <picker range="{{districtOptions}}" value="{{newNeighborhoodDistrictIndex}}" bindchange="onAddDistrictChange">
+        <view class="modal-picker">{{newNeighborhoodDistrict || '请选择罗湖片区'}}</view>
+      </picker>
+    </view>
+    <view class="modal-actions">
+      <view class="modal-btn" bindtap="onCloseAddModal">取消</view>
+      <view class="modal-btn primary" bindtap="onConfirmAddNeighborhood">{{addSaving ? '创建中...' : '创建'}}</view>
+    </view>
+  </view>
+</view>
 
 <view class="bottom-bar" wx:if="{{selectedName}}">
   <view class="save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">{{saving ? '保存中...' : '保存小区配置'}}</view>

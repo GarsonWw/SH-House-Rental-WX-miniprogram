@@ -30,10 +30,28 @@ const getLuohuArea = house => {
   const matched = LUOHU_AREA_KEYWORDS.find(([, keywords]) => keywords.some(keyword => searchable.includes(keyword)))
   return matched ? matched[0] : '其他片区'
 }
+
+const resolveHouseDistrict = house => {
+  const raw = String((house && house.district) || '').trim()
+  if (LUOHU_AREAS.includes(raw)) return raw
+  return getLuohuArea(house)
+}
+
+const getDistrictFilterOptions = (houseList, allLabel = '全部') => {
+  const used = new Set()
+  ;(houseList || []).forEach(house => {
+    const district = resolveHouseDistrict(house)
+    if (district) used.add(district)
+  })
+  return [allLabel, ...LUOHU_AREAS.filter(district => used.has(district))]
+}
 const NEIGHBORHOOD_FIELDS = [
   'neighborhoodNote',
   'neighborhoodReview',
   'neighborhoodCover',
+  'neighborhoodImages',
+  'neighborhoodVideos',
+  'neighborhoodVideoCover',
   'neighborhoodSlogan',
   'commuteInfo',
   'commuteMode',
@@ -51,7 +69,11 @@ const NEIGHBORHOOD_FIELDS = [
   'suitableCrowd',
   'scoutTitle',
   'scoutSummary',
-  'scoutAdvice'
+  'scoutAdvice',
+  'district',
+  'latitude',
+  'longitude',
+  'locationName'
 ]
 
 const stripNeighborhoodFields = source => {
@@ -237,6 +259,19 @@ App({
     return { ...house, ...overlay }
   },
 
+  _normalizeHouseRecord(house) {
+    const profiled = this._applyNeighborhoodProfile({ ...house, id: house.id || house._id })
+    return { ...profiled, district: resolveHouseDistrict(profiled) }
+  },
+
+  resolveHouseDistrict(house) {
+    return resolveHouseDistrict(house)
+  },
+
+  getDistrictFilterOptions(houseList, allLabel = '全部') {
+    return getDistrictFilterOptions(houseList, allLabel)
+  },
+
   loadHousesFromCloud() {
     if (this._houseRefreshPromise) return this._houseRefreshPromise
     this._houseRefreshPromise = Promise.all([
@@ -249,7 +284,7 @@ App({
           if (profile && profile.name) profiles[profile.name] = { ...profile, id: profile._id }
         })
         this.globalData.neighborhoodProfiles = profiles
-        const list = houseRows.map(h => this._applyNeighborhoodProfile({ ...h, id: h._id, district: getLuohuArea(h) }))
+        const list = houseRows.map(h => this._normalizeHouseRecord({ ...h, id: h._id }))
         this.globalData.houseList = list
         this.globalData.houseListLoaded = true
         this.globalData.lastHouseSyncAt = Date.now()
@@ -263,7 +298,7 @@ App({
       })
       .catch(err => {
         console.error('[Cloud] 加载房源失败', err)
-        const cached = (wx.getStorageSync('houseList_cache') || []).map(h => ({ ...h, district: getLuohuArea(h) }))
+        const cached = (wx.getStorageSync('houseList_cache') || []).map(h => this._normalizeHouseRecord(h))
         this.globalData.neighborhoodProfiles = wx.getStorageSync('neighborhoodProfiles_cache') || {}
         this.globalData.houseList = cached
         this.globalData.houseListLoaded = true
@@ -312,27 +347,84 @@ App({
     this.globalData.houseLoadCallbacks = []
   },
 
-  refreshNeighborhoodList() {
+  buildNeighborhoodIndex() {
     const map = {}
-    this.globalData.houseList.forEach(h => {
-      if (!map[h.neighborhood]) {
-        const profile = this.globalData.neighborhoodProfiles[h.neighborhood] || {}
-        map[h.neighborhood] = {
-          name: h.neighborhood, count: 0,
-          district: h.district || '未知区域',
-          coverImg: profile.neighborhoodCover || h.neighborhoodCover || (h.images && h.images[0] ? h.images[0] : ''),
-          note: profile.neighborhoodNote || h.neighborhoodNote || h.neighborhoodDesc || '',
-          review: profile.neighborhoodReview || h.neighborhoodReview || '',
-          commuteInfo: profile.commuteInfo || h.commuteInfo || '',
-          propertyType: profile.propertyType || h.propertyType || '',
-          parkingInfo: profile.parkingInfo || h.parkingInfo || '',
-          priceReference: profile.priceReference || h.priceReference || '',
-          waterElectricFee: profile.waterElectricFee || h.waterElectricFee || '',
-          broadbandFee: profile.broadbandFee || h.broadbandFee || '',
-          parkingFee: profile.parkingFee || h.parkingFee || ''
+    const ensure = name => {
+      const trimmed = String(name || '').trim()
+      if (!trimmed) return null
+      if (!map[trimmed]) {
+        const profile = this.globalData.neighborhoodProfiles[trimmed] || {}
+        map[trimmed] = {
+          name: trimmed,
+          district: profile.district || '',
+          count: 0,
+          available: 0,
+          hasProfile: Object.prototype.hasOwnProperty.call(this.globalData.neighborhoodProfiles, trimmed)
         }
       }
-      map[h.neighborhood].count++
+      return map[trimmed]
+    }
+
+    Object.keys(this.globalData.neighborhoodProfiles).forEach(name => ensure(name))
+    this.globalData.houseList.forEach(h => {
+      const entry = ensure(h.neighborhood)
+      if (!entry) return
+      if (!entry.district && h.district) entry.district = h.district
+      entry.count += 1
+      if (h.available !== false) entry.available += 1
+    })
+    Object.values(map).forEach(entry => {
+      entry.district = resolveHouseDistrict({
+        neighborhood: entry.name,
+        district: entry.district
+      })
+    })
+    return map
+  },
+
+  getMergedNeighborhoodSummaries() {
+    return Object.values(this.buildNeighborhoodIndex())
+      .map(entry => ({
+        ...entry,
+        district: entry.district || '其他片区'
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'))
+  },
+
+  getNeighborhoodNameList() {
+    return this.getMergedNeighborhoodSummaries().map(item => item.name)
+  },
+
+  isNeighborhoodNameTaken(name, exceptName = '') {
+    const trimmed = String(name || '').trim()
+    const skip = String(exceptName || '').trim()
+    if (!trimmed) return false
+    return this.getNeighborhoodNameList().some(item => item === trimmed && item !== skip)
+  },
+
+  refreshNeighborhoodList() {
+    const map = {}
+    this.getMergedNeighborhoodSummaries().forEach(entry => {
+      const profile = this.globalData.neighborhoodProfiles[entry.name] || {}
+      const sampleHouse = this.globalData.houseList.find(h => h.neighborhood === entry.name) || {}
+      map[entry.name] = {
+        name: entry.name,
+        count: entry.count,
+        district: entry.district || '未知区域',
+        coverImg: (profile.neighborhoodImages && profile.neighborhoodImages[0])
+          || profile.neighborhoodCover
+          || sampleHouse.neighborhoodCover
+          || (sampleHouse.images && sampleHouse.images[0] ? sampleHouse.images[0] : ''),
+        note: profile.neighborhoodNote || sampleHouse.neighborhoodNote || sampleHouse.neighborhoodDesc || '',
+        review: profile.neighborhoodReview || sampleHouse.neighborhoodReview || '',
+        commuteInfo: profile.commuteInfo || sampleHouse.commuteInfo || '',
+        propertyType: profile.propertyType || sampleHouse.propertyType || '',
+        parkingInfo: profile.parkingInfo || sampleHouse.parkingInfo || '',
+        priceReference: profile.priceReference || sampleHouse.priceReference || '',
+        waterElectricFee: profile.waterElectricFee || sampleHouse.waterElectricFee || '',
+        broadbandFee: profile.broadbandFee || sampleHouse.broadbandFee || '',
+        parkingFee: profile.parkingFee || sampleHouse.parkingFee || ''
+      }
     })
     this.globalData.neighborhoodList = Object.values(map)
   },
@@ -348,7 +440,7 @@ App({
     }
     this.callHouseService('createHouse', { data: houseData })
       .then(result => {
-        const newHouse = { ...houseData, _id: result.id, id: result.id, version: result.version }
+        const newHouse = this._normalizeHouseRecord({ ...houseData, _id: result.id, id: result.id, version: result.version })
         this.globalData.houseList.unshift(newHouse)
         this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
@@ -409,7 +501,7 @@ App({
     const db = wx.cloud.database()
     db.collection('houses').doc(id).get()
       .then(res => {
-        const fresh = this._applyNeighborhoodProfile({ ...res.data, id: res.data._id, district: getLuohuArea(res.data) })
+        const fresh = this._normalizeHouseRecord({ ...res.data, id: res.data._id })
         const index = this.globalData.houseList.findIndex(h => h.id === id)
         if (index > -1) this.globalData.houseList[index] = fresh
         else this.globalData.houseList.unshift(fresh)
@@ -432,7 +524,10 @@ App({
     const houseData = stripNeighborhoodFields(data)
     this.callHouseService('updateHouse', { id, data: houseData, expectedVersion: house && house.version })
       .then(result => {
-        if (house) Object.assign(house, houseData, { version: result.version })
+        if (house) {
+          Object.assign(house, houseData, { version: result.version })
+          Object.assign(house, this._normalizeHouseRecord(house))
+        }
         this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
         if (callback) callback(null)
@@ -442,6 +537,24 @@ App({
 
   getNeighborhoodProfile(name) {
     return this.globalData.neighborhoodProfiles[name] || null
+  },
+
+  getNeighborhoodLocation(name) {
+    const profile = this.getNeighborhoodProfile(name) || {}
+    return {
+      district: profile.district || '',
+      latitude: profile.latitude,
+      longitude: profile.longitude,
+      locationName: profile.locationName || '',
+      address: profile.address || ''
+    }
+  },
+
+  hasNeighborhoodLocation(name) {
+    const location = this.getNeighborhoodLocation(name)
+    const latitude = Number(location.latitude)
+    const longitude = Number(location.longitude)
+    return Number.isFinite(latitude) && latitude !== 0 && Number.isFinite(longitude) && longitude !== 0
   },
 
   saveNeighborhood(name, data, callback) {
@@ -454,14 +567,67 @@ App({
       .then(result => {
         const profile = { ...(current || {}), ...data, name, id: result.id, version: result.version }
         this.globalData.neighborhoodProfiles[name] = profile
+        const locationPatch = {
+          district: profile.district,
+          latitude: profile.latitude,
+          longitude: profile.longitude,
+          locationName: profile.locationName,
+          address: profile.address
+        }
         this.globalData.houseList = this.globalData.houseList.map(house => {
           if (house.neighborhood !== name) return house
-          return this._applyNeighborhoodProfile(house)
+          return this._normalizeHouseRecord(this._applyNeighborhoodProfile({ ...house, ...locationPatch }))
         })
         this.refreshNeighborhoodList()
         wx.setStorageSync('houseList_cache', this.globalData.houseList)
         wx.setStorageSync('neighborhoodProfiles_cache', this.globalData.neighborhoodProfiles)
         if (callback) callback(null, profile)
+      })
+      .catch(error => { if (callback) callback(error) })
+  },
+
+  deleteNeighborhood(name, callback) {
+    this.callHouseService('deleteNeighborhood', { name })
+      .then(result => {
+        delete this.globalData.neighborhoodProfiles[name]
+        this.refreshNeighborhoodList()
+        wx.setStorageSync('neighborhoodProfiles_cache', this.globalData.neighborhoodProfiles)
+        if (callback) callback(null, result)
+      })
+      .catch(error => { if (callback) callback(error) })
+  },
+
+  renameNeighborhood(oldName, newName, callback) {
+    const from = String(oldName || '').trim()
+    const to = String(newName || '').trim()
+    if (!from || !to) {
+      const error = new Error('小区名称不能为空')
+      error.code = 'INVALID_DATA'
+      if (callback) callback(error)
+      return
+    }
+    if (from === to) {
+      if (callback) callback(null, { oldName: from, newName: to, renamed: false })
+      return
+    }
+    this.callHouseService('renameNeighborhood', { oldName: from, newName: to })
+      .then(result => {
+        const oldProfile = this.getNeighborhoodProfile(from) || {}
+        delete this.globalData.neighborhoodProfiles[from]
+        this.globalData.neighborhoodProfiles[to] = {
+          ...oldProfile,
+          name: to,
+          id: result.id,
+          version: result.version
+        }
+        this.globalData.houseList = this.globalData.houseList.map(house => {
+          if (house.neighborhood !== from) return house
+          return this._normalizeHouseRecord({ ...house, neighborhood: to })
+        })
+        this.refreshNeighborhoodList()
+        wx.setStorageSync('houseList_cache', this.globalData.houseList)
+        wx.setStorageSync('neighborhoodProfiles_cache', this.globalData.neighborhoodProfiles)
+        if (callback) callback(null, result)
       })
       .catch(error => { if (callback) callback(error) })
   },

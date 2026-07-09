@@ -11,6 +11,7 @@
   background: #DDE6EF;
 }
 
+.hero-swiper,
 .hero-img,
 .hero-fallback {
   width: 100%;
@@ -59,6 +60,21 @@
   line-height: 1.5;
   margin-top: 10rpx;
   color: rgba(255,255,255,0.88);
+}
+
+.nb-video-section {
+  margin: 18rpx 18rpx 0;
+  padding: 20rpx;
+  background: #FFFFFF;
+  border-radius: 12rpx;
+}
+
+.nb-video {
+  width: 100%;
+  height: 360rpx;
+  border-radius: 12rpx;
+  display: block;
+  margin-top: 12rpx;
 }
 
 .join-strip {
@@ -546,4 +562,86 @@
 
 .bottom-bar .round-btn {
   margin-left: 0;
+}
+
+/* 该小区在租房源 · 智能筛选 */
+.house-match-section {
+  margin-bottom: 8rpx;
+}
+
+.filter-panel {
+  background: #FFFFFF;
+  margin: 0 18rpx 16rpx;
+  border-radius: 20rpx;
+  padding: 24rpx 24rpx 8rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.filter-panel-title {
+  display: block;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+  color: #667A82;
+}
+
+.filter-row {
+  margin-bottom: 20rpx;
+}
+
+.filter-label {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #333333;
+}
+
+.filter-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.filter-chips {
+  display: inline-flex;
+  white-space: nowrap;
+  padding-bottom: 4rpx;
+}
+
+.f-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 14rpx;
+  padding: 12rpx 28rpx;
+  border: 2rpx solid transparent;
+  border-radius: 50rpx;
+  background: #F1EEE7;
+  font-size: 26rpx;
+  color: #555555;
+}
+
+.f-chip-active {
+  border-color: #0F2F4A;
+  background: #E2F6F8;
+  font-weight: 700;
+  color: #33464D;
+}
+
+.match-summary {
+  display: flex;
+  align-items: baseline;
+  margin: 0 22rpx 12rpx;
+}
+
+.match-summary-text {
+  font-size: 26rpx;
+  color: #667A82;
+}
+
+.match-summary-count {
+  margin: 0 6rpx;
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #0F2F4A;
 }

@@ -67,67 +67,133 @@
     <text class="loading-txt">加载中...</text>
   </view>
 
-  <!-- 房源列表 -->
+  <!-- 房源列表（片区 → 小区） -->
   <view wx:else>
     <view class="empty-wrap" wx:if="{{myHouseList.length === 0}}">
       <text class="empty-title">还没有发布任何房源</text>
       <text class="empty-sub">点击上方按钮开始发布</text>
     </view>
 
-    <view
-      class="house-card"
-      wx:for="{{myHouseList}}"
-      wx:key="id"
-      wx:if="{{filterStatus === 'all' || (filterStatus === 'available' && item.available) || (filterStatus === 'rented' && !item.available)}}"
-    >
-      <!-- 图片区 -->
-      <view class="card-img-wrap" bindtap="onHouseTap" data-id="{{item.id}}">
-        <image
-          wx:if="{{item.images && item.images.length}}"
-          src="{{item.images[0]}}" class="card-img" mode="aspectFill" lazy-load
-        />
-        <view wx:else class="card-img-ph">
-          <view class="ui-icon ui-icon-home"></view>
-        </view>
-        <view class="status-tag {{item.available ? 'tag-ok' : 'tag-rented'}}">
-          {{item.available ? '可租' : '已租'}}
-        </view>
-        <view class="views-tag">浏览 {{item.viewCount || 0}}</view>
-      </view>
-
-      <!-- 信息区 -->
-      <view class="card-body" bindtap="onHouseTap" data-id="{{item.id}}">
-        <text class="card-title">{{item.title}}</text>
-        <text class="card-meta">{{item.neighborhood}} · {{item.roomType}} · {{item.area}}㎡</text>
-        <text class="card-price">{{item.price}}<text class="price-u">元/月</text></text>
-      </view>
-
-      <!-- 操作行 -->
-      <view class="card-actions">
-        <view
-          class="act-btn act-edit"
-          bindtap="onEditHouse"
-          data-id="{{item.id}}"
-        >编辑</view>
-        <view
-          class="act-btn act-community"
-          bindtap="onEditNeighborhood"
-          data-name="{{item.neighborhood}}"
-        >配置小区</view>
-        <view
-          class="act-btn {{item.available ? 'act-rent' : 'act-open'}}"
-          bindtap="onToggleStatus"
-          data-id="{{item.id}}"
-          data-available="{{item.available}}"
-        >{{item.available ? '标记已租' : '重新出租'}}</view>
-        <view
-          class="act-btn act-del"
-          catchtap="onDeleteHouse"
-          data-id="{{item.id}}"
-          data-title="{{item.title}}"
-        >删除</view>
-      </view>
+    <view class="empty-wrap" wx:elif="{{groupedHouseList.length === 0 && neighborhoodSearchKeyword}}">
+      <text class="empty-title">未找到「{{neighborhoodSearchKeyword}}」</text>
+      <text class="empty-sub">试试输入小区名称的一部分</text>
     </view>
+
+    <view class="empty-wrap" wx:elif="{{groupedHouseList.length === 0}}">
+      <text class="empty-title">当前筛选下暂无房源</text>
+      <text class="empty-sub">试试切换到「全部」或其他状态</text>
+    </view>
+
+    <block wx:else>
+      <view class="fold-actions">
+        <view class="fold-search-wrap">
+          <text class="fold-search-icon">🔍</text>
+          <input
+            class="fold-search-input"
+            value="{{neighborhoodSearchKeyword}}"
+            bindinput="onNeighborhoodSearchInput"
+            confirm-type="search"
+            placeholder="搜索小区名称"
+            placeholder-class="fold-search-placeholder"
+          />
+          <text
+            wx:if="{{neighborhoodSearchKeyword}}"
+            class="fold-search-clear"
+            catchtap="onClearNeighborhoodSearch"
+          >×</text>
+        </view>
+        <view class="fold-action-btn" bindtap="onExpandAll">全部展开</view>
+        <view class="fold-action-btn fold-action-btn-muted" bindtap="onCollapseAll">全部收起</view>
+      </view>
+
+      <view class="district-group" wx:for="{{groupedHouseList}}" wx:key="district">
+        <view class="district-head" bindtap="onToggleDistrict" data-district="{{item.district}}">
+          <view class="district-head-left">
+            <text class="fold-arrow {{item.expanded ? 'expanded' : ''}}">›</text>
+            <text class="district-name">{{item.district}}</text>
+          </view>
+          <text class="district-meta">{{item.count}}套 · 可租{{item.available}}</text>
+        </view>
+
+        <block wx:if="{{item.expanded}}">
+          <view class="neighborhood-group" wx:for="{{item.neighborhoods}}" wx:for-item="nb" wx:key="key">
+            <view class="neighborhood-head">
+              <view
+                class="neighborhood-head-left"
+                bindtap="onToggleNeighborhood"
+                data-district="{{item.district}}"
+                data-key="{{nb.key}}"
+              >
+                <view class="neighborhood-title-row">
+                  <text class="fold-arrow fold-arrow-sm {{nb.expanded ? 'expanded' : ''}}">›</text>
+                  <text class="neighborhood-name {{nb.matched && neighborhoodSearchKeyword ? 'neighborhood-name-hit' : ''}}">{{nb.name}}</text>
+                </view>
+                <text class="neighborhood-meta">{{nb.count}}套 · 可租{{nb.available}}</text>
+              </view>
+              <view
+                class="neighborhood-config-btn"
+                catchtap="onEditNeighborhood"
+                data-name="{{nb.name}}"
+              >配置小区</view>
+            </view>
+
+            <block wx:if="{{nb.expanded}}">
+              <view class="house-card" wx:for="{{nb.houses}}" wx:for-item="house" wx:key="id">
+            <!-- 图片区 -->
+            <view class="card-img-wrap" bindtap="onHouseTap" data-id="{{house.id}}">
+              <image
+                wx:if="{{house.images && house.images.length}}"
+                src="{{house.images[0]}}" class="card-img" mode="aspectFill" lazy-load
+              />
+              <view wx:else class="card-img-ph">
+                <view class="ui-icon ui-icon-home"></view>
+                <text class="card-img-ph-text">待上传照片</text>
+              </view>
+              <view class="status-tag {{house.available ? 'tag-ok' : 'tag-rented'}}">
+                {{house.available ? '可租' : '已租'}}
+              </view>
+              <view class="views-tag">浏览 {{house.viewCount || 0}}</view>
+            </view>
+
+            <!-- 信息区 -->
+            <view class="card-body" bindtap="onHouseTap" data-id="{{house.id}}">
+              <text class="card-title">{{house.title}}</text>
+              <text class="card-meta">{{house.roomType}} · {{house.area}}㎡</text>
+              <text class="card-setup-hint" wx:if="{{house.setupHint}}">{{house.setupHint}}</text>
+              <text class="card-price">{{house.price}}<text class="price-u">元/月</text></text>
+            </view>
+
+            <!-- 操作行 -->
+            <view class="card-actions">
+              <view
+                class="act-btn act-edit"
+                bindtap="onEditHouse"
+                data-id="{{house.id}}"
+              >编辑</view>
+              <view
+                class="act-btn act-community"
+                bindtap="onEditNeighborhood"
+                data-name="{{house.neighborhood}}"
+              >配置小区</view>
+              <view
+                class="act-btn {{house.available ? 'act-rent' : 'act-open'}}"
+                bindtap="onToggleStatus"
+                data-id="{{house.id}}"
+                data-available="{{house.available}}"
+              >{{house.available ? '标记已租' : '重新出租'}}</view>
+              <view
+                class="act-btn act-del"
+                catchtap="onDeleteHouse"
+                data-id="{{house.id}}"
+                data-title="{{house.title}}"
+              >删除</view>
+            </view>
+              </view>
+            </block>
+          </view>
+        </block>
+      </view>
+    </block>
   </view>
 
   <view style="height: 60rpx;"></view>

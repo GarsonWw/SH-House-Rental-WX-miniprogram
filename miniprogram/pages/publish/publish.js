@@ -4,6 +4,8 @@ const util = require('../../utils/util')
 
 const TAG_OPTIONS = ['近地铁', '拎包入住', '南北通透', '近商场', '学区房', '可短租', '停车方便', '独立卫生间', '合租友好', '宠物友好', '无中介', '家电齐全']
 const DISTRICT_OPTIONS = ['罗湖口岸', '国贸', '东门', '黄贝岭', '翠竹', '笋岗', '银湖', '蔡屋围', '莲塘', '水贝', '布心', '清水河', '其他片区']
+const MAX_HOUSE_IMAGES = 15
+const MAX_VIDEO_DURATION = 120
 
 const buildTagOptions = selectedTags => {
   const selected = Array.isArray(selectedTags) ? selectedTags : []
@@ -58,7 +60,7 @@ Page({
       available: true,
       tags: [],
       images: [],
-      videos: []     // 最多1个，60秒以内
+      videos: []     // 最多1个，120秒以内
     },
     roomTypeOptions: ['1室1厅1卫', '2室1厅1卫', '2室2厅1卫', '3室1厅1卫', '3室2厅1卫', '3室2厅2卫', '合租/主卧', '合租/次卧', '整套公寓'],
     districtOptions: DISTRICT_OPTIONS,
@@ -74,7 +76,13 @@ Page({
     currentStep: 1, // 1:基本信息 2:管家信息 3:预览确认
     showRoomTypePicker: false,
     showOrientationPicker: false,
-    showDecorationPicker: false
+    showDecorationPicker: false,
+    neighborhoodMode: 'select',
+    neighborhoodNameOptions: [],
+    neighborhoodPickerIndex: 0,
+    neighborhoodDuplicateHint: '',
+    originalNeighborhood: '',
+    neighborhoodLocationHint: ''
   },
 
   onLoad(options = {}) {
@@ -92,17 +100,118 @@ Page({
     })
   },
 
+  onShow() {
+    if (!app.globalData.isLandlord) return
+    this.loadNeighborhoodOptions(this.data.form.neighborhood)
+  },
+
   initializePage(options = {}) {
-    if (options.id) {
-      this.loadEditHouse(options.id)
+    app.ensureHousesFresh(() => {
+      this.loadNeighborhoodOptions()
+      if (options.id) {
+        this.loadEditHouse(options.id)
+        return
+      }
+      const userProfile = app.globalData.userProfile
+      if (userProfile) {
+        this.setData({ 'form.landlordName': userProfile.nickName })
+      }
+    })
+  },
+
+  loadNeighborhoodOptions(preferredName = '') {
+    const names = app.getNeighborhoodNameList()
+    const currentName = preferredName || this.data.form.neighborhood || ''
+    const idx = names.indexOf(currentName)
+    this.setData({
+      neighborhoodNameOptions: names,
+      neighborhoodPickerIndex: idx >= 0 ? idx : 0,
+      neighborhoodMode: idx >= 0 ? 'select' : (currentName ? 'custom' : (names.length ? 'select' : 'custom')),
+      neighborhoodDuplicateHint: ''
+    })
+    this.refreshNeighborhoodLocationHint(currentName)
+  },
+
+  refreshNeighborhoodLocationHint(name) {
+    const trimmed = String(name || this.data.form.neighborhood || '').trim()
+    if (!trimmed) {
+      this.setData({ neighborhoodLocationHint: '' })
       return
     }
+    const location = app.getNeighborhoodLocation(trimmed)
+    const hasLocation = app.hasNeighborhoodLocation(trimmed)
+    this.setData({
+      neighborhoodLocationHint: hasLocation
+        ? `已配置：${location.district || '未设片区'} · ${location.locationName || trimmed}`
+        : '请先在「小区详情配置」中为该小区设置片区和地图位置'
+    })
+  },
 
-    // 获取用户信息填充默认姓名
-    const userProfile = app.globalData.userProfile
-    if (userProfile) {
-      this.setData({ 'form.landlordName': userProfile.nickName })
+  syncNeighborhoodMode(name) {
+    const trimmed = String(name || '').trim()
+    const names = this.data.neighborhoodNameOptions.length
+      ? this.data.neighborhoodNameOptions
+      : app.getNeighborhoodNameList()
+    const idx = names.indexOf(trimmed)
+    this.setData({
+      neighborhoodNameOptions: names,
+      neighborhoodPickerIndex: idx >= 0 ? idx : 0,
+      neighborhoodMode: idx >= 0 ? 'select' : 'custom',
+      neighborhoodDuplicateHint: ''
+    })
+  },
+
+  onNeighborhoodModeChange(e) {
+    const mode = e.currentTarget.dataset.mode
+    if (mode === this.data.neighborhoodMode) return
+    if (mode === 'select') {
+      const names = this.data.neighborhoodNameOptions
+      const idx = this.data.neighborhoodPickerIndex
+      const selected = names[idx] || names[0] || ''
+      this.setData({
+        neighborhoodMode: 'select',
+        'form.neighborhood': selected,
+        neighborhoodDuplicateHint: ''
+      })
+      this.refreshNeighborhoodLocationHint(selected)
+      return
     }
+    this.setData({
+      neighborhoodMode: 'custom',
+      'form.neighborhood': '',
+      neighborhoodDuplicateHint: '',
+      neighborhoodLocationHint: ''
+    })
+  },
+
+  onNeighborhoodPickerChange(e) {
+    const idx = Number(e.detail.value)
+    const name = this.data.neighborhoodNameOptions[idx] || ''
+    this.setData({
+      neighborhoodPickerIndex: idx,
+      'form.neighborhood': name,
+      neighborhoodDuplicateHint: ''
+    })
+    this.refreshNeighborhoodLocationHint(name)
+  },
+
+  onNeighborhoodCustomInput(e) {
+    const value = e.detail.value
+    const exceptName = this.data.isEditMode ? this.data.originalNeighborhood : ''
+    const duplicate = app.isNeighborhoodNameTaken(value, exceptName)
+    this.setData({
+      'form.neighborhood': value,
+      neighborhoodDuplicateHint: duplicate ? '该名称已存在，请改用「选择已有」' : ''
+    })
+    this.refreshNeighborhoodLocationHint(value)
+  },
+
+  onGoNeighborhoodConfig() {
+    const name = (this.data.form.neighborhood || '').trim()
+    const url = name
+      ? `/pages/neighborhood-config/neighborhood-config?name=${encodeURIComponent(name)}`
+      : '/pages/neighborhood-config/neighborhood-config'
+    wx.navigateTo({ url })
   },
 
   loadEditHouse(id) {
@@ -112,6 +221,7 @@ Page({
       this.setData({
         isEditMode: true,
         editHouseId: id,
+        originalNeighborhood: house.neighborhood || '',
         selectedTags: tags,
         tagOptions: buildTagOptions(tags),
         form: {
@@ -160,6 +270,9 @@ Page({
           videos: Array.isArray(house.videos) ? [...house.videos] : [],
           videoCover: house.videoCover || ''
         }
+      }, () => {
+        this.loadNeighborhoodOptions(house.neighborhood || '')
+        this.refreshNeighborhoodLocationHint(house.neighborhood || '')
       })
     }
 
@@ -226,12 +339,12 @@ Page({
   // 上传图片
   onChooseImage() {
     const current = this.data.form.images.length
-    if (current >= 6) {
-      wx.showToast({ title: '最多上传6张', icon: 'none' })
+    if (current >= MAX_HOUSE_IMAGES) {
+      wx.showToast({ title: `最多上传${MAX_HOUSE_IMAGES}张`, icon: 'none' })
       return
     }
     wx.chooseMedia({
-      count: 6 - current,
+      count: MAX_HOUSE_IMAGES - current,
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       success: (res) => {
@@ -242,38 +355,6 @@ Page({
       fail: err => {
         console.error('[Publish] 选择图片失败', err)
         wx.showToast({ title: '选择图片失败', icon: 'none' })
-      }
-    })
-  },
-
-  onChooseLocation() {
-    const form = this.data.form
-    const latitude = Number(form.latitude) || 22.5550
-    const longitude = Number(form.longitude) || 114.1200
-
-    wx.chooseLocation({
-      latitude,
-      longitude,
-      success: res => {
-        const nextData = {
-          'form.locationName': res.name || '',
-          'form.latitude': res.latitude,
-          'form.longitude': res.longitude
-        }
-
-        if (!form.neighborhood.trim() && res.name) {
-          nextData['form.neighborhood'] = res.name
-        }
-        if (!form.address.trim() && res.address) {
-          nextData['form.address'] = res.address
-        }
-
-        this.setData(nextData)
-        wx.showToast({ title: '位置已选择', icon: 'success' })
-      },
-      fail: err => {
-        if (err && err.errMsg && err.errMsg.includes('cancel')) return
-        wx.showToast({ title: '选择位置失败', icon: 'none' })
       }
     })
   },
@@ -294,12 +375,12 @@ Page({
       count: 1,
       mediaType: ['video'],
       sourceType: ['album', 'camera'],
-      maxDuration: 60,
+      maxDuration: MAX_VIDEO_DURATION,
       camera: 'back',
       success: res => {
         const file = res.tempFiles[0]
-        if (file.duration > 60) {
-          wx.showToast({ title: '视频不能超过60秒', icon: 'none', duration: 2000 })
+        if (file.duration > MAX_VIDEO_DURATION) {
+          wx.showToast({ title: `视频不能超过${MAX_VIDEO_DURATION}秒`, icon: 'none', duration: 2000 })
           return
         }
         this.setData({
@@ -338,16 +419,20 @@ Page({
 
   validateStep1() {
     const { form } = this.data
-    if (!form.neighborhood.trim()) {
-      wx.showToast({ title: '请填写小区名称', icon: 'none' })
+    const neighborhood = (form.neighborhood || '').trim()
+    if (!neighborhood) {
+      wx.showToast({ title: '请填写或选择小区名称', icon: 'none' })
       return false
     }
-    if (!DISTRICT_OPTIONS.includes(form.district)) {
-      wx.showToast({ title: '请选择罗湖片区', icon: 'none' })
+    if (this.data.neighborhoodMode === 'custom' && app.isNeighborhoodNameTaken(neighborhood, this.data.originalNeighborhood)) {
+      wx.showToast({ title: '该小区名称已存在，请从列表选择', icon: 'none' })
       return false
     }
-    if (!form.latitude || !form.longitude) {
-      wx.showToast({ title: '请在地图中选择小区位置', icon: 'none' })
+    if (neighborhood !== form.neighborhood) {
+      this.setData({ 'form.neighborhood': neighborhood })
+    }
+    if (!app.hasNeighborhoodLocation(neighborhood)) {
+      wx.showToast({ title: '请先在小区配置中设置片区和地图位置', icon: 'none', duration: 2500 })
       return false
     }
     if (!form.price || isNaN(form.price) || Number(form.price) <= 0) {
@@ -434,9 +519,7 @@ Page({
           videos: [...cloudVideos, ...vidIDs],
           videoCover: isCloud(form.videoCover) ? form.videoCover : '',
           price: Number(form.price),
-          area: Number(form.area),
-          latitude: Number(form.latitude),
-          longitude: Number(form.longitude)
+          area: Number(form.area)
         }
 
         if (this.data.isEditMode) {

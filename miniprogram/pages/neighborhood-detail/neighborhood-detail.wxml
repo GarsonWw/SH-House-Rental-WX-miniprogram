@@ -1,6 +1,20 @@
 <view class="detail-page">
   <view class="hero">
-    <image wx:if="{{profile.cover}}" class="hero-img" src="{{profile.cover}}" mode="aspectFill" />
+    <swiper
+      wx:if="{{profile.images.length > 0}}"
+      class="hero-swiper"
+      indicator-dots="{{profile.images.length > 1}}"
+      indicator-color="rgba(255,255,255,0.45)"
+      indicator-active-color="#FFFFFF"
+      autoplay="{{profile.images.length > 1}}"
+      interval="4000"
+      circular="{{profile.images.length > 1}}"
+    >
+      <swiper-item wx:for="{{profile.images}}" wx:key="index">
+        <image class="hero-img" src="{{item}}" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+    <image wx:elif="{{profile.cover}}" class="hero-img" src="{{profile.cover}}" mode="aspectFill" />
     <view wx:else class="hero-fallback">
       <view class="hero-icon ui-icon ui-icon-home"></view>
     </view>
@@ -9,6 +23,18 @@
       <text class="hero-title">{{profile.name}}</text>
       <text class="hero-sub">{{profile.district}}｜{{profile.slogan}}</text>
     </view>
+  </view>
+
+  <view class="nb-video-section" wx:if="{{profile.videos.length > 0}}">
+    <view class="section-title">小区带看</view>
+    <video
+      src="{{profile.videos[0]}}"
+      poster="{{profile.videoCover}}"
+      class="nb-video"
+      controls
+      show-mute-btn
+      object-fit="cover"
+    ></video>
   </view>
 
   <view class="join-strip">
@@ -93,14 +119,60 @@
   <view wx:if="{{availableHouses.length === 0}}" class="empty-card">
     <text>暂无在租房源，可稍后再来看看</text>
   </view>
-  <view class="house-list">
-    <house-card
-      wx:for="{{availableHouses}}"
-      wx:key="id"
-      house="{{item}}"
-      show-contact="{{true}}"
-      bindtap="onHouseTap"
-    />
+  <view class="house-match-section" wx:else>
+    <view class="filter-panel">
+      <text class="filter-panel-title">在本小区房源中，按预算和户型快速筛选</text>
+
+      <view class="filter-row">
+        <text class="filter-label">💰 价格</text>
+        <scroll-view scroll-x class="filter-scroll" enable-flex>
+          <view class="filter-chips">
+            <view
+              class="f-chip {{selectedPriceIdx === index ? 'f-chip-active' : ''}}"
+              wx:for="{{priceRanges}}"
+              wx:key="index"
+              bindtap="onNeighborhoodPriceSelect"
+              data-idx="{{index}}"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view class="filter-row">
+        <text class="filter-label">🏡 房型</text>
+        <scroll-view scroll-x class="filter-scroll" enable-flex>
+          <view class="filter-chips">
+            <view
+              class="f-chip {{selectedRoomType === item ? 'f-chip-active' : ''}}"
+              wx:for="{{roomTypes}}"
+              wx:key="index"
+              bindtap="onNeighborhoodRoomTypeSelect"
+              data-type="{{item}}"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <view class="match-summary" wx:if="{{hasMatchSearched}}">
+      <text class="match-summary-text">为你找到 </text>
+      <text class="match-summary-count">{{matchCount}}</text>
+      <text class="match-summary-text"> 套房源</text>
+    </view>
+
+    <view class="empty-card" wx:if="{{hasMatchSearched && matchCount === 0}}">
+      <text>暂无符合条件的房源，试试放宽价格或房型条件</text>
+    </view>
+
+    <view class="house-list">
+      <house-card
+        wx:for="{{matchResults}}"
+        wx:key="id"
+        house="{{item}}"
+        show-contact="{{true}}"
+        bindtap="onHouseTap"
+      />
+    </view>
   </view>
 
   <view class="bottom-space"></view>

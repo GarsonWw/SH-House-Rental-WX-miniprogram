@@ -4,6 +4,10 @@ const app = getApp()
 Page({
   data: {
     myHouseList: [],
+    groupedHouseList: [],
+    expandedDistricts: {},
+    expandedNeighborhoods: {},
+    neighborhoodSearchKeyword: '',
     stats: { total: 0, available: 0, rented: 0, totalViews: 0 },
     loading: true,
     filterStatus: 'all',   // 'all' | 'available' | 'rented'
@@ -71,19 +75,193 @@ Page({
         rented: list.filter(h => !h.available).length,
         totalViews: list.reduce((s, h) => s + (h.viewCount || 0), 0)
       }
-      this.setData({ myHouseList: list, stats, loading: false })
+      const myHouseList = list.map(house => {
+        const hasPhotos = Array.isArray(house.images) && house.images.length > 0 && house.images[0]
+        const hints = []
+        if (!hasPhotos) hints.push('待上传照片')
+        if (!app.hasNeighborhoodLocation(house.neighborhood)) hints.push('待配置小区定位')
+        return {
+          ...house,
+          missingPhotos: !hasPhotos,
+          setupHint: hints.join(' · ')
+        }
+      })
+      const groupedHouseList = this.buildGroupedHouseList(
+        myHouseList,
+        this.data.filterStatus,
+        {},
+        this.data.neighborhoodSearchKeyword
+      )
+      this.setData({ myHouseList, groupedHouseList, stats, loading: false })
     })
   },
 
-  get filteredList() {
-    const { myHouseList, filterStatus } = this.data
-    if (filterStatus === 'available') return myHouseList.filter(h => h.available)
-    if (filterStatus === 'rented')    return myHouseList.filter(h => !h.available)
-    return myHouseList
+  buildGroupedHouseList(houseList, filterStatus = 'all', expandState = {}, searchKeyword = '') {
+    let filtered = houseList || []
+    if (filterStatus === 'available') filtered = filtered.filter(h => h.available)
+    if (filterStatus === 'rented') filtered = filtered.filter(h => !h.available)
+
+    const expandedDistricts = expandState.expandedDistricts || this.data.expandedDistricts || {}
+    const expandedNeighborhoods = expandState.expandedNeighborhoods || this.data.expandedNeighborhoods || {}
+    const keyword = String(searchKeyword !== undefined ? searchKeyword : this.data.neighborhoodSearchKeyword || '').trim().toLowerCase()
+
+    const districtMap = new Map()
+    filtered.forEach(house => {
+      const district = app.resolveHouseDistrict(house)
+      const neighborhood = String(house.neighborhood || '未命名小区').trim() || '未命名小区'
+      if (!districtMap.has(district)) districtMap.set(district, new Map())
+      const neighborhoodMap = districtMap.get(district)
+      if (!neighborhoodMap.has(neighborhood)) neighborhoodMap.set(neighborhood, [])
+      neighborhoodMap.get(neighborhood).push(house)
+    })
+
+    const districtOrder = [...this.data.districtOptions]
+    const districts = Array.from(districtMap.keys()).sort((a, b) => {
+      const indexA = districtOrder.indexOf(a)
+      const indexB = districtOrder.indexOf(b)
+      const rankA = indexA >= 0 ? indexA : 999
+      const rankB = indexB >= 0 ? indexB : 999
+      if (rankA !== rankB) return rankA - rankB
+      return a.localeCompare(b, 'zh-CN')
+    })
+
+    return districts.map(district => {
+      const neighborhoodMap = districtMap.get(district)
+      let neighborhoods = Array.from(neighborhoodMap.keys())
+        .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+        .map(name => {
+          const houses = neighborhoodMap.get(name)
+          const key = `${district}::${name}`
+          const matched = !keyword || name.toLowerCase().includes(keyword)
+          return {
+            name,
+            key,
+            count: houses.length,
+            available: houses.filter(h => h.available).length,
+            expanded: expandedNeighborhoods[key] === true,
+            matched,
+            houses
+          }
+        })
+      if (keyword) {
+        neighborhoods = neighborhoods.filter(nb => nb.matched)
+      }
+      if (!neighborhoods.length) return null
+      const houses = neighborhoods.flatMap(item => item.houses)
+      return {
+        district,
+        count: houses.length,
+        available: houses.filter(h => h.available).length,
+        expanded: expandedDistricts[district] === true,
+        neighborhoods
+      }
+    }).filter(Boolean)
+  },
+
+  buildExpandStateFromGroups(groupedHouseList, expanded) {
+    const expandedDistricts = {}
+    const expandedNeighborhoods = {}
+    ;(groupedHouseList || []).forEach(group => {
+      expandedDistricts[group.district] = expanded
+      ;(group.neighborhoods || []).forEach(nb => {
+        expandedNeighborhoods[nb.key] = expanded
+      })
+    })
+    return { expandedDistricts, expandedNeighborhoods }
+  },
+
+  applyExpandState(expandState, searchKeyword) {
+    const { expandedDistricts, expandedNeighborhoods } = expandState
+    const keyword = searchKeyword !== undefined ? searchKeyword : this.data.neighborhoodSearchKeyword
+    this.setData({
+      expandedDistricts,
+      expandedNeighborhoods,
+      groupedHouseList: this.buildGroupedHouseList(this.data.myHouseList, this.data.filterStatus, {
+        expandedDistricts,
+        expandedNeighborhoods
+      }, keyword)
+    })
+  },
+
+  applyNeighborhoodSearch(keyword) {
+    const neighborhoodSearchKeyword = String(keyword || '')
+    const groupedHouseList = this.buildGroupedHouseList(
+      this.data.myHouseList,
+      this.data.filterStatus,
+      {},
+      neighborhoodSearchKeyword
+    )
+    const trimmed = neighborhoodSearchKeyword.trim()
+    let expandState = {
+      expandedDistricts: { ...(this.data.expandedDistricts || {}) },
+      expandedNeighborhoods: { ...(this.data.expandedNeighborhoods || {}) }
+    }
+    if (trimmed) {
+      expandState = this.buildExpandStateFromGroups(groupedHouseList, true)
+    } else {
+      expandState = this.buildExpandStateFromGroups(groupedHouseList, false)
+    }
+    this.setData({ neighborhoodSearchKeyword })
+    this.applyExpandState(expandState, neighborhoodSearchKeyword)
+  },
+
+  onNeighborhoodSearchInput(e) {
+    this.applyNeighborhoodSearch(e.detail.value)
+  },
+
+  onClearNeighborhoodSearch() {
+    this.applyNeighborhoodSearch('')
+  },
+
+  onToggleDistrict(e) {
+    const district = e.currentTarget.dataset.district
+    if (!district) return
+    const expandedDistricts = { ...(this.data.expandedDistricts || {}) }
+    expandedDistricts[district] = !(expandedDistricts[district] === true)
+    this.applyExpandState({
+      expandedDistricts,
+      expandedNeighborhoods: { ...(this.data.expandedNeighborhoods || {}) }
+    })
+  },
+
+  onToggleNeighborhood(e) {
+    const { key } = e.currentTarget.dataset
+    if (!key) return
+    const expandedNeighborhoods = { ...(this.data.expandedNeighborhoods || {}) }
+    expandedNeighborhoods[key] = !(expandedNeighborhoods[key] === true)
+    this.applyExpandState({
+      expandedDistricts: { ...(this.data.expandedDistricts || {}) },
+      expandedNeighborhoods
+    })
+  },
+
+  onExpandAll() {
+    const expandState = this.buildExpandStateFromGroups(this.data.groupedHouseList, true)
+    this.applyExpandState(expandState)
+  },
+
+  onCollapseAll() {
+    const expandState = this.buildExpandStateFromGroups(this.data.groupedHouseList, false)
+    this.applyExpandState(expandState)
   },
 
   onFilterChange(e) {
-    this.setData({ filterStatus: e.currentTarget.dataset.status })
+    const filterStatus = e.currentTarget.dataset.status
+    const groupedHouseList = this.buildGroupedHouseList(
+      this.data.myHouseList,
+      filterStatus,
+      {},
+      this.data.neighborhoodSearchKeyword
+    )
+    let expandState = {
+      expandedDistricts: { ...(this.data.expandedDistricts || {}) },
+      expandedNeighborhoods: { ...(this.data.expandedNeighborhoods || {}) }
+    }
+    if (this.data.neighborhoodSearchKeyword.trim()) {
+      expandState = this.buildExpandStateFromGroups(groupedHouseList, true)
+    }
+    this.setData({ filterStatus })
+    this.applyExpandState(expandState, this.data.neighborhoodSearchKeyword)
   },
 
   noop() {},

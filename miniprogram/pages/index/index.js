@@ -1,5 +1,6 @@
 // pages/index/index.js
 const app = getApp()
+const houseMatch = require('../../utils/houseMatch')
 
 const NEIGHBORHOOD_PROFILES = {
   '京基东方都会': {
@@ -31,17 +32,10 @@ const DEFAULT_PROFILE = {
 }
 
 // 价格区间定义
-const PRICE_RANGES = [
-  { label: '不限',    min: 0,    max: Infinity },
-  { label: '2000以下', min: 0,    max: 2000 },
-  { label: '2000-3500', min: 2000, max: 3500 },
-  { label: '3500-5000', min: 3500, max: 5000 },
-  { label: '5000-8000', min: 5000, max: 8000 },
-  { label: '8000以上', min: 8000, max: Infinity },
-]
+const PRICE_RANGES = houseMatch.PRICE_RANGES
 
 // 房型选项
-const ROOM_TYPES = ['不限', '整租', '合租', '单间', '一室', '两室', '三室+']
+const ROOM_TYPES = houseMatch.ROOM_TYPES
 
 Page({
   data: {
@@ -61,6 +55,8 @@ Page({
     // 智能匹配
     matchDistrictList: [],
     matchSelectedDistrict: '不限',
+    matchNeighborhoodList: [],
+    matchSelectedNeighborhood: '全选',
     priceRanges: PRICE_RANGES.map(r => r.label),
     selectedPriceIdx: 0,
     roomTypes: ROOM_TYPES,
@@ -84,16 +80,35 @@ Page({
       houses: availableHouseList.length,
       available: availableHouseList.length
     }
-    const districts = ['全部', ...new Set(availableHouseList.map(h => h.district).filter(Boolean))]
-    const matchDistricts = ['不限', ...new Set(availableHouseList.map(h => h.district).filter(Boolean))]
-    const sections = this.buildSections(availableHouseList)
+    const districts = app.getDistrictFilterOptions(availableHouseList, '全部')
+    const matchDistricts = app.getDistrictFilterOptions(availableHouseList, '不限')
+    let selectedDistrict = this.data.selectedDistrict
+    if (selectedDistrict !== '全部' && !districts.includes(selectedDistrict)) {
+      selectedDistrict = '全部'
+    }
+    let matchSelectedDistrict = this.data.matchSelectedDistrict
+    if (matchSelectedDistrict !== '不限' && !matchDistricts.includes(matchSelectedDistrict)) {
+      matchSelectedDistrict = '不限'
+    }
+    const matchNeighborhoodList = this.buildMatchNeighborhoodList(availableHouseList, matchSelectedDistrict)
+    let matchSelectedNeighborhood = this.data.matchSelectedNeighborhood
+    if (matchSelectedDistrict === '不限') {
+      matchSelectedNeighborhood = '全选'
+    } else if (!matchNeighborhoodList.includes(matchSelectedNeighborhood)) {
+      matchSelectedNeighborhood = '全选'
+    }
+    const sections = this.buildSections(availableHouseList, selectedDistrict)
     const heroSlides = this.buildHeroSlides(availableHouseList)
     const heroChanged = JSON.stringify(heroSlides) !== JSON.stringify(this.data.heroSlides || [])
     const nextData = {
       platformStats: stats,
       districtList: districts,
-      overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim, districts),
+      selectedDistrict,
       matchDistrictList: matchDistricts,
+      matchSelectedDistrict,
+      matchNeighborhoodList,
+      matchSelectedNeighborhood,
+      overviewFilterOptions: this.getOverviewFilterOptions(this.data.activeDim, districts, selectedDistrict),
       neighborhoodSections: sections
     }
     if (heroChanged) {
@@ -143,10 +158,10 @@ Page({
     })
   },
 
-  getOverviewFilterOptions(dim, districts = this.data.districtList) {
-    const { selectedDistrict, overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
+  getOverviewFilterOptions(dim, districts = this.data.districtList, activeDistrict = this.data.selectedDistrict) {
+    const { overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
     if (dim === '片区') {
-      return districts.map((label, idx) => ({ label, idx, active: selectedDistrict === label }))
+      return districts.map((label, idx) => ({ label, idx, active: activeDistrict === label }))
     }
     if (dim === '房型') {
       return ROOM_TYPES.map((label, idx) => ({ label, idx, active: overviewSelectedRoomType === label }))
@@ -154,28 +169,16 @@ Page({
     return PRICE_RANGES.map((r, idx) => ({ label: r.label, idx, active: overviewSelectedPriceIdx === idx }))
   },
 
-  matchRoomType(h, selectedRoomType) {
-    if (selectedRoomType === '不限') return true
-    const roomType = String(h.roomType || '')
-    const combined = `${roomType}${h.title || ''}`
-    if (selectedRoomType === '合租') {
-      return h.rentType === '合租' || combined.includes('合租')
-    }
-    if (selectedRoomType === '整租') {
-      if (h.rentType) return h.rentType === '整租'
-      return !combined.includes('合租')
-    }
-    if (selectedRoomType === '一室') return /^1室/.test(roomType)
-    if (selectedRoomType === '两室') return /^2室/.test(roomType)
-    if (selectedRoomType === '三室+') {
-      const count = Number((roomType.match(/^(\d+)室/) || [])[1])
-      return Number.isFinite(count) && count >= 3
-    }
-    return roomType.includes(selectedRoomType)
+  buildMatchNeighborhoodList(houseList, district) {
+    return houseMatch.buildNeighborhoodOptions(houseList, district)
   },
 
-  buildSections(houseList) {
-    const { selectedDistrict, overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
+  matchRoomType(h, selectedRoomType) {
+    return houseMatch.matchRoomType(h, selectedRoomType)
+  },
+
+  buildSections(houseList, selectedDistrict = this.data.selectedDistrict) {
+    const { overviewSelectedRoomType, overviewSelectedPriceIdx } = this.data
     const range = PRICE_RANGES[overviewSelectedPriceIdx] || PRICE_RANGES[0]
     const map = {}
     ;(houseList || []).forEach(h => {
@@ -246,7 +249,18 @@ Page({
 
   // ── 智能匹配 ─────────────────────────────────────
   onMatchDistrictSelect(e) {
-    this.setData({ matchSelectedDistrict: e.currentTarget.dataset.district })
+    const district = e.currentTarget.dataset.district
+    const houseList = (app.globalData.houseList || []).filter(h => h && h.available === true)
+    const matchNeighborhoodList = this.buildMatchNeighborhoodList(houseList, district)
+    this.setData({
+      matchSelectedDistrict: district,
+      matchNeighborhoodList,
+      matchSelectedNeighborhood: '全选'
+    }, () => this.runMatch())
+  },
+
+  onMatchNeighborhoodSelect(e) {
+    this.setData({ matchSelectedNeighborhood: e.currentTarget.dataset.name })
     this.runMatch()
   },
 
@@ -262,19 +276,13 @@ Page({
 
   runMatch() {
     const houseList = (app.globalData.houseList || []).filter(h => h && h.available === true)
-    const { matchSelectedDistrict, selectedPriceIdx, selectedRoomType } = this.data
-    const range = PRICE_RANGES[selectedPriceIdx]
-
-    const results = houseList.filter(h => {
-      if (matchSelectedDistrict !== '不限' && h.district !== matchSelectedDistrict) return false
-      if (h.price < range.min || h.price > range.max) return false
-      if (selectedRoomType !== '不限') {
-        // 房型匹配：整租/合租精确，其他按 roomType 包含
-        if (!this.matchRoomType(h, selectedRoomType)) return false
-      }
-      return true
+    const { matchSelectedDistrict, matchSelectedNeighborhood, selectedPriceIdx, selectedRoomType } = this.data
+    const results = houseMatch.filterHouses(houseList, {
+      district: matchSelectedDistrict,
+      neighborhood: matchSelectedNeighborhood,
+      priceIdx: Number(selectedPriceIdx),
+      roomType: selectedRoomType
     })
-
     this.setData({ matchResults: results, matchCount: results.length, hasSearched: true })
   },
 

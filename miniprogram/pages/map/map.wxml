@@ -85,15 +85,95 @@
 
     <!-- 标题行 -->
     <view class="sheet-header">
-      <view class="sheet-title-wrap">
-        <text class="sheet-title">{{sheetNeighborhood}}</text>
-        <text class="sheet-count">{{sheetHouses.length}}套在租</text>
+      <view class="sheet-title-block">
+        <view class="sheet-title-wrap">
+          <text class="sheet-title">{{sheetNeighborhood}}</text>
+          <text class="sheet-count">{{sheetTotalCount}}套在租</text>
+        </view>
+        <text class="sheet-sub" wx:if="{{sheetDistrict || sheetPriceText}}">
+          {{sheetDistrict}}{{sheetDistrict && sheetPriceText ? ' · ' : ''}}{{sheetPriceText}}
+        </text>
+        <text class="sheet-address" wx:if="{{sheetAddress}}">📍 {{sheetAddress}}</text>
       </view>
       <view class="sheet-close" bindtap="onCloseSheet">关闭</view>
     </view>
 
+    <view class="sheet-actions">
+      <view class="sheet-action-btn" bindtap="onOpenSheetDetail">
+        <view class="sheet-action-icon ui-icon ui-icon-home"></view>
+        <text>看测评</text>
+      </view>
+      <view
+        class="sheet-action-btn sheet-action-primary {{sheetHasLocation ? '' : 'sheet-action-disabled'}}"
+        bindtap="onOpenSheetMap"
+      >
+        <view class="sheet-action-icon ui-icon ui-icon-map"></view>
+        <text>导航</text>
+      </view>
+      <button
+        class="sheet-action-btn sheet-action-contact"
+        open-type="contact"
+        show-message-card="true"
+        send-message-title="{{sheetNeighborhood}}联系管家"
+        send-message-path="/pages/messages/messages"
+        session-from="map-sheet-contact"
+        hover-class="none"
+      >
+        <view class="sheet-action-icon ui-icon ui-icon-chat"></view>
+        <text>联系管家</text>
+      </button>
+    </view>
+
+    <!-- 智能找房 -->
+    <view class="sheet-match" wx:if="{{sheetTotalCount > 0}}">
+      <view class="sheet-filter-panel">
+        <text class="sheet-filter-title">在本小区按预算和户型筛选</text>
+
+        <view class="sheet-filter-row">
+          <text class="sheet-filter-label">💰 价格</text>
+          <scroll-view scroll-x class="sheet-filter-scroll" enable-flex>
+            <view class="sheet-filter-chips">
+              <view
+                class="sheet-f-chip {{selectedPriceIdx === index ? 'sheet-f-chip-active' : ''}}"
+                wx:for="{{priceRanges}}"
+                wx:key="index"
+                bindtap="onSheetPriceSelect"
+                data-idx="{{index}}"
+              >{{item}}</view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="sheet-filter-row">
+          <text class="sheet-filter-label">🏡 房型</text>
+          <scroll-view scroll-x class="sheet-filter-scroll" enable-flex>
+            <view class="sheet-filter-chips">
+              <view
+                class="sheet-f-chip {{selectedRoomType === item ? 'sheet-f-chip-active' : ''}}"
+                wx:for="{{roomTypes}}"
+                wx:key="index"
+                bindtap="onSheetRoomTypeSelect"
+                data-type="{{item}}"
+              >{{item}}</view>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+
+      <view class="sheet-match-summary" wx:if="{{hasSheetMatchSearched}}">
+        <text class="sheet-match-text">为你找到 </text>
+        <text class="sheet-match-count">{{sheetMatchCount}}</text>
+        <text class="sheet-match-text"> 套房源</text>
+      </view>
+    </view>
+
     <!-- 房源列表 -->
-    <scroll-view scroll-y class="sheet-list">
+    <view class="sheet-list-wrap">
+      <scroll-view scroll-y class="sheet-list" enhanced show-scrollbar>
+      <view class="sheet-empty" wx:if="{{hasSheetMatchSearched && sheetMatchCount === 0}}">
+        <text>暂无符合条件的房源，试试放宽价格或房型条件</text>
+      </view>
+
       <view
         class="sheet-house"
         wx:for="{{sheetHouses}}"
@@ -155,7 +235,8 @@
       </view>
 
       <view class="sheet-bottom-space"></view>
-    </scroll-view>
+      </scroll-view>
+    </view>
   </view>
 
 </view>

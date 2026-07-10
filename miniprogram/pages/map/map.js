@@ -1,5 +1,7 @@
 // pages/map/map.js
 const app = getApp()
+const locationUtil = require('../../utils/location.js')
+const houseMatch = require('../../utils/houseMatch.js')
 const DEFAULT_CENTER = { latitude: 22.5550, longitude: 114.1200, scale: 12 }
 
 // 各小区近似坐标（深圳罗湖）
@@ -52,7 +54,21 @@ Page({
     // 底部浮层（点击 Marker 后显示）
     showSheet: false,
     sheetNeighborhood: '',
+    sheetAllHouses: [],
     sheetHouses: [],
+    sheetTotalCount: 0,
+    sheetMatchCount: 0,
+    hasSheetMatchSearched: false,
+    priceRanges: houseMatch.priceRangeLabels,
+    roomTypes: houseMatch.ROOM_TYPES,
+    selectedPriceIdx: 0,
+    selectedRoomType: '不限',
+    sheetDistrict: '',
+    sheetPriceText: '',
+    sheetAddress: '',
+    sheetHasLocation: false,
+    sheetLat: '',
+    sheetLng: '',
 
     // 搜索
     searchValue: '',
@@ -131,6 +147,95 @@ Page({
     this.setData({ markers, districtList: districts })
   },
 
+  buildSheetSummary(name, houses, coord) {
+    const profile = app.getNeighborhoodProfile(name) || {}
+    const sampleHouse = houses[0] || {}
+    const district = app.resolveHouseDistrict({
+      neighborhood: name,
+      district: profile.district || sampleHouse.district,
+      address: profile.address || sampleHouse.address,
+      locationName: profile.locationName || sampleHouse.locationName
+    })
+    const prices = houses.map(h => Number(h.price)).filter(Boolean)
+    const minPrice = prices.length ? Math.min(...prices) : 0
+    const maxPrice = prices.length ? Math.max(...prices) : 0
+    let priceText = ''
+    if (minPrice || maxPrice) {
+      priceText = minPrice === maxPrice ? `${minPrice}元/月起` : `${minPrice}-${maxPrice}元/月`
+    }
+
+    let latitude = Number(profile.latitude)
+    let longitude = Number(profile.longitude)
+    let address = String(profile.address || profile.locationName || sampleHouse.address || sampleHouse.locationName || '').trim()
+    if ((!latitude || !longitude) && coord) {
+      latitude = Number(coord.latitude)
+      longitude = Number(coord.longitude)
+    }
+    const hasLocation = Number.isFinite(latitude) && latitude && Number.isFinite(longitude) && longitude
+    return {
+      sheetDistrict: district,
+      sheetPriceText: priceText,
+      sheetAddress: address,
+      sheetHasLocation: hasLocation,
+      sheetLat: hasLocation ? latitude : '',
+      sheetLng: hasLocation ? longitude : ''
+    }
+  },
+
+  openNeighborhoodSheet(name, houses, coord) {
+    const summary = this.buildSheetSummary(name, houses, coord)
+    const sheetAllHouses = houses || []
+    const matchResults = houseMatch.filterHouses(sheetAllHouses, {
+      neighborhood: name,
+      priceIdx: 0,
+      roomType: '不限'
+    })
+    const nextData = {
+      showSheet: true,
+      sheetNeighborhood: name,
+      sheetAllHouses,
+      sheetHouses: matchResults,
+      sheetTotalCount: sheetAllHouses.length,
+      sheetMatchCount: matchResults.length,
+      hasSheetMatchSearched: true,
+      selectedPriceIdx: 0,
+      selectedRoomType: '不限',
+      ...summary
+    }
+    if (coord && coord.latitude && coord.longitude) {
+      nextData.mapLat = coord.latitude
+      nextData.mapLng = coord.longitude
+      nextData.scale = 14
+      nextData.currentScale = 14
+    }
+    this.setData(nextData)
+  },
+
+  runSheetMatch(priceIdx, roomType) {
+    const selectedPriceIdx = priceIdx !== undefined ? Number(priceIdx) : Number(this.data.selectedPriceIdx)
+    const selectedRoomType = roomType !== undefined ? roomType : this.data.selectedRoomType
+    const results = houseMatch.filterHouses(this.data.sheetAllHouses, {
+      neighborhood: this.data.sheetNeighborhood,
+      priceIdx: selectedPriceIdx,
+      roomType: selectedRoomType
+    })
+    this.setData({
+      selectedPriceIdx,
+      selectedRoomType,
+      sheetHouses: results,
+      sheetMatchCount: results.length,
+      hasSheetMatchSearched: true
+    })
+  },
+
+  onSheetPriceSelect(e) {
+    this.runSheetMatch(Number(e.currentTarget.dataset.idx))
+  },
+
+  onSheetRoomTypeSelect(e) {
+    this.runSheetMatch(undefined, e.currentTarget.dataset.type)
+  },
+
   // ── 点击 Marker ───────────────────────────────────
   onMarkerTap(e) {
     const markerId = e.detail.markerId
@@ -138,10 +243,9 @@ Page({
     if (!marker) return
     const name = marker._name
     const houses = app.globalData.houseList.filter(h => h.neighborhood === name && h.available === true)
-    this.setData({
-      showSheet: true,
-      sheetNeighborhood: name,
-      sheetHouses: houses
+    this.openNeighborhoodSheet(name, houses, {
+      latitude: marker.latitude,
+      longitude: marker.longitude
     })
   },
 
@@ -156,6 +260,28 @@ Page({
 
   onCloseSheet() {
     this.setData({ showSheet: false })
+  },
+
+  onOpenSheetDetail() {
+    const name = this.data.sheetNeighborhood
+    if (!name) return
+    wx.navigateTo({
+      url: `/pages/neighborhood-detail/neighborhood-detail?name=${encodeURIComponent(name)}`
+    })
+  },
+
+  onOpenSheetMap() {
+    const { sheetNeighborhood, sheetHasLocation, sheetLat, sheetLng, sheetAddress } = this.data
+    if (!sheetHasLocation) {
+      wx.showToast({ title: '请先在小区配置中设置地图位置', icon: 'none' })
+      return
+    }
+    locationUtil.openMapLocation({
+      latitude: sheetLat,
+      longitude: sheetLng,
+      name: sheetNeighborhood,
+      address: sheetAddress
+    })
   },
 
   // ── 点击房源 → 详情 ───────────────────────────────
@@ -243,9 +369,8 @@ Page({
     const coord = house ? getHouseCoord(house) : null
     if (house && coord) {
       const name = house.neighborhood
-      this.setData({ mapLat: coord.latitude, mapLng: coord.longitude, scale: 14 })
       const houses = app.globalData.houseList.filter(h => h.neighborhood === name && h.available === true)
-      this.setData({ showSheet: true, sheetNeighborhood: name, sheetHouses: houses })
+      this.openNeighborhoodSheet(name, houses, coord)
     } else {
       wx.showToast({ title: '未找到该小区', icon: 'none' })
     }
